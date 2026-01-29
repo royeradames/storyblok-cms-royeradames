@@ -1,0 +1,1898 @@
+/**
+ * Storyblok Component Definitions
+ *
+ * This file defines the schema for all CMS components to seed Storyblok.
+ * These definitions match the TypeScript interfaces in the wrapper components.
+ *
+ * Run `bun run storyblok:seed` to push these to your Storyblok space.
+ */
+
+// Helper types for Storyblok field definitions
+type StoryblokFieldType =
+  | "text"
+  | "textarea"
+  | "richtext"
+  | "number"
+  | "boolean"
+  | "option"
+  | "options"
+  | "asset"
+  | "multiasset"
+  | "multilink"
+  | "bloks"
+  | "table";
+
+interface StoryblokOption {
+  value: string;
+  name: string;
+}
+
+interface StoryblokField {
+  type: StoryblokFieldType;
+  pos?: number;
+  required?: boolean;
+  default_value?: string | number | boolean;
+  options?: StoryblokOption[];
+  // For bloks field type
+  restrict_type?: string;
+  restrict_components?: boolean;
+  component_whitelist?: string[];
+  // For multilink
+  allow_target_blank?: boolean;
+  // For asset
+  filetypes?: string[];
+  // For number
+  min_value?: number;
+  max_value?: number;
+  // Description for editors
+  description?: string;
+}
+
+interface StoryblokComponentSchema {
+  [fieldName: string]: StoryblokField;
+}
+
+interface StoryblokComponent {
+  name: string;
+  display_name: string;
+  is_root?: boolean;
+  is_nestable?: boolean;
+  schema: StoryblokComponentSchema;
+  preview_field?: string;
+  preview_tmpl?: string;
+  color?: string;
+  icon?: string;
+}
+
+// Reusable option sets
+const buttonVariantOptions: StoryblokOption[] = [
+  { value: "default", name: "Default" },
+  { value: "destructive", name: "Destructive" },
+  { value: "outline", name: "Outline" },
+  { value: "secondary", name: "Secondary" },
+  { value: "ghost", name: "Ghost" },
+  { value: "link", name: "Link" },
+];
+
+const buttonSizeOptions: StoryblokOption[] = [
+  { value: "default", name: "Default" },
+  { value: "sm", name: "Small" },
+  { value: "lg", name: "Large" },
+  { value: "icon", name: "Icon" },
+];
+
+const gapOptions: StoryblokOption[] = [
+  { value: "none", name: "None" },
+  { value: "sm", name: "Small" },
+  { value: "md", name: "Medium" },
+  { value: "lg", name: "Large" },
+];
+
+const sideOptions: StoryblokOption[] = [
+  { value: "top", name: "Top" },
+  { value: "right", name: "Right" },
+  { value: "bottom", name: "Bottom" },
+  { value: "left", name: "Left" },
+];
+
+const alignOptions: StoryblokOption[] = [
+  { value: "left", name: "Left" },
+  { value: "center", name: "Center" },
+  { value: "right", name: "Right" },
+];
+
+const orientationOptions: StoryblokOption[] = [
+  { value: "horizontal", name: "Horizontal" },
+  { value: "vertical", name: "Vertical" },
+];
+
+/**
+ * Component Definitions
+ * Organized by category matching the wrapper exports
+ */
+export const componentDefinitions: StoryblokComponent[] = [
+  // ============================================
+  // LAYOUT COMPONENTS
+  // ============================================
+  {
+    name: "shadcn_section",
+    display_name: "Section",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-wallet",
+    schema: {
+      content: {
+        type: "bloks",
+        pos: 0,
+        description: "Content blocks inside this section",
+      },
+      padding: {
+        type: "option",
+        pos: 1,
+        default_value: "md",
+        options: [
+          { value: "none", name: "None" },
+          { value: "sm", name: "Small" },
+          { value: "md", name: "Medium" },
+          { value: "lg", name: "Large" },
+          { value: "xl", name: "Extra Large" },
+        ],
+      },
+      background: {
+        type: "option",
+        pos: 2,
+        default_value: "default",
+        options: [
+          { value: "default", name: "Default" },
+          { value: "muted", name: "Muted" },
+          { value: "primary", name: "Primary" },
+          { value: "secondary", name: "Secondary" },
+        ],
+      },
+      max_width: {
+        type: "option",
+        pos: 3,
+        default_value: "xl",
+        options: [
+          { value: "sm", name: "Small" },
+          { value: "md", name: "Medium" },
+          { value: "lg", name: "Large" },
+          { value: "xl", name: "Extra Large" },
+          { value: "full", name: "Full Width" },
+        ],
+      },
+      id: {
+        type: "text",
+        pos: 4,
+        description: "HTML ID for anchor links",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_grid",
+    display_name: "Grid",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-table",
+    schema: {
+      items: {
+        type: "bloks",
+        pos: 0,
+        description: "Items to display in the grid",
+      },
+      columns: {
+        type: "option",
+        pos: 1,
+        default_value: "3",
+        options: [
+          { value: "1", name: "1 Column" },
+          { value: "2", name: "2 Columns" },
+          { value: "3", name: "3 Columns" },
+          { value: "4", name: "4 Columns" },
+          { value: "5", name: "5 Columns" },
+          { value: "6", name: "6 Columns" },
+        ],
+      },
+      columns_mobile: {
+        type: "option",
+        pos: 2,
+        default_value: "1",
+        options: [
+          { value: "1", name: "1 Column" },
+          { value: "2", name: "2 Columns" },
+        ],
+      },
+      gap: {
+        type: "option",
+        pos: 3,
+        default_value: "md",
+        options: gapOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_flex",
+    display_name: "Flex Container",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-arrow-pointer",
+    schema: {
+      items: {
+        type: "bloks",
+        pos: 0,
+        description: "Items in the flex container",
+      },
+      direction: {
+        type: "option",
+        pos: 1,
+        default_value: "row",
+        options: [
+          { value: "row", name: "Row" },
+          { value: "column", name: "Column" },
+          { value: "row-reverse", name: "Row Reverse" },
+          { value: "column-reverse", name: "Column Reverse" },
+        ],
+      },
+      justify: {
+        type: "option",
+        pos: 2,
+        default_value: "start",
+        options: [
+          { value: "start", name: "Start" },
+          { value: "center", name: "Center" },
+          { value: "end", name: "End" },
+          { value: "between", name: "Space Between" },
+          { value: "around", name: "Space Around" },
+          { value: "evenly", name: "Space Evenly" },
+        ],
+      },
+      align: {
+        type: "option",
+        pos: 3,
+        default_value: "stretch",
+        options: [
+          { value: "start", name: "Start" },
+          { value: "center", name: "Center" },
+          { value: "end", name: "End" },
+          { value: "stretch", name: "Stretch" },
+          { value: "baseline", name: "Baseline" },
+        ],
+      },
+      gap: {
+        type: "option",
+        pos: 4,
+        default_value: "md",
+        options: gapOptions,
+      },
+      wrap: {
+        type: "boolean",
+        pos: 5,
+        default_value: false,
+        description: "Allow items to wrap to next line",
+      },
+    },
+  },
+
+  // ============================================
+  // TYPOGRAPHY & CONTENT
+  // ============================================
+  {
+    name: "shadcn_text",
+    display_name: "Text",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-text-c",
+    preview_field: "content",
+    schema: {
+      content: {
+        type: "textarea",
+        pos: 0,
+        required: true,
+        description: "Text content",
+      },
+      element: {
+        type: "option",
+        pos: 1,
+        default_value: "p",
+        options: [
+          { value: "p", name: "Paragraph" },
+          { value: "span", name: "Span" },
+          { value: "h1", name: "Heading 1" },
+          { value: "h2", name: "Heading 2" },
+          { value: "h3", name: "Heading 3" },
+          { value: "h4", name: "Heading 4" },
+          { value: "h5", name: "Heading 5" },
+          { value: "h6", name: "Heading 6" },
+        ],
+      },
+      size: {
+        type: "option",
+        pos: 2,
+        default_value: "base",
+        options: [
+          { value: "xs", name: "Extra Small" },
+          { value: "sm", name: "Small" },
+          { value: "base", name: "Base" },
+          { value: "lg", name: "Large" },
+          { value: "xl", name: "XL" },
+          { value: "2xl", name: "2XL" },
+          { value: "3xl", name: "3XL" },
+          { value: "4xl", name: "4XL" },
+        ],
+      },
+      weight: {
+        type: "option",
+        pos: 3,
+        default_value: "normal",
+        options: [
+          { value: "normal", name: "Normal" },
+          { value: "medium", name: "Medium" },
+          { value: "semibold", name: "Semibold" },
+          { value: "bold", name: "Bold" },
+        ],
+      },
+      color: {
+        type: "option",
+        pos: 4,
+        default_value: "default",
+        options: [
+          { value: "default", name: "Default" },
+          { value: "muted", name: "Muted" },
+          { value: "primary", name: "Primary" },
+          { value: "destructive", name: "Destructive" },
+        ],
+      },
+      align: {
+        type: "option",
+        pos: 5,
+        default_value: "left",
+        options: alignOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_rich_text",
+    display_name: "Rich Text",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-doc",
+    schema: {
+      content: {
+        type: "richtext",
+        pos: 0,
+        required: true,
+        description: "Rich text content with formatting",
+      },
+      prose_size: {
+        type: "option",
+        pos: 1,
+        default_value: "base",
+        options: [
+          { value: "sm", name: "Small" },
+          { value: "base", name: "Base" },
+          { value: "lg", name: "Large" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_alert",
+    display_name: "Alert",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-alert",
+    preview_field: "title",
+    schema: {
+      title: {
+        type: "text",
+        pos: 0,
+        description: "Alert title",
+      },
+      description: {
+        type: "textarea",
+        pos: 1,
+        description: "Alert description",
+      },
+      variant: {
+        type: "option",
+        pos: 2,
+        default_value: "default",
+        options: [
+          { value: "default", name: "Default" },
+          { value: "destructive", name: "Destructive" },
+        ],
+      },
+      icon: {
+        type: "option",
+        pos: 3,
+        default_value: "info",
+        options: [
+          { value: "info", name: "Info" },
+          { value: "warning", name: "Warning" },
+          { value: "success", name: "Success" },
+          { value: "error", name: "Error" },
+          { value: "none", name: "None" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_badge",
+    display_name: "Badge",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-tag",
+    preview_field: "text",
+    schema: {
+      text: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Badge text",
+      },
+      variant: {
+        type: "option",
+        pos: 1,
+        default_value: "default",
+        options: [
+          { value: "default", name: "Default" },
+          { value: "secondary", name: "Secondary" },
+          { value: "destructive", name: "Destructive" },
+          { value: "outline", name: "Outline" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_separator",
+    display_name: "Separator",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-minus",
+    schema: {
+      orientation: {
+        type: "option",
+        pos: 0,
+        default_value: "horizontal",
+        options: orientationOptions,
+      },
+      decorative: {
+        type: "boolean",
+        pos: 1,
+        default_value: true,
+        description: "If true, separator is purely decorative",
+      },
+    },
+  },
+
+  // ============================================
+  // NAVIGATION
+  // ============================================
+  {
+    name: "shadcn_accordion",
+    display_name: "Accordion",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-accordion",
+    schema: {
+      items: {
+        type: "bloks",
+        pos: 0,
+        restrict_components: true,
+        component_whitelist: ["shadcn_accordion_item"],
+        description: "Accordion items",
+      },
+      type: {
+        type: "option",
+        pos: 1,
+        default_value: "single",
+        options: [
+          { value: "single", name: "Single (one open at a time)" },
+          { value: "multiple", name: "Multiple (many open)" },
+        ],
+      },
+      collapsible: {
+        type: "boolean",
+        pos: 2,
+        default_value: true,
+        description: "Allow closing all items (single mode only)",
+      },
+      default_value: {
+        type: "text",
+        pos: 3,
+        description: "Value of initially open item",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_accordion_item",
+    display_name: "Accordion Item",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    preview_field: "title",
+    schema: {
+      title: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Item title (trigger)",
+      },
+      content: {
+        type: "textarea",
+        pos: 1,
+        required: true,
+        description: "Item content",
+      },
+      value: {
+        type: "text",
+        pos: 2,
+        description: "Unique value for this item",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_tabs",
+    display_name: "Tabs",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-tab",
+    schema: {
+      tabs: {
+        type: "bloks",
+        pos: 0,
+        restrict_components: true,
+        component_whitelist: ["shadcn_tab_item"],
+        description: "Tab items",
+      },
+      default_value: {
+        type: "text",
+        pos: 1,
+        description: "Value of initially active tab",
+      },
+      orientation: {
+        type: "option",
+        pos: 2,
+        default_value: "horizontal",
+        options: orientationOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_tab_item",
+    display_name: "Tab Item",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    preview_field: "label",
+    schema: {
+      label: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Tab label",
+      },
+      value: {
+        type: "text",
+        pos: 1,
+        required: true,
+        description: "Unique value for this tab",
+      },
+      content: {
+        type: "bloks",
+        pos: 2,
+        description: "Tab content",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_breadcrumb",
+    display_name: "Breadcrumb",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-arrow-pointer",
+    schema: {
+      items: {
+        type: "bloks",
+        pos: 0,
+        restrict_components: true,
+        component_whitelist: ["shadcn_breadcrumb_item"],
+        description: "Breadcrumb items",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_breadcrumb_item",
+    display_name: "Breadcrumb Item",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    preview_field: "label",
+    schema: {
+      label: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Item label",
+      },
+      href: {
+        type: "text",
+        pos: 1,
+        description: "Link URL (empty for current page)",
+      },
+      is_current: {
+        type: "boolean",
+        pos: 2,
+        default_value: false,
+        description: "Is this the current page?",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_pagination",
+    display_name: "Pagination",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-arrow-right",
+    schema: {
+      total_pages: {
+        type: "number",
+        pos: 0,
+        required: true,
+        min_value: 1,
+        description: "Total number of pages",
+      },
+      current_page: {
+        type: "number",
+        pos: 1,
+        required: true,
+        min_value: 1,
+        description: "Current page number",
+      },
+      base_url: {
+        type: "text",
+        pos: 2,
+        required: true,
+        description: "Base URL for pagination links",
+      },
+      show_ellipsis: {
+        type: "boolean",
+        pos: 3,
+        default_value: true,
+        description: "Show ellipsis for many pages",
+      },
+      visible_pages: {
+        type: "number",
+        pos: 4,
+        default_value: 5,
+        min_value: 3,
+        max_value: 10,
+        description: "Number of visible page links",
+      },
+    },
+  },
+
+  // ============================================
+  // MEDIA
+  // ============================================
+  {
+    name: "shadcn_avatar",
+    display_name: "Avatar",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-smiley",
+    schema: {
+      image: {
+        type: "asset",
+        pos: 0,
+        filetypes: ["images"],
+        description: "Avatar image",
+      },
+      fallback: {
+        type: "text",
+        pos: 1,
+        description: "Fallback text (e.g., initials)",
+      },
+      size: {
+        type: "option",
+        pos: 2,
+        default_value: "md",
+        options: [
+          { value: "sm", name: "Small" },
+          { value: "md", name: "Medium" },
+          { value: "lg", name: "Large" },
+          { value: "xl", name: "Extra Large" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_image",
+    display_name: "Image",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-image",
+    schema: {
+      image: {
+        type: "asset",
+        pos: 0,
+        required: true,
+        filetypes: ["images"],
+        description: "Image file",
+      },
+      aspect_ratio: {
+        type: "option",
+        pos: 1,
+        default_value: "auto",
+        options: [
+          { value: "auto", name: "Auto" },
+          { value: "square", name: "Square (1:1)" },
+          { value: "video", name: "Video (16:9)" },
+          { value: "portrait", name: "Portrait (3:4)" },
+          { value: "wide", name: "Wide (21:9)" },
+        ],
+      },
+      object_fit: {
+        type: "option",
+        pos: 2,
+        default_value: "cover",
+        options: [
+          { value: "cover", name: "Cover" },
+          { value: "contain", name: "Contain" },
+          { value: "fill", name: "Fill" },
+          { value: "none", name: "None" },
+        ],
+      },
+      rounded: {
+        type: "option",
+        pos: 3,
+        default_value: "md",
+        options: [
+          { value: "none", name: "None" },
+          { value: "sm", name: "Small" },
+          { value: "md", name: "Medium" },
+          { value: "lg", name: "Large" },
+          { value: "full", name: "Full (Circle)" },
+        ],
+      },
+      caption: {
+        type: "text",
+        pos: 4,
+        description: "Image caption",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_carousel",
+    display_name: "Carousel",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-carousel",
+    schema: {
+      items: {
+        type: "bloks",
+        pos: 0,
+        description: "Carousel items",
+      },
+      show_arrows: {
+        type: "boolean",
+        pos: 1,
+        default_value: true,
+        description: "Show navigation arrows",
+      },
+      loop: {
+        type: "boolean",
+        pos: 2,
+        default_value: false,
+        description: "Loop back to start",
+      },
+      autoplay: {
+        type: "boolean",
+        pos: 3,
+        default_value: false,
+        description: "Auto-advance slides",
+      },
+      autoplay_delay: {
+        type: "number",
+        pos: 4,
+        default_value: 3000,
+        min_value: 1000,
+        description: "Autoplay delay in ms",
+      },
+      orientation: {
+        type: "option",
+        pos: 5,
+        default_value: "horizontal",
+        options: orientationOptions,
+      },
+      items_per_view: {
+        type: "option",
+        pos: 6,
+        default_value: "1",
+        options: [
+          { value: "1", name: "1 Item" },
+          { value: "2", name: "2 Items" },
+          { value: "3", name: "3 Items" },
+          { value: "4", name: "4 Items" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_aspect_ratio",
+    display_name: "Aspect Ratio",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-resize",
+    schema: {
+      ratio: {
+        type: "option",
+        pos: 0,
+        default_value: "video",
+        options: [
+          { value: "square", name: "Square (1:1)" },
+          { value: "video", name: "Video (16:9)" },
+          { value: "portrait", name: "Portrait (3:4)" },
+          { value: "wide", name: "Wide (21:9)" },
+          { value: "custom", name: "Custom" },
+        ],
+      },
+      custom_ratio: {
+        type: "number",
+        pos: 1,
+        description: "Custom ratio (e.g., 1.5 for 3:2)",
+      },
+      content: {
+        type: "bloks",
+        pos: 2,
+        description: "Content inside the aspect ratio container",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_skeleton",
+    display_name: "Skeleton",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-empty",
+    schema: {
+      variant: {
+        type: "option",
+        pos: 0,
+        default_value: "rectangular",
+        options: [
+          { value: "text", name: "Text Lines" },
+          { value: "circular", name: "Circular" },
+          { value: "rectangular", name: "Rectangular" },
+          { value: "card", name: "Card" },
+        ],
+      },
+      width: {
+        type: "text",
+        pos: 1,
+        default_value: "100%",
+        description: "Width (e.g., 100%, 200px)",
+      },
+      height: {
+        type: "text",
+        pos: 2,
+        default_value: "20px",
+        description: "Height (e.g., 20px, 100%)",
+      },
+      lines: {
+        type: "number",
+        pos: 3,
+        default_value: 1,
+        min_value: 1,
+        max_value: 10,
+        description: "Number of lines (text variant)",
+      },
+    },
+  },
+
+  // ============================================
+  // INTERACTIVE / OVERLAYS
+  // ============================================
+  {
+    name: "shadcn_button",
+    display_name: "Button",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-button",
+    preview_field: "label",
+    schema: {
+      label: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Button text",
+      },
+      variant: {
+        type: "option",
+        pos: 1,
+        default_value: "default",
+        options: buttonVariantOptions,
+      },
+      size: {
+        type: "option",
+        pos: 2,
+        default_value: "default",
+        options: buttonSizeOptions,
+      },
+      link: {
+        type: "multilink",
+        pos: 3,
+        allow_target_blank: true,
+        description: "Button link",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_card",
+    display_name: "Card",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-wallet",
+    preview_field: "title",
+    schema: {
+      title: {
+        type: "text",
+        pos: 0,
+        description: "Card title",
+      },
+      description: {
+        type: "textarea",
+        pos: 1,
+        description: "Card description",
+      },
+      content: {
+        type: "bloks",
+        pos: 2,
+        description: "Card content",
+      },
+      footer: {
+        type: "bloks",
+        pos: 3,
+        description: "Card footer (usually buttons)",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_hero",
+    display_name: "Hero",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-image",
+    preview_field: "headline",
+    schema: {
+      headline: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Main headline",
+      },
+      subheadline: {
+        type: "textarea",
+        pos: 1,
+        description: "Supporting text",
+      },
+      background_image: {
+        type: "asset",
+        pos: 2,
+        filetypes: ["images"],
+        description: "Background image",
+      },
+      cta: {
+        type: "bloks",
+        pos: 3,
+        restrict_components: true,
+        component_whitelist: ["shadcn_button"],
+        description: "Call-to-action buttons",
+      },
+      alignment: {
+        type: "option",
+        pos: 4,
+        default_value: "center",
+        options: alignOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_dialog",
+    display_name: "Dialog",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-chat",
+    preview_field: "title",
+    schema: {
+      trigger_text: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Button text to open dialog",
+      },
+      trigger_variant: {
+        type: "option",
+        pos: 1,
+        default_value: "default",
+        options: buttonVariantOptions,
+      },
+      title: {
+        type: "text",
+        pos: 2,
+        required: true,
+        description: "Dialog title",
+      },
+      description: {
+        type: "textarea",
+        pos: 3,
+        description: "Dialog description",
+      },
+      content: {
+        type: "bloks",
+        pos: 4,
+        description: "Dialog content",
+      },
+      footer: {
+        type: "bloks",
+        pos: 5,
+        description: "Dialog footer (usually buttons)",
+      },
+      size: {
+        type: "option",
+        pos: 6,
+        default_value: "md",
+        options: [
+          { value: "sm", name: "Small" },
+          { value: "md", name: "Medium" },
+          { value: "lg", name: "Large" },
+          { value: "xl", name: "Extra Large" },
+          { value: "full", name: "Full Width" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_sheet",
+    display_name: "Sheet",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-sidecar",
+    preview_field: "title",
+    schema: {
+      trigger_text: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Button text to open sheet",
+      },
+      trigger_variant: {
+        type: "option",
+        pos: 1,
+        default_value: "default",
+        options: buttonVariantOptions,
+      },
+      title: {
+        type: "text",
+        pos: 2,
+        required: true,
+        description: "Sheet title",
+      },
+      description: {
+        type: "textarea",
+        pos: 3,
+        description: "Sheet description",
+      },
+      content: {
+        type: "bloks",
+        pos: 4,
+        description: "Sheet content",
+      },
+      footer: {
+        type: "bloks",
+        pos: 5,
+        description: "Sheet footer",
+      },
+      side: {
+        type: "option",
+        pos: 6,
+        default_value: "right",
+        options: sideOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_drawer",
+    display_name: "Drawer",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-sidecar",
+    preview_field: "title",
+    schema: {
+      trigger_text: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Button text to open drawer",
+      },
+      trigger_variant: {
+        type: "option",
+        pos: 1,
+        default_value: "default",
+        options: buttonVariantOptions,
+      },
+      title: {
+        type: "text",
+        pos: 2,
+        required: true,
+        description: "Drawer title",
+      },
+      description: {
+        type: "textarea",
+        pos: 3,
+        description: "Drawer description",
+      },
+      content: {
+        type: "bloks",
+        pos: 4,
+        description: "Drawer content",
+      },
+      footer: {
+        type: "bloks",
+        pos: 5,
+        description: "Drawer footer",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_tooltip",
+    display_name: "Tooltip",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-chat",
+    preview_field: "content",
+    schema: {
+      content: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Tooltip text",
+      },
+      trigger: {
+        type: "bloks",
+        pos: 1,
+        description: "Element that triggers tooltip",
+      },
+      side: {
+        type: "option",
+        pos: 2,
+        default_value: "top",
+        options: sideOptions,
+      },
+      delay: {
+        type: "number",
+        pos: 3,
+        default_value: 200,
+        min_value: 0,
+        description: "Delay before showing (ms)",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_hover_card",
+    display_name: "Hover Card",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-wallet",
+    schema: {
+      trigger: {
+        type: "bloks",
+        pos: 0,
+        description: "Element that triggers hover card",
+      },
+      content: {
+        type: "bloks",
+        pos: 1,
+        description: "Hover card content",
+      },
+      side: {
+        type: "option",
+        pos: 2,
+        default_value: "bottom",
+        options: sideOptions,
+      },
+      open_delay: {
+        type: "number",
+        pos: 3,
+        default_value: 200,
+        min_value: 0,
+        description: "Delay before showing (ms)",
+      },
+      close_delay: {
+        type: "number",
+        pos: 4,
+        default_value: 100,
+        min_value: 0,
+        description: "Delay before hiding (ms)",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_popover",
+    display_name: "Popover",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-chat",
+    schema: {
+      trigger_text: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Button text to open popover",
+      },
+      trigger_variant: {
+        type: "option",
+        pos: 1,
+        default_value: "outline",
+        options: buttonVariantOptions,
+      },
+      content: {
+        type: "bloks",
+        pos: 2,
+        description: "Popover content",
+      },
+      side: {
+        type: "option",
+        pos: 3,
+        default_value: "bottom",
+        options: sideOptions,
+      },
+      align: {
+        type: "option",
+        pos: 4,
+        default_value: "center",
+        options: [
+          { value: "start", name: "Start" },
+          { value: "center", name: "Center" },
+          { value: "end", name: "End" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_collapsible",
+    display_name: "Collapsible",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-arrow-down",
+    preview_field: "trigger_text",
+    schema: {
+      trigger_text: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Toggle button text",
+      },
+      content: {
+        type: "bloks",
+        pos: 1,
+        description: "Collapsible content",
+      },
+      default_open: {
+        type: "boolean",
+        pos: 2,
+        default_value: false,
+        description: "Start expanded",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_progress",
+    display_name: "Progress",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-progress",
+    schema: {
+      value: {
+        type: "number",
+        pos: 0,
+        required: true,
+        min_value: 0,
+        description: "Current progress value",
+      },
+      max: {
+        type: "number",
+        pos: 1,
+        default_value: 100,
+        min_value: 1,
+        description: "Maximum value",
+      },
+      show_label: {
+        type: "boolean",
+        pos: 2,
+        default_value: false,
+        description: "Show percentage label",
+      },
+      label_position: {
+        type: "option",
+        pos: 3,
+        default_value: "top",
+        options: [
+          { value: "top", name: "Top" },
+          { value: "inside", name: "Inside" },
+          { value: "bottom", name: "Bottom" },
+        ],
+      },
+      size: {
+        type: "option",
+        pos: 4,
+        default_value: "md",
+        options: [
+          { value: "sm", name: "Small" },
+          { value: "md", name: "Medium" },
+          { value: "lg", name: "Large" },
+        ],
+      },
+    },
+  },
+
+  // ============================================
+  // FORM ELEMENTS
+  // ============================================
+  {
+    name: "shadcn_form",
+    display_name: "Form",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-embed",
+    schema: {
+      action: {
+        type: "text",
+        pos: 0,
+        description: "Form action URL",
+      },
+      method: {
+        type: "option",
+        pos: 1,
+        default_value: "post",
+        options: [
+          { value: "get", name: "GET" },
+          { value: "post", name: "POST" },
+        ],
+      },
+      fields: {
+        type: "bloks",
+        pos: 2,
+        description: "Form fields",
+      },
+      submit_text: {
+        type: "text",
+        pos: 3,
+        default_value: "Submit",
+        description: "Submit button text",
+      },
+      submit_variant: {
+        type: "option",
+        pos: 4,
+        default_value: "default",
+        options: buttonVariantOptions.filter((o) => o.value !== "link"),
+      },
+      layout: {
+        type: "option",
+        pos: 5,
+        default_value: "vertical",
+        options: [
+          { value: "vertical", name: "Vertical" },
+          { value: "horizontal", name: "Horizontal (2 columns)" },
+          { value: "inline", name: "Inline" },
+        ],
+      },
+    },
+  },
+
+  {
+    name: "shadcn_input",
+    display_name: "Input",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-text",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name (for form submission)",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        description: "Label text",
+      },
+      placeholder: {
+        type: "text",
+        pos: 2,
+        description: "Placeholder text",
+      },
+      type: {
+        type: "option",
+        pos: 3,
+        default_value: "text",
+        options: [
+          { value: "text", name: "Text" },
+          { value: "email", name: "Email" },
+          { value: "password", name: "Password" },
+          { value: "number", name: "Number" },
+          { value: "tel", name: "Phone" },
+          { value: "url", name: "URL" },
+        ],
+      },
+      required: {
+        type: "boolean",
+        pos: 4,
+        default_value: false,
+        description: "Required field",
+      },
+      disabled: {
+        type: "boolean",
+        pos: 5,
+        default_value: false,
+        description: "Disabled field",
+      },
+      helper_text: {
+        type: "text",
+        pos: 6,
+        description: "Helper text below input",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_textarea",
+    display_name: "Textarea",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-doc",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        description: "Label text",
+      },
+      placeholder: {
+        type: "text",
+        pos: 2,
+        description: "Placeholder text",
+      },
+      rows: {
+        type: "number",
+        pos: 3,
+        default_value: 4,
+        min_value: 2,
+        max_value: 20,
+        description: "Number of rows",
+      },
+      required: {
+        type: "boolean",
+        pos: 4,
+        default_value: false,
+      },
+      disabled: {
+        type: "boolean",
+        pos: 5,
+        default_value: false,
+      },
+      helper_text: {
+        type: "text",
+        pos: 6,
+        description: "Helper text",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_checkbox",
+    display_name: "Checkbox",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-check",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        required: true,
+        description: "Checkbox label",
+      },
+      description: {
+        type: "text",
+        pos: 2,
+        description: "Additional description",
+      },
+      default_checked: {
+        type: "boolean",
+        pos: 3,
+        default_value: false,
+        description: "Checked by default",
+      },
+      disabled: {
+        type: "boolean",
+        pos: 4,
+        default_value: false,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_switch",
+    display_name: "Switch",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-toggle",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        required: true,
+        description: "Switch label",
+      },
+      description: {
+        type: "text",
+        pos: 2,
+        description: "Additional description",
+      },
+      default_checked: {
+        type: "boolean",
+        pos: 3,
+        default_value: false,
+      },
+      disabled: {
+        type: "boolean",
+        pos: 4,
+        default_value: false,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_radio_group",
+    display_name: "Radio Group",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-radio",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        description: "Group label",
+      },
+      options: {
+        type: "bloks",
+        pos: 2,
+        restrict_components: true,
+        component_whitelist: ["shadcn_radio_option"],
+        description: "Radio options",
+      },
+      default_value: {
+        type: "text",
+        pos: 3,
+        description: "Default selected value",
+      },
+      orientation: {
+        type: "option",
+        pos: 4,
+        default_value: "vertical",
+        options: orientationOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_radio_option",
+    display_name: "Radio Option",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    preview_field: "label",
+    schema: {
+      value: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Option value",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        required: true,
+        description: "Option label",
+      },
+      description: {
+        type: "text",
+        pos: 2,
+        description: "Option description",
+      },
+      disabled: {
+        type: "boolean",
+        pos: 3,
+        default_value: false,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_select",
+    display_name: "Select",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-dropdown",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        description: "Label text",
+      },
+      placeholder: {
+        type: "text",
+        pos: 2,
+        default_value: "Select...",
+        description: "Placeholder text",
+      },
+      options: {
+        type: "bloks",
+        pos: 3,
+        restrict_components: true,
+        component_whitelist: ["shadcn_select_option"],
+        description: "Select options",
+      },
+      default_value: {
+        type: "text",
+        pos: 4,
+        description: "Default selected value",
+      },
+      disabled: {
+        type: "boolean",
+        pos: 5,
+        default_value: false,
+      },
+      helper_text: {
+        type: "text",
+        pos: 6,
+        description: "Helper text",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_select_option",
+    display_name: "Select Option",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    preview_field: "label",
+    schema: {
+      value: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Option value",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        required: true,
+        description: "Option label",
+      },
+      disabled: {
+        type: "boolean",
+        pos: 2,
+        default_value: false,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_slider",
+    display_name: "Slider",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-progress",
+    preview_field: "label",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Field name",
+      },
+      label: {
+        type: "text",
+        pos: 1,
+        description: "Label text",
+      },
+      min: {
+        type: "number",
+        pos: 2,
+        default_value: 0,
+        description: "Minimum value",
+      },
+      max: {
+        type: "number",
+        pos: 3,
+        default_value: 100,
+        description: "Maximum value",
+      },
+      step: {
+        type: "number",
+        pos: 4,
+        default_value: 1,
+        min_value: 1,
+        description: "Step increment",
+      },
+      default_value: {
+        type: "number",
+        pos: 5,
+        default_value: 50,
+        description: "Default value",
+      },
+      show_value: {
+        type: "boolean",
+        pos: 6,
+        default_value: true,
+        description: "Show current value",
+      },
+      disabled: {
+        type: "boolean",
+        pos: 7,
+        default_value: false,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_table",
+    display_name: "Table",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-table",
+    schema: {
+      caption: {
+        type: "text",
+        pos: 0,
+        description: "Table caption",
+      },
+      headers: {
+        type: "bloks",
+        pos: 1,
+        restrict_components: true,
+        component_whitelist: ["shadcn_table_cell"],
+        description: "Header cells",
+      },
+      rows: {
+        type: "bloks",
+        pos: 2,
+        restrict_components: true,
+        component_whitelist: ["shadcn_table_row"],
+        description: "Table rows",
+      },
+      striped: {
+        type: "boolean",
+        pos: 3,
+        default_value: false,
+        description: "Striped rows",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_table_row",
+    display_name: "Table Row",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    schema: {
+      cells: {
+        type: "bloks",
+        pos: 0,
+        restrict_components: true,
+        component_whitelist: ["shadcn_table_cell"],
+        description: "Row cells",
+      },
+    },
+  },
+
+  {
+    name: "shadcn_table_cell",
+    display_name: "Table Cell",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    preview_field: "content",
+    schema: {
+      content: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Cell content",
+      },
+      is_header: {
+        type: "boolean",
+        pos: 1,
+        default_value: false,
+        description: "Is header cell",
+      },
+      align: {
+        type: "option",
+        pos: 2,
+        default_value: "left",
+        options: alignOptions,
+      },
+    },
+  },
+];
+
+// Export component names for easy reference
+export const componentNames = componentDefinitions.map((c) => c.name);
+
+// Export count for verification
+export const componentCount = componentDefinitions.length;

@@ -1,0 +1,40 @@
+{
+  "name": "storyblok-cms",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:gateway": "turbo dev --filter=gateway",
+    "dev:web": "turbo dev --filter=web",
+    "build": "turbo build",
+    "build:gateway": "turbo build --filter=gateway",
+    "build:web": "turbo build --filter=web",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
+    "db:generate": "turbo db:generate --filter=gateway",
+    "db:migrate": "turbo db:migrate --filter=gateway",
+    "db:push": "turbo db:push --filter=gateway",
+    "db:studio": "turbo db:studio --filter=gateway",
+    "db:seed": "bun scripts/seed-preview-user.ts",
+    "storyblok:pull": "storyblok components pull -s 290156609668258",
+    "storyblok:types": "storyblok-generate-ts source=./components.290156609668258.json target=./packages/cms/src/types",
+    "storyblok:sync": "bun run storyblok:pull && bun run storyblok:types",
+    "storyblok:push": "storyblok components push --space $TARGET_SPACE --from 290156609668258",
+    "storyblok:seed:generate": "bun scripts/generate-storyblok-seed.ts",
+    "storyblok:seed:push": "bun scripts/push-storyblok-seed.ts",
+    "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.7",
+    "turbo": "2.7.6",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "bun@1.3.3"
+}

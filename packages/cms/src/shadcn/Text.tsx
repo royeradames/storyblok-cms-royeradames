@@ -1,0 +1,63 @@
+"use client";
+
+import { storyblokEditable } from "@storyblok/react";
+import { cn } from "@repo/ui";
+import type { SbBlokData } from "@storyblok/react";
+
+export interface ShadcnTextBlok extends SbBlokData {
+  content: string;
+  element?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+  weight?: "normal" | "medium" | "semibold" | "bold";
+  color?: "default" | "muted" | "primary" | "destructive";
+  align?: "left" | "center" | "right";
+}
+
+const sizeMap = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+  xl: "text-xl",
+  "2xl": "text-2xl",
+  "3xl": "text-3xl",
+  "4xl": "text-4xl",
+};
+
+const weightMap = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+};
+
+const colorMap = {
+  default: "text-foreground",
+  muted: "text-muted-foreground",
+  primary: "text-primary",
+  destructive: "text-destructive",
+};
+
+const alignMap = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+};
+
+export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
+  const Element = blok.element || "p";
+
+  return (
+    <Element
+      {...storyblokEditable(blok)}
+      className={cn(
+        sizeMap[blok.size || "base"],
+        weightMap[blok.weight || "normal"],
+        colorMap[blok.color || "default"],
+        alignMap[blok.align || "left"],
+      )}
+    >
+      {blok.content}
+    </Element>
+  );
+}
