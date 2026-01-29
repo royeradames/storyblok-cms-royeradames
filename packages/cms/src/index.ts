@@ -1,3 +1,6 @@
+// Storyblok default components
+export * from "./storyblok";
+
 // Shadcn wrappers
 export * from "./shadcn";
 
@@ -9,6 +12,12 @@ export * from "./dev";
 
 // Types
 export * from "./types";
+
+// Storyblok default component imports
+import { Page } from "./storyblok/Page";
+import { Teaser } from "./storyblok/Teaser";
+import { Grid } from "./storyblok/Grid";
+import { Feature } from "./storyblok/Feature";
 
 // Component imports for the map
 import { ShadcnSection } from "./shadcn/Section";
@@ -70,6 +79,12 @@ import { DevScenarioPicker } from "./dev/ScenarioPicker";
  * - All dev components use prefix: dev_
  */
 export const components = {
+  // === Storyblok Defaults ===
+  page: Page,
+  teaser: Teaser,
+  grid: Grid,
+  feature: Feature,
+
   // === Layout ===
   shadcn_section: ShadcnSection,
   shadcn_grid: ShadcnGrid,

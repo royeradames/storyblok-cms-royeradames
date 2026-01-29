@@ -10,7 +10,7 @@ import { components } from "@repo/cms";
  */
 export function initStoryblok(preview = false) {
   const accessToken = preview
-    ? process.env.STORYBLOK_PREVIEW_TOKEN
+    ? process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN
     : process.env.STORYBLOK_PUBLIC_TOKEN;
 
   return storyblokInit({

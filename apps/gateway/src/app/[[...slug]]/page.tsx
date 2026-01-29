@@ -1,17 +1,21 @@
 import { getStoryblokApi, StoryblokStory } from "@storyblok/react/rsc";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-async function fetchStory(slug: string) {
+type StoryblokVersion = "draft" | "published";
+
+async function fetchStory(slug: string, version: StoryblokVersion) {
   const storyblokApi = getStoryblokApi();
 
   try {
     const { data } = await storyblokApi.get(`cdn/stories/${slug}`, {
-      version: "published",
-      cv: Date.now(), // Cache validation
+      version,
+      cv: Date.now(), // Cache validation - ensures fresh content
     });
     return data.story;
   } catch {
@@ -19,11 +23,20 @@ async function fetchStory(slug: string) {
   }
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = await searchParams;
   const slugPath = slug ? slug.join("/") : "home";
 
-  const story = await fetchStory(slugPath);
+  // Detect if we're in the Visual Editor or Draft Mode
+  const { isEnabled: isDraftMode } = await draftMode();
+  const isVisualEditor = resolvedSearchParams._storyblok !== undefined;
+
+  // Use draft version for Visual Editor or Draft Mode, otherwise published
+  const version: StoryblokVersion =
+    isDraftMode || isVisualEditor ? "draft" : "published";
+
+  const story = await fetchStory(slugPath, version);
 
   if (!story) {
     notFound();

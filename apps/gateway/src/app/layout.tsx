@@ -3,9 +3,9 @@ import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import { components } from "@repo/cms";
 import "./globals.css";
 
-// Initialize Storyblok for server-side
+// Initialize Storyblok for server-side (using NEXT_PUBLIC_ so same token works client + server)
 storyblokInit({
-  accessToken: process.env.STORYBLOK_PREVIEW_TOKEN,
+  accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN,
   use: [apiPlugin],
   components,
 });
