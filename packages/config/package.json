@@ -11,7 +11,7 @@
     "./tailwind": "./tailwind/tailwind.config.ts"
   },
   "devDependencies": {
-    "tailwindcss": "^4.1.8",
+    "tailwindcss": "3.4.17",
     "tailwindcss-animate": "^1.0.7"
   }
 }
