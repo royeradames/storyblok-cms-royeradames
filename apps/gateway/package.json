@@ -12,6 +12,10 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "db:seed": "bun scripts/seed-preview-user.ts",
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
     "storyblok:seed:generate": "bun scripts/storyblok/generate-seed.ts",
     "storyblok:seed:push": "bun scripts/storyblok/push-seed.ts",
     "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push"

@@ -1,21 +1,26 @@
 /**
- * Seed Preview User Script
+ * Seed Preview User (gateway app)
  *
  * Creates a preview user for testing authenticated components in preview mode.
+ * Loads env from apps/gateway/.env when run from gateway directory.
  *
- * Usage: bun scripts/seed-preview-user.ts
+ * Usage: bun run db:seed (from apps/gateway)
  */
 
-import { db } from "@repo/db/client";
-import { users } from "@repo/db/schema";
+import { config } from "dotenv";
+import * as path from "path";
+
+config({ path: path.join(process.cwd(), ".env") });
 
 const PREVIEW_USER_ID = process.env.PREVIEW_USER_ID || "preview-user-001";
 
 async function seedPreviewUser() {
+  const { db } = await import("@repo/db/client");
+  const { users } = await import("@repo/db/schema");
+
   console.log("🌱 Seeding preview user...");
 
   try {
-    // Check if user already exists
     const existing = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, PREVIEW_USER_ID),
     });
@@ -25,7 +30,6 @@ async function seedPreviewUser() {
       return;
     }
 
-    // Create preview user
     await db.insert(users).values({
       id: PREVIEW_USER_ID,
       name: "Preview User",
