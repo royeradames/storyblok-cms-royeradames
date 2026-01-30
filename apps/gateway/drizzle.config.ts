@@ -5,7 +5,10 @@ import { defineConfig } from "drizzle-kit";
 config();
 
 export default defineConfig({
-  schema: "../../packages/db/src/schema/index.ts",
+  schema: [
+    "../../packages/db/src/schema/index.ts",
+    "./src/db/schema/index.ts",
+  ],
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
