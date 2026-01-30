@@ -15,7 +15,7 @@ import {
   SeedDataProvider,
   useSeedData,
   type Scenario,
-} from "@repo/cms/dev";
+} from "@repo/shared-cms/dev";
 
 // For now, just use presets. CMS scenarios would be fetched from API
 const allScenarios: Scenario[] = [...PRESET_SCENARIOS];

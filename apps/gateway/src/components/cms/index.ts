@@ -1,13 +1,17 @@
 /**
  * Gateway app-specific component map
  *
- * Extends shared @repo/cms components and overrides/adds gateway-specific ones.
- * The home page and all pages use the gateway Page component from this app.
+ * Shared components are registered with "shared_" prefix (e.g. shared_shadcn_flex).
+ * App-specific components have no prefix (e.g. page).
  */
-import { components as sharedComponents } from "@repo/cms";
+import { components as sharedComponents } from "@repo/shared-cms";
 import { Page } from "./Page";
 
+const sharedWithPrefix = Object.fromEntries(
+  Object.entries(sharedComponents).map(([k, v]) => [`shared_${k}`, v]),
+);
+
 export const components = {
-  ...sharedComponents,
+  ...sharedWithPrefix,
   page: Page,
 };

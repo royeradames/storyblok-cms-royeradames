@@ -1,5 +1,5 @@
 {
-  "name": "@repo/cms",
+  "name": "@repo/shared-cms",
   "version": "0.0.0",
   "private": true,
   "exports": {
@@ -7,7 +7,8 @@
     "./shadcn": "./src/shadcn/index.ts",
     "./presets": "./src/presets/index.ts",
     "./dev": "./src/dev/index.ts",
-    "./types": "./src/types/index.ts"
+    "./types": "./src/types/index.ts",
+    "./storyblok-seed": "./src/storyblok-seed/definitions.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit"

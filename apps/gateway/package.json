@@ -11,13 +11,16 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "storyblok:seed:generate": "bun scripts/storyblok/generate-seed.ts",
+    "storyblok:seed:push": "bun scripts/storyblok/push-seed.ts",
+    "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/auth": "workspace:*",
-    "@repo/cms": "workspace:*",
+    "@repo/shared-cms": "workspace:*",
     "@storyblok/react": "^4.6.0",
     "@tanstack/react-query": "^5.80.7",
     "next": "^15.3.3",

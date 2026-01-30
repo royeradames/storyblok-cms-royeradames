@@ -7,7 +7,7 @@ import type { SbBlokData } from "@storyblok/react";
  * Gateway-specific Page component
  *
  * Used for the home page and all pages in the gateway app.
- * Overrides the shared @repo/cms Page so gateway owns page rendering.
+ * Overrides the shared @repo/shared-cms Page so gateway owns page rendering.
  */
 export interface PageBlok extends SbBlokData {
   body?: SbBlokData[];

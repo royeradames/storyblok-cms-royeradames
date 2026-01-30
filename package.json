@@ -22,13 +22,11 @@
     "db:push": "turbo db:push --filter=gateway",
     "db:studio": "turbo db:studio --filter=gateway",
     "db:seed": "bun scripts/seed-preview-user.ts",
-    "storyblok:pull": "storyblok components pull -s 290156609668258",
-    "storyblok:types": "storyblok-generate-ts source=./components.290156609668258.json target=./packages/cms/src/types",
+    "storyblok:pull": "storyblok components pull -s $STORYBLOK_SPACE_ID",
+    "storyblok:types": "storyblok-generate-ts source=./components.$STORYBLOK_SPACE_ID.json target=./packages/shared-cms/src/types",
     "storyblok:sync": "bun run storyblok:pull && bun run storyblok:types",
-    "storyblok:push": "storyblok components push --space $TARGET_SPACE --from 290156609668258",
-    "storyblok:seed:generate": "bun scripts/generate-storyblok-seed.ts",
-    "storyblok:seed:push": "bun scripts/push-storyblok-seed.ts",
-    "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push",
+    "storyblok:push": "storyblok components push --space $STORYBLOK_SPACE_ID --from $STORYBLOK_SPACE_ID",
+    "storyblok:seed": "bun run --cwd apps/gateway storyblok:seed",
     "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {

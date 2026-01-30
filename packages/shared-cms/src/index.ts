@@ -65,7 +65,7 @@ import { DevScenarioPicker } from "./dev/ScenarioPicker";
  *
  * Usage:
  * ```ts
- * import { components } from "@repo/cms";
+ * import { components } from "@repo/shared-cms";
  *
  * storyblokInit({
  *   accessToken: "...",

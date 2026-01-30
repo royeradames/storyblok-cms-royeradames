@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@repo/ui", "@repo/db", "@repo/auth", "@repo/cms"],
+  transpilePackages: ["@repo/ui", "@repo/db", "@repo/auth", "@repo/shared-cms"],
   images: {
     remotePatterns: [
       {

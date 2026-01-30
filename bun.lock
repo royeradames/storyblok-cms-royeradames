@@ -15,8 +15,8 @@
       "version": "0.0.0",
       "dependencies": {
         "@repo/auth": "workspace:*",
-        "@repo/cms": "workspace:*",
         "@repo/db": "workspace:*",
+        "@repo/shared-cms": "workspace:*",
         "@repo/ui": "workspace:*",
         "@storyblok/react": "^4.6.0",
         "@tanstack/react-query": "^5.80.7",
@@ -53,25 +53,6 @@
         "typescript": "^5.9.3",
       },
     },
-    "packages/cms": {
-      "name": "@repo/cms",
-      "version": "0.0.0",
-      "dependencies": {
-        "@repo/ui": "workspace:*",
-        "@storyblok/react": "^4.6.0",
-        "lucide-react": "^0.511.0",
-      },
-      "devDependencies": {
-        "@repo/config": "workspace:*",
-        "@types/react": "^19.1.8",
-        "@types/react-dom": "^19.1.6",
-        "typescript": "^5.9.3",
-      },
-      "peerDependencies": {
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-      },
-    },
     "packages/config": {
       "name": "@repo/config",
       "version": "0.0.0",
@@ -91,6 +72,25 @@
       "devDependencies": {
         "@repo/config": "workspace:*",
         "typescript": "^5.9.3",
+      },
+    },
+    "packages/shared-cms": {
+      "name": "@repo/shared-cms",
+      "version": "0.0.0",
+      "dependencies": {
+        "@repo/ui": "workspace:*",
+        "@storyblok/react": "^4.6.0",
+        "lucide-react": "^0.511.0",
+      },
+      "devDependencies": {
+        "@repo/config": "workspace:*",
+        "@types/react": "^19.1.8",
+        "@types/react-dom": "^19.1.6",
+        "typescript": "^5.9.3",
+      },
+      "peerDependencies": {
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
       },
     },
     "packages/ui": {
@@ -478,11 +478,11 @@
 
     "@repo/auth": ["@repo/auth@workspace:packages/auth"],
 
-    "@repo/cms": ["@repo/cms@workspace:packages/cms"],
-
     "@repo/config": ["@repo/config@workspace:packages/config"],
 
     "@repo/db": ["@repo/db@workspace:packages/db"],
+
+    "@repo/shared-cms": ["@repo/shared-cms@workspace:packages/shared-cms"],
 
     "@repo/ui": ["@repo/ui@workspace:packages/ui"],
 
