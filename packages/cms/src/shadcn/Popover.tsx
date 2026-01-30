@@ -9,7 +9,7 @@ export interface ShadcnPopoverBlok extends SbBlokData {
   trigger_variant?:
     | "default"
     | "destructive"
-    | "outline"
+    | "outline-solid"
     | "secondary"
     | "ghost"
     | "link";
@@ -24,7 +24,7 @@ export function ShadcnPopover({ blok }: { blok: ShadcnPopoverBlok }) {
       <PopoverTrigger asChild>
         <Button
           {...storyblokEditable(blok)}
-          variant={blok.trigger_variant || "outline"}
+          variant={blok.trigger_variant || "outline-solid"}
         >
           {blok.trigger_text}
         </Button>

@@ -1,20 +1,13 @@
 /**
- * App-specific component map
+ * Gateway app-specific component map
  *
- * This file allows you to:
- * 1. Import shared components from @repo/cms
- * 2. Add app-specific components
- * 3. Override shared components if needed
+ * Extends shared @repo/cms components and overrides/adds gateway-specific ones.
+ * The home page and all pages use the gateway Page component from this app.
  */
+import { components as sharedComponents } from "@repo/cms";
+import { Page } from "./Page";
 
-// Re-export the shared components map
-export { components } from "@repo/cms";
-
-// You can also extend with app-specific components:
-// import { components as sharedComponents } from "@repo/cms";
-// import { CustomComponent } from "./CustomComponent";
-//
-// export const components = {
-//   ...sharedComponents,
-//   custom_component: CustomComponent,
-// };
+export const components = {
+  ...sharedComponents,
+  page: Page,
+};

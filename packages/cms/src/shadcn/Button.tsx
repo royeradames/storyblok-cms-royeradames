@@ -9,7 +9,7 @@ export interface ShadcnButtonBlok extends SbBlokData {
   variant?:
     | "default"
     | "destructive"
-    | "outline"
+    | "outline-solid"
     | "secondary"
     | "ghost"
     | "link";

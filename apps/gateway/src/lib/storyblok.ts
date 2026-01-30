@@ -3,7 +3,7 @@ import {
   apiPlugin,
   getStoryblokApi,
 } from "@storyblok/react/rsc";
-import { components } from "@repo/cms";
+import { components } from "@/components/cms";
 
 /**
  * Initialize Storyblok for server-side rendering

@@ -68,7 +68,7 @@ interface StoryblokComponent {
 const buttonVariantOptions: StoryblokOption[] = [
   { value: "default", name: "Default" },
   { value: "destructive", name: "Destructive" },
-  { value: "outline", name: "Outline" },
+  { value: "outline-solid", name: "Outline" },
   { value: "secondary", name: "Secondary" },
   { value: "ghost", name: "Ghost" },
   { value: "link", name: "Link" },
@@ -443,7 +443,7 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "default", name: "Default" },
           { value: "secondary", name: "Secondary" },
           { value: "destructive", name: "Destructive" },
-          { value: "outline", name: "Outline" },
+          { value: "outline-solid", name: "Outline" },
         ],
       },
     },
@@ -1257,7 +1257,7 @@ export const componentDefinitions: StoryblokComponent[] = [
       trigger_variant: {
         type: "option",
         pos: 1,
-        default_value: "outline",
+        default_value: "outline-solid",
         options: buttonVariantOptions,
       },
       content: {

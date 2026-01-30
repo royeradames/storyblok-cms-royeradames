@@ -17,7 +17,7 @@ export function Feature({ blok }: { blok: FeatureBlok }) {
   return (
     <div
       {...storyblokEditable(blok)}
-      className="p-6 rounded-lg border bg-card text-card-foreground shadow-sm"
+      className="p-6 rounded-lg border bg-card text-card-foreground shadow-xs"
     >
       <h3 className="text-lg font-semibold">{blok.name || "Feature"}</h3>
     </div>

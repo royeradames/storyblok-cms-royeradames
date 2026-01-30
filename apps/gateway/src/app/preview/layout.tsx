@@ -12,8 +12,8 @@ export default async function PreviewLayout({
 
   return (
     <StoryblokProvider>
-      <DraftToolbar />
       {children}
+      {/* <DraftToolbar /> */}
     </StoryblokProvider>
   );
 }

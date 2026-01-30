@@ -19,7 +19,7 @@ export interface ShadcnDrawerBlok extends SbBlokData {
   trigger_variant?:
     | "default"
     | "destructive"
-    | "outline"
+    | "outline-solid"
     | "secondary"
     | "ghost"
     | "link";

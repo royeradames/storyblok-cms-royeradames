@@ -18,7 +18,7 @@ export function PresetHeroDefault({ blok }: { blok: PresetHeroDefaultBlok }) {
   return (
     <section
       {...storyblokEditable(blok)}
-      className="min-h-[50vh] flex flex-col justify-center items-center text-center py-20 px-4 bg-gradient-to-b from-background to-muted"
+      className="min-h-[50vh] flex flex-col justify-center items-center text-center py-20 px-4 bg-linear-to-b from-background to-muted"
     >
       <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
         Welcome to Our Platform

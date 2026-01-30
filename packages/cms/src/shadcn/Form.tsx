@@ -12,7 +12,7 @@ export interface ShadcnFormBlok extends SbBlokData {
   submit_variant?:
     | "default"
     | "destructive"
-    | "outline"
+    | "outline-solid"
     | "secondary"
     | "ghost";
   layout?: "vertical" | "horizontal" | "inline";

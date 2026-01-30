@@ -17,7 +17,7 @@ export function Teaser({ blok }: { blok: TeaserBlok }) {
   return (
     <div
       {...storyblokEditable(blok)}
-      className="py-16 px-4 text-center bg-gradient-to-r from-primary/10 to-secondary/10"
+      className="py-16 px-4 text-center bg-linear-to-r from-primary/10 to-secondary/10"
     >
       <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
         {blok.headline || "Welcome"}
