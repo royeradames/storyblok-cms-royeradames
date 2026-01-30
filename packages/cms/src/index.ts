@@ -22,7 +22,7 @@ import { Feature } from "./storyblok/Feature";
 // Component imports for the map
 import { ShadcnSection } from "./shadcn/Section";
 import { ShadcnGrid } from "./shadcn/Grid";
-import { ShadcnFlex } from "./shadcn/Flex";
+import { ShadcnFlex } from "./shadcn/flex/Flex";
 import { ShadcnText } from "./shadcn/Text";
 import { ShadcnRichText } from "./shadcn/RichText";
 import { ShadcnAlert } from "./shadcn/Alert";

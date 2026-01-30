@@ -7,6 +7,13 @@
  * Run `bun run storyblok:seed` to push these to your Storyblok space.
  */
 
+import {
+  directionMap,
+  justifyMap,
+  alignMap,
+  gapMap,
+} from "../shadcn/flex/maps";
+
 // Helper types for Storyblok field definitions
 type StoryblokFieldType =
   | "text"
@@ -87,6 +94,23 @@ const gapOptions: StoryblokOption[] = [
   { value: "md", name: "Medium" },
   { value: "lg", name: "Large" },
 ];
+
+// Flex: Tailwind class options (value = name = class)
+const flexDirectionOptions: StoryblokOption[] = (
+  Object.keys(directionMap) as (keyof typeof directionMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexJustifyOptions: StoryblokOption[] = (
+  Object.keys(justifyMap) as (keyof typeof justifyMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexAlignOptions: StoryblokOption[] = (
+  Object.keys(alignMap) as (keyof typeof alignMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexGapOptions: StoryblokOption[] = (
+  Object.keys(gapMap) as (keyof typeof gapMap)[]
+).map((key) => ({ value: key, name: key }));
 
 const sideOptions: StoryblokOption[] = [
   { value: "top", name: "Top" },
@@ -227,44 +251,25 @@ export const componentDefinitions: StoryblokComponent[] = [
       direction: {
         type: "option",
         pos: 1,
-        default_value: "row",
-        options: [
-          { value: "row", name: "Row" },
-          { value: "column", name: "Column" },
-          { value: "row-reverse", name: "Row Reverse" },
-          { value: "column-reverse", name: "Column Reverse" },
-        ],
+        default_value: "flex-row",
+        options: flexDirectionOptions,
       },
       justify: {
         type: "option",
         pos: 2,
-        default_value: "start",
-        options: [
-          { value: "start", name: "Start" },
-          { value: "center", name: "Center" },
-          { value: "end", name: "End" },
-          { value: "between", name: "Space Between" },
-          { value: "around", name: "Space Around" },
-          { value: "evenly", name: "Space Evenly" },
-        ],
+        default_value: "justify-start",
+        options: flexJustifyOptions,
       },
       align: {
         type: "option",
         pos: 3,
-        default_value: "stretch",
-        options: [
-          { value: "start", name: "Start" },
-          { value: "center", name: "Center" },
-          { value: "end", name: "End" },
-          { value: "stretch", name: "Stretch" },
-          { value: "baseline", name: "Baseline" },
-        ],
+        default_value: "items-stretch",
+        options: flexAlignOptions,
       },
       gap: {
         type: "option",
         pos: 4,
-        default_value: "md",
-        options: gapOptions,
+        options: flexGapOptions,
       },
       wrap: {
         type: "boolean",
