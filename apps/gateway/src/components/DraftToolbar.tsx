@@ -7,7 +7,7 @@ export function DraftToolbar() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-100 border-b-2 border-yellow-400 px-4 py-2">
+    <div className="mb-4 bg-yellow-100 border-b-2 border-yellow-400 px-4 py-2">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Badge variant="secondary" className="bg-yellow-200">
@@ -23,7 +23,9 @@ export function DraftToolbar() {
           </Button>
           <Button size="sm" variant="outline" asChild>
             <a
-              href={`/api/exit-preview?pathname=${encodeURIComponent(pathname)}`}
+              href={`/api/exit-preview?pathname=${encodeURIComponent(
+                pathname,
+              )}`}
             >
               Exit Preview
             </a>
