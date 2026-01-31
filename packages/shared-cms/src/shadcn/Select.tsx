@@ -8,13 +8,16 @@ import {
   SelectTrigger,
   SelectValue,
   Label,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSelectOptionBlok extends SbBlokData {
   value: string;
   label: string;
   disabled?: boolean;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export interface ShadcnSelectBlok extends SbBlokData {
@@ -25,11 +28,15 @@ export interface ShadcnSelectBlok extends SbBlokData {
   default_value?: string;
   disabled?: boolean;
   helper_text?: string;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnSelect({ blok }: { blok: ShadcnSelectBlok }) {
   return (
-    <div {...storyblokEditable(blok)} className="space-y-2">
+    <div
+      {...storyblokEditable(blok)}
+      className={cn("space-y-2", ...buildStyleClasses(blok.styles))}
+    >
       {blok.label && <Label htmlFor={blok.name}>{blok.label}</Label>}
       <Select
         name={blok.name}

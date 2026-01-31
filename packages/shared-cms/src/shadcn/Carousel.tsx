@@ -7,8 +7,10 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCarouselBlok extends SbBlokData {
   items?: SbBlokData[];
@@ -18,6 +20,7 @@ export interface ShadcnCarouselBlok extends SbBlokData {
   autoplay_delay?: number;
   orientation?: "horizontal" | "vertical";
   items_per_view?: "1" | "2" | "3" | "4";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const itemsPerViewMap = {
@@ -38,7 +41,7 @@ export function ShadcnCarousel({ blok }: { blok: ShadcnCarouselBlok }) {
         align: "start",
       }}
       orientation={blok.orientation || "horizontal"}
-      className="w-full"
+      className={cn("w-full", ...buildStyleClasses(blok.styles))}
     >
       <CarouselContent>
         {blok.items?.map((item) => (

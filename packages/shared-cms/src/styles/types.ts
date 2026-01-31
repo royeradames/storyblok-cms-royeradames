@@ -1,5 +1,6 @@
 import type { SbBlokData } from "@storyblok/react";
 import {
+  displayMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -23,6 +24,7 @@ export type BreakpointKey = (typeof BREAKPOINT_ORDER)[number];
  */
 export interface FlexBreakpointOptionsBlok extends SbBlokData {
   breakpoint?: BreakpointKey;
+  display?: keyof typeof displayMap;
   direction?: keyof typeof directionMap;
   justify?: keyof typeof justifyMap;
   align?: keyof typeof alignMap;

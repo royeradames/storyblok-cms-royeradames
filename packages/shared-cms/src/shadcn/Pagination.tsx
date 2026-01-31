@@ -9,8 +9,10 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnPaginationBlok extends SbBlokData {
   total_pages: number;
@@ -18,6 +20,7 @@ export interface ShadcnPaginationBlok extends SbBlokData {
   base_url: string;
   show_ellipsis?: boolean;
   visible_pages?: number;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnPagination({ blok }: { blok: ShadcnPaginationBlok }) {
@@ -34,7 +37,10 @@ export function ShadcnPagination({ blok }: { blok: ShadcnPaginationBlok }) {
   const getPageUrl = (page: number) => `${base_url}?page=${page}`;
 
   return (
-    <Pagination {...storyblokEditable(blok)}>
+    <Pagination
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
       <PaginationContent>
         {current_page > 1 && (
           <PaginationItem>

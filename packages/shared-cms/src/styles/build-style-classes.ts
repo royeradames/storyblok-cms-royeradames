@@ -4,6 +4,7 @@ import {
   type FlexBreakpointOptionsBlok,
 } from "./types";
 import {
+  displayMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -45,6 +46,8 @@ export function buildStyleClasses(
       (opt.breakpoint ?? "base") as BreakpointKey
     );
 
+    if (opt.display && displayMap[opt.display])
+      classes.push(prefix + displayMap[opt.display]);
     if (opt.direction && directionMap[opt.direction])
       classes.push(prefix + directionMap[opt.direction]);
     if (opt.justify && justifyMap[opt.justify])

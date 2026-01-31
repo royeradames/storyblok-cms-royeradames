@@ -1,7 +1,9 @@
 "use client";
 
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
+import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnHeroBlok extends SbBlokData {
   headline: string;
@@ -12,6 +14,7 @@ export interface ShadcnHeroBlok extends SbBlokData {
   };
   cta?: SbBlokData[];
   alignment?: "left" | "center" | "right";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnHero({ blok }: { blok: ShadcnHeroBlok }) {
@@ -26,7 +29,10 @@ export function ShadcnHero({ blok }: { blok: ShadcnHeroBlok }) {
   return (
     <section
       {...storyblokEditable(blok)}
-      className="relative min-h-[60vh] flex flex-col justify-center py-20 px-4"
+      className={cn(
+        "relative min-h-[60vh] flex flex-col justify-center py-20 px-4",
+        ...buildStyleClasses(blok.styles),
+      )}
       style={
         blok.background_image?.filename
           ? {

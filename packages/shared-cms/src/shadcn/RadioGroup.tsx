@@ -1,14 +1,16 @@
 "use client";
 
 import { storyblokEditable } from "@storyblok/react";
-import { RadioGroup, RadioGroupItem, Label } from "@repo/ui";
+import { RadioGroup, RadioGroupItem, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnRadioOptionBlok extends SbBlokData {
   value: string;
   label: string;
   description?: string;
   disabled?: boolean;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export interface ShadcnRadioGroupBlok extends SbBlokData {
@@ -17,11 +19,15 @@ export interface ShadcnRadioGroupBlok extends SbBlokData {
   options: ShadcnRadioOptionBlok[];
   default_value?: string;
   orientation?: "horizontal" | "vertical";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnRadioGroup({ blok }: { blok: ShadcnRadioGroupBlok }) {
   return (
-    <div {...storyblokEditable(blok)} className="space-y-3">
+    <div
+      {...storyblokEditable(blok)}
+      className={cn("space-y-3", ...buildStyleClasses(blok.styles))}
+    >
       {blok.label && <Label className="text-base">{blok.label}</Label>}
       <RadioGroup
         name={blok.name}
@@ -35,7 +41,10 @@ export function ShadcnRadioGroup({ blok }: { blok: ShadcnRadioGroupBlok }) {
         {blok.options?.map((option) => (
           <div
             key={option._uid}
-            className="flex items-start space-x-3"
+            className={cn(
+              "flex items-start space-x-3",
+              ...buildStyleClasses(option.styles),
+            )}
             {...storyblokEditable(option)}
           >
             <RadioGroupItem

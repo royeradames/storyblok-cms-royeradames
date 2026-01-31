@@ -7,14 +7,17 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
   Button,
+  cn,
 } from "@repo/ui";
 import { ChevronsUpDown } from "lucide-react";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCollapsibleBlok extends SbBlokData {
   trigger_text: string;
   content?: SbBlokData[];
   default_open?: boolean;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnCollapsible({ blok }: { blok: ShadcnCollapsibleBlok }) {
@@ -25,7 +28,7 @@ export function ShadcnCollapsible({ blok }: { blok: ShadcnCollapsibleBlok }) {
       {...storyblokEditable(blok)}
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="w-full space-y-2"
+      className={cn("w-full space-y-2", ...buildStyleClasses(blok.styles))}
     >
       <div className="flex items-center justify-between space-x-4">
         <h4 className="text-sm font-semibold">{blok.trigger_text}</h4>

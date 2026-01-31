@@ -3,12 +3,14 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Skeleton, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSkeletonBlok extends SbBlokData {
   variant?: "text" | "circular" | "rectangular" | "card";
   width?: string;
   height?: string;
   lines?: number;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
@@ -16,7 +18,10 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
 
   if (variant === "text") {
     return (
-      <div {...storyblokEditable(blok)} className="space-y-2">
+      <div
+        {...storyblokEditable(blok)}
+        className={cn("space-y-2", ...buildStyleClasses(blok.styles))}
+      >
         {Array.from({ length: lines }).map((_, i) => (
           <Skeleton
             key={i}
@@ -32,7 +37,7 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
     return (
       <Skeleton
         {...storyblokEditable(blok)}
-        className="rounded-full"
+        className={cn("rounded-full", ...buildStyleClasses(blok.styles))}
         style={{ width: width || "40px", height: height || "40px" }}
       />
     );
@@ -40,7 +45,10 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
 
   if (variant === "card") {
     return (
-      <div {...storyblokEditable(blok)} className="space-y-4">
+      <div
+        {...storyblokEditable(blok)}
+        className={cn("space-y-4", ...buildStyleClasses(blok.styles))}
+      >
         <Skeleton className="h-48 w-full rounded-lg" />
         <div className="space-y-2">
           <Skeleton className="h-4 w-3/4" />
@@ -53,6 +61,7 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
   return (
     <Skeleton
       {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
       style={{ width: width || "100%", height: height || "20px" }}
     />
   );

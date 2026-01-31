@@ -1,8 +1,9 @@
 "use client";
 
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
-import { Popover, PopoverContent, PopoverTrigger, Button } from "@repo/ui";
+import { Popover, PopoverContent, PopoverTrigger, Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnPopoverBlok extends SbBlokData {
   trigger_text: string;
@@ -16,10 +17,15 @@ export interface ShadcnPopoverBlok extends SbBlokData {
   content?: SbBlokData[];
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnPopover({ blok }: { blok: ShadcnPopoverBlok }) {
   return (
+    <div
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
     <Popover>
       <PopoverTrigger asChild>
         <Button
@@ -39,5 +45,6 @@ export function ShadcnPopover({ blok }: { blok: ShadcnPopoverBlok }) {
         ))}
       </PopoverContent>
     </Popover>
+    </div>
   );
 }

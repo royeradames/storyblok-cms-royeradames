@@ -6,18 +6,25 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTooltipBlok extends SbBlokData {
   content: string;
   trigger?: SbBlokData[];
   side?: "top" | "right" | "bottom" | "left";
   delay?: number;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnTooltip({ blok }: { blok: ShadcnTooltipBlok }) {
   return (
+    <div
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
     <TooltipProvider delayDuration={blok.delay ?? 200}>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -32,5 +39,6 @@ export function ShadcnTooltip({ blok }: { blok: ShadcnTooltipBlok }) {
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+    </div>
   );
 }

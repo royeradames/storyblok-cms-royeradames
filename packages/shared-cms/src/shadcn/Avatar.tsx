@@ -1,8 +1,9 @@
 "use client";
 
 import { storyblokEditable } from "@storyblok/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
+import { Avatar, AvatarFallback, AvatarImage, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAvatarBlok extends SbBlokData {
   image?: {
@@ -11,6 +12,7 @@ export interface ShadcnAvatarBlok extends SbBlokData {
   };
   fallback?: string;
   size?: "sm" | "md" | "lg" | "xl";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const sizeMap = {
@@ -28,7 +30,10 @@ export function ShadcnAvatar({ blok }: { blok: ShadcnAvatarBlok }) {
     blok.fallback || blok.image?.alt?.charAt(0)?.toUpperCase() || "?";
 
   return (
-    <Avatar {...storyblokEditable(blok)} className={size}>
+    <Avatar
+      {...storyblokEditable(blok)}
+      className={cn(size, ...buildStyleClasses(blok.styles))}
+    >
       {blok.image?.filename && (
         <AvatarImage src={blok.image.filename} alt={blok.image.alt || ""} />
       )}

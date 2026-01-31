@@ -49,6 +49,14 @@ export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
         restrict_components: true,
         component_whitelist: [SHARED_WHITELIST_PLACEHOLDER],
       },
+      styles: {
+        type: "bloks",
+        pos: 1,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["shared_flex_breakpoint_options"],
+      },
     },
   },
 ];

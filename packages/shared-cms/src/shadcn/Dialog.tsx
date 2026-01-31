@@ -11,8 +11,10 @@ import {
   DialogTitle,
   DialogTrigger,
   Button,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnDialogBlok extends SbBlokData {
   trigger_text: string;
@@ -28,6 +30,7 @@ export interface ShadcnDialogBlok extends SbBlokData {
   content?: SbBlokData[];
   footer?: SbBlokData[];
   size?: "sm" | "md" | "lg" | "xl" | "full";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const sizeMap = {
@@ -43,7 +46,11 @@ export function ShadcnDialog({ blok }: { blok: ShadcnDialogBlok }) {
   const size = sizeMap[blok.size || "md"];
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <div
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
+      <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           {...storyblokEditable(blok)}
@@ -71,5 +78,6 @@ export function ShadcnDialog({ blok }: { blok: ShadcnDialogBlok }) {
         )}
       </DialogContent>
     </Dialog>
+    </div>
   );
 }

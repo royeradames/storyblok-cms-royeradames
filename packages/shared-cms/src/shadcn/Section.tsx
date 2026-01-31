@@ -3,6 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSectionBlok extends SbBlokData {
   content?: SbBlokData[];
@@ -10,6 +11,7 @@ export interface ShadcnSectionBlok extends SbBlokData {
   background?: "default" | "muted" | "primary" | "secondary";
   max_width?: "sm" | "md" | "lg" | "xl" | "full";
   id?: string;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const paddingMap = {
@@ -44,7 +46,7 @@ export function ShadcnSection({ blok }: { blok: ShadcnSectionBlok }) {
     <section
       {...storyblokEditable(blok)}
       id={blok.id}
-      className={cn(padding, background, "w-full")}
+      className={cn(padding, background, "w-full", ...buildStyleClasses(blok.styles))}
     >
       <div className={cn(maxWidth, "mx-auto px-4")}>
         {blok.content?.map((nestedBlok) => (

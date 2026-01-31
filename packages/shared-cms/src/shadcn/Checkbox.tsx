@@ -1,8 +1,9 @@
 "use client";
 
 import { storyblokEditable } from "@storyblok/react";
-import { Checkbox, Label } from "@repo/ui";
+import { Checkbox, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCheckboxBlok extends SbBlokData {
   name: string;
@@ -10,11 +11,15 @@ export interface ShadcnCheckboxBlok extends SbBlokData {
   description?: string;
   default_checked?: boolean;
   disabled?: boolean;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnCheckbox({ blok }: { blok: ShadcnCheckboxBlok }) {
   return (
-    <div {...storyblokEditable(blok)} className="flex items-start space-x-3">
+    <div
+      {...storyblokEditable(blok)}
+      className={cn("flex items-start space-x-3", ...buildStyleClasses(blok.styles))}
+    >
       <Checkbox
         id={blok.name}
         name={blok.name}

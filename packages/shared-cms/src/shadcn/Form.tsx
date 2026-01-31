@@ -3,6 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnFormBlok extends SbBlokData {
   action?: string;
@@ -16,6 +17,7 @@ export interface ShadcnFormBlok extends SbBlokData {
     | "secondary"
     | "ghost";
   layout?: "vertical" | "horizontal" | "inline";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const layoutMap = {
@@ -30,7 +32,7 @@ export function ShadcnForm({ blok }: { blok: ShadcnFormBlok }) {
       {...storyblokEditable(blok)}
       action={blok.action}
       method={blok.method || "post"}
-      className="space-y-6"
+      className={cn("space-y-6", ...buildStyleClasses(blok.styles))}
     >
       <div className={cn(layoutMap[blok.layout || "vertical"])}>
         {blok.fields?.map((field) => (

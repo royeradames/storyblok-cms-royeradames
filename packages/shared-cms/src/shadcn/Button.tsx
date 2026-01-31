@@ -1,8 +1,9 @@
 "use client";
 
 import { storyblokEditable } from "@storyblok/react";
-import { Button } from "@repo/ui";
+import { Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnButtonBlok extends SbBlokData {
   label: string;
@@ -18,6 +19,7 @@ export interface ShadcnButtonBlok extends SbBlokData {
     url: string;
     target?: string;
   };
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
@@ -40,7 +42,12 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
   }
 
   return (
-    <Button {...storyblokEditable(blok)} variant={variant} size={size}>
+    <Button
+      {...storyblokEditable(blok)}
+      variant={variant}
+      size={size}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
       {blok.label}
     </Button>
   );

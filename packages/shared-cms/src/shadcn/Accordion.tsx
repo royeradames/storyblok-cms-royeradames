@@ -1,6 +1,7 @@
 "use client";
 
 import { storyblokEditable } from "@storyblok/react";
+import { cn } from "@repo/ui";
 import {
   Accordion,
   AccordionContent,
@@ -8,11 +9,13 @@ import {
   AccordionTrigger,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAccordionItemBlok extends SbBlokData {
   title: string;
   content: string;
   value?: string;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export interface ShadcnAccordionBlok extends SbBlokData {
@@ -20,6 +23,7 @@ export interface ShadcnAccordionBlok extends SbBlokData {
   type?: "single" | "multiple";
   collapsible?: boolean;
   default_value?: string;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnAccordion({ blok }: { blok: ShadcnAccordionBlok }) {
@@ -31,11 +35,13 @@ export function ShadcnAccordion({ blok }: { blok: ShadcnAccordionBlok }) {
         {...storyblokEditable(blok)}
         type="multiple"
         defaultValue={blok.default_value ? [blok.default_value] : undefined}
+        className={cn(...buildStyleClasses(blok.styles))}
       >
         {blok.items?.map((item, index) => (
           <AccordionItem
             key={item._uid}
             value={item.value || `item-${index}`}
+            className={cn(...buildStyleClasses(item.styles))}
             {...storyblokEditable(item)}
           >
             <AccordionTrigger>{item.title}</AccordionTrigger>
@@ -52,11 +58,13 @@ export function ShadcnAccordion({ blok }: { blok: ShadcnAccordionBlok }) {
       type="single"
       collapsible={blok.collapsible ?? true}
       defaultValue={blok.default_value}
+      className={cn(...buildStyleClasses(blok.styles))}
     >
       {blok.items?.map((item, index) => (
         <AccordionItem
           key={item._uid}
           value={item.value || `item-${index}`}
+          className={cn(...buildStyleClasses(item.styles))}
           {...storyblokEditable(item)}
         >
           <AccordionTrigger>{item.title}</AccordionTrigger>

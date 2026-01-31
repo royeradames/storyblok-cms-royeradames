@@ -1,7 +1,9 @@
 "use client";
 
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
+import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "@repo/shared-cms/styles";
 
 /**
  * Gateway-specific Page component
@@ -11,11 +13,15 @@ import type { SbBlokData } from "@storyblok/react";
  */
 export interface PageBlok extends SbBlokData {
   body?: SbBlokData[];
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function Page({ blok }: { blok: PageBlok }) {
   return (
-    <main {...storyblokEditable(blok)} className="container mx-auto">
+    <main
+      {...storyblokEditable(blok)}
+      className={cn("container mx-auto", ...buildStyleClasses(blok.styles))}
+    >
       {blok.body?.map((nestedBlok) => (
         <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
       ))}

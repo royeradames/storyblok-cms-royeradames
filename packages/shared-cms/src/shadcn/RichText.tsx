@@ -7,10 +7,12 @@ import {
 } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
   prose_size?: "sm" | "base" | "lg";
+  styles?: FlexBreakpointOptionsBlok[];
   component: string;
   _uid: string;
 }
@@ -32,6 +34,7 @@ export function ShadcnRichText({ blok }: { blok: ShadcnRichTextBlok }) {
         "prose-headings:font-semibold",
         "prose-a:text-primary prose-a:underline",
         "max-w-none",
+        ...buildStyleClasses(blok.styles),
       )}
       dangerouslySetInnerHTML={{ __html: html || "" }}
     />

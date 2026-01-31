@@ -13,6 +13,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
+  displayMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -52,6 +53,7 @@ function main() {
   const all: string[] = [];
 
   const maps = [
+    displayMap,
     directionMap,
     justifyMap,
     alignMap,

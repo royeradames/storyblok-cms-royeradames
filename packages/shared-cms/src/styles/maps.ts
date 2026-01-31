@@ -1,7 +1,21 @@
 /**
- * Tailwind class maps for layout/styles (flex, gap, padding, margin, sizing).
+ * Tailwind class maps for layout/styles (display, flex, gap, padding, margin, sizing).
  * Shared by styles builder and Flex. Reference: tailwindcss.com docs.
  */
+
+/** Display (opt-in; no default. Container always uses flex in code.) */
+export const displayMap = {
+  block: "block",
+  "inline-block": "inline-block",
+  inline: "inline",
+  flex: "flex",
+  "inline-flex": "inline-flex",
+  grid: "grid",
+  "inline-grid": "inline-grid",
+  table: "table",
+  "table-cell": "table-cell",
+  hidden: "hidden",
+} as const;
 
 /** Flex Direction */
 export const directionMap = {

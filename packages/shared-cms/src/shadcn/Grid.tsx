@@ -3,12 +3,14 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnGridBlok extends SbBlokData {
   items?: SbBlokData[];
   columns?: "1" | "2" | "3" | "4" | "5" | "6";
   columns_mobile?: "1" | "2";
   gap?: "none" | "sm" | "md" | "lg";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const columnsMap = {
@@ -40,7 +42,7 @@ export function ShadcnGrid({ blok }: { blok: ShadcnGridBlok }) {
   return (
     <div
       {...storyblokEditable(blok)}
-      className={cn("grid", columnsMobile, columns, gap)}
+      className={cn("grid", columnsMobile, columns, gap, ...buildStyleClasses(blok.styles))}
     >
       {blok.items?.map((nestedBlok) => (
         <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />

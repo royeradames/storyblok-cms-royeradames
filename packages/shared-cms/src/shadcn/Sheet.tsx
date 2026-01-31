@@ -11,8 +11,10 @@ import {
   SheetTitle,
   SheetTrigger,
   Button,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSheetBlok extends SbBlokData {
   trigger_text: string;
@@ -28,12 +30,17 @@ export interface ShadcnSheetBlok extends SbBlokData {
   content?: SbBlokData[];
   footer?: SbBlokData[];
   side?: "top" | "right" | "bottom" | "left";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnSheet({ blok }: { blok: ShadcnSheetBlok }) {
   const [open, setOpen] = useState(false);
 
   return (
+    <div
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
@@ -64,5 +71,6 @@ export function ShadcnSheet({ blok }: { blok: ShadcnSheetBlok }) {
         )}
       </SheetContent>
     </Sheet>
+    </div>
   );
 }

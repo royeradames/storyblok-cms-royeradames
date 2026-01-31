@@ -9,17 +9,21 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTableCellBlok extends SbBlokData {
   content: string;
   is_header?: boolean;
   align?: "left" | "center" | "right";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export interface ShadcnTableRowBlok extends SbBlokData {
   cells: ShadcnTableCellBlok[];
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export interface ShadcnTableBlok extends SbBlokData {
@@ -27,11 +31,15 @@ export interface ShadcnTableBlok extends SbBlokData {
   headers?: ShadcnTableCellBlok[];
   rows?: ShadcnTableRowBlok[];
   striped?: boolean;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnTable({ blok }: { blok: ShadcnTableBlok }) {
   return (
-    <Table {...storyblokEditable(blok)}>
+    <Table
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
       {blok.caption && <TableCaption>{blok.caption}</TableCaption>}
       {blok.headers && blok.headers.length > 0 && (
         <TableHeader>
@@ -39,7 +47,10 @@ export function ShadcnTable({ blok }: { blok: ShadcnTableBlok }) {
             {blok.headers.map((header) => (
               <TableHead
                 key={header._uid}
-                className={`text-${header.align || "left"}`}
+                className={cn(
+                  `text-${header.align || "left"}`,
+                  ...buildStyleClasses(header.styles),
+                )}
                 {...storyblokEditable(header)}
               >
                 {header.content}
@@ -52,13 +63,19 @@ export function ShadcnTable({ blok }: { blok: ShadcnTableBlok }) {
         {blok.rows?.map((row, rowIndex) => (
           <TableRow
             key={row._uid}
-            className={blok.striped && rowIndex % 2 === 1 ? "bg-muted/50" : ""}
+            className={cn(
+              blok.striped && rowIndex % 2 === 1 ? "bg-muted/50" : "",
+              ...buildStyleClasses(row.styles),
+            )}
             {...storyblokEditable(row)}
           >
             {row.cells?.map((cell) => (
               <TableCell
                 key={cell._uid}
-                className={`text-${cell.align || "left"}`}
+                className={cn(
+                  `text-${cell.align || "left"}`,
+                  ...buildStyleClasses(cell.styles),
+                )}
                 {...storyblokEditable(cell)}
               >
                 {cell.content}

@@ -8,6 +8,7 @@
  */
 
 import {
+  displayMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -104,6 +105,10 @@ const gapOptions: StoryblokOption[] = [
 ];
 
 // Flex: Tailwind class options (value = name = class)
+const flexDisplayOptions: StoryblokOption[] = (
+  Object.keys(displayMap) as (keyof typeof displayMap)[]
+).map((key) => ({ value: key, name: key }));
+
 const flexDirectionOptions: StoryblokOption[] = (
   Object.keys(directionMap) as (keyof typeof directionMap)[]
 ).map((key) => ({ value: key, name: key }));
@@ -239,6 +244,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 4,
         description: "HTML ID for anchor links",
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -282,6 +295,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "md",
         options: gapOptions,
       },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -298,74 +319,81 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexBreakpointOptions,
         description: "Tailwind breakpoint (base = no prefix)",
       },
-      direction: {
+      display: {
         type: "option",
         pos: 1,
-        default_value: "flex-row",
+        options: flexDisplayOptions,
+        description:
+          "Display (opt-in, no default). Only applied when set. Container always uses flex in code.",
+      },
+      direction: {
+        type: "option",
+        pos: 2,
         options: flexDirectionOptions,
+        description: "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       justify: {
         type: "option",
-        pos: 2,
-        default_value: "justify-start",
+        pos: 3,
         options: flexJustifyOptions,
+        description: "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       align: {
         type: "option",
-        pos: 3,
-        default_value: "items-stretch",
+        pos: 4,
         options: flexAlignOptions,
+        description: "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       gap: {
         type: "option",
-        pos: 4,
+        pos: 5,
         options: flexGapOptions,
       },
       wrap: {
         type: "boolean",
-        pos: 5,
+        pos: 6,
         default_value: false,
         description: "Allow items to wrap to next line",
       },
       width: {
         type: "option",
-        pos: 6,
+        pos: 7,
         options: flexWidthOptions,
       },
       height: {
         type: "option",
-        pos: 7,
+        pos: 8,
         options: flexHeightOptions,
       },
       min_width: {
         type: "option",
-        pos: 8,
+        pos: 9,
         options: flexMinWidthOptions,
       },
       max_width: {
         type: "option",
-        pos: 9,
+        pos: 10,
         options: flexMaxWidthOptions,
       },
       min_height: {
         type: "option",
-        pos: 10,
+        pos: 11,
         options: flexMinHeightOptions,
       },
       max_height: {
         type: "option",
-        pos: 11,
+        pos: 12,
         options: flexMaxHeightOptions,
       },
       padding: {
         type: "option",
-        pos: 12,
+        pos: 13,
         options: flexPaddingOptions,
         description: "Padding",
       },
       margin: {
         type: "option",
-        pos: 13,
+        pos: 14,
         options: flexMarginOptions,
         description: "Margin",
       },
@@ -486,6 +514,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "left",
         options: alignOptions,
       },
+      styles: {
+        type: "bloks",
+        pos: 6,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -511,6 +547,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "base", name: "Base" },
           { value: "lg", name: "Large" },
         ],
+      },
+      styles: {
+        type: "bloks",
+        pos: 2,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -554,6 +598,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "none", name: "None" },
         ],
       },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -581,6 +633,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "destructive", name: "Destructive" },
           { value: "outline-solid", name: "Outline" },
         ],
+      },
+      styles: {
+        type: "bloks",
+        pos: 2,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -620,6 +680,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 4,
         description: "Optional CSS class (e.g. Tailwind)",
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -641,6 +709,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 1,
         default_value: true,
         description: "If true, separator is purely decorative",
+      },
+      styles: {
+        type: "bloks",
+        pos: 2,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -682,6 +758,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 3,
         description: "Value of initially open item",
       },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -709,6 +793,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "text",
         pos: 2,
         description: "Unique value for this item",
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -738,6 +830,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "horizontal",
         options: orientationOptions,
       },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -766,6 +866,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 2,
         description: "Tab content",
       },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -782,6 +890,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["shadcn_breadcrumb_item"],
         description: "Breadcrumb items",
+      },
+      styles: {
+        type: "bloks",
+        pos: 1,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -810,6 +926,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 2,
         default_value: false,
         description: "Is this the current page?",
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -855,6 +979,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         max_value: 10,
         description: "Number of visible page links",
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -889,6 +1021,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "lg", name: "Large" },
           { value: "xl", name: "Extra Large" },
         ],
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -947,6 +1087,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 4,
         description: "Image caption",
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1004,6 +1152,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "4", name: "4 Items" },
         ],
       },
+      styles: {
+        type: "bloks",
+        pos: 7,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1035,6 +1191,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "bloks",
         pos: 2,
         description: "Content inside the aspect ratio container",
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1077,6 +1241,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         max_value: 10,
         description: "Number of lines (text variant)",
       },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1115,6 +1287,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         allow_target_blank: true,
         description: "Button link",
       },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1145,6 +1325,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "bloks",
         pos: 3,
         description: "Card footer (usually buttons)",
+      },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1186,6 +1374,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 4,
         default_value: "center",
         options: alignOptions,
+      },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1243,6 +1439,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "full", name: "Full Width" },
         ],
       },
+      styles: {
+        type: "bloks",
+        pos: 7,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1293,6 +1497,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "right",
         options: sideOptions,
       },
+      styles: {
+        type: "bloks",
+        pos: 7,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1337,6 +1549,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 5,
         description: "Drawer footer",
       },
+      styles: {
+        type: "bloks",
+        pos: 6,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1371,6 +1591,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: 200,
         min_value: 0,
         description: "Delay before showing (ms)",
+      },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1411,6 +1639,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: 100,
         min_value: 0,
         description: "Delay before hiding (ms)",
+      },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1455,6 +1691,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "end", name: "End" },
         ],
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1482,6 +1726,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 2,
         default_value: false,
         description: "Start expanded",
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1532,6 +1784,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "md", name: "Medium" },
           { value: "lg", name: "Large" },
         ],
+      },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1586,6 +1846,14 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "horizontal", name: "Horizontal (2 columns)" },
           { value: "inline", name: "Inline" },
         ],
+      },
+      styles: {
+        type: "bloks",
+        pos: 6,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1644,6 +1912,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 6,
         description: "Helper text below input",
       },
+      styles: {
+        type: "bloks",
+        pos: 7,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1694,6 +1970,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 6,
         description: "Helper text",
       },
+      styles: {
+        type: "bloks",
+        pos: 7,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1733,6 +2017,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 4,
         default_value: false,
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1770,6 +2062,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "boolean",
         pos: 4,
         default_value: false,
+      },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1811,6 +2111,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "vertical",
         options: orientationOptions,
       },
+      styles: {
+        type: "bloks",
+        pos: 5,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1843,6 +2151,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "boolean",
         pos: 3,
         default_value: false,
+      },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1894,6 +2210,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 6,
         description: "Helper text",
       },
+      styles: {
+        type: "bloks",
+        pos: 7,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -1921,6 +2245,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "boolean",
         pos: 2,
         default_value: false,
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -1980,6 +2312,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 7,
         default_value: false,
       },
+      styles: {
+        type: "bloks",
+        pos: 8,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -2015,6 +2355,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: false,
         description: "Striped rows",
       },
+      styles: {
+        type: "bloks",
+        pos: 4,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
+      },
     },
   },
 
@@ -2031,6 +2379,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["shadcn_table_cell"],
         description: "Row cells",
+      },
+      styles: {
+        type: "bloks",
+        pos: 1,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },
@@ -2060,6 +2416,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 2,
         default_value: "left",
         options: alignOptions,
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },

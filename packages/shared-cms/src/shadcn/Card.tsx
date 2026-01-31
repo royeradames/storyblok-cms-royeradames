@@ -8,19 +8,25 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCardBlok extends SbBlokData {
   title?: string;
   description?: string;
   content?: SbBlokData[];
   footer?: SbBlokData[];
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnCard({ blok }: { blok: ShadcnCardBlok }) {
   return (
-    <Card {...storyblokEditable(blok)}>
+    <Card
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
       {(blok.title || blok.description) && (
         <CardHeader>
           {blok.title && <CardTitle>{blok.title}</CardTitle>}

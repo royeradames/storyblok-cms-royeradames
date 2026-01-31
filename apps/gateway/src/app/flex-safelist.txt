@@ -1,3 +1,5 @@
+2xl:block
+2xl:flex
 2xl:flex-col
 2xl:flex-col-reverse
 2xl:flex-row
@@ -108,6 +110,7 @@
 2xl:gap-y-9
 2xl:gap-y-96
 2xl:gap-y-px
+2xl:grid
 2xl:h-0
 2xl:h-0.5
 2xl:h-1
@@ -167,6 +170,11 @@
 2xl:h-px
 2xl:h-screen
 2xl:h-svh
+2xl:hidden
+2xl:inline
+2xl:inline-block
+2xl:inline-flex
+2xl:inline-grid
 2xl:items-baseline
 2xl:items-center
 2xl:items-end
@@ -856,6 +864,8 @@
 2xl:py-9
 2xl:py-96
 2xl:py-px
+2xl:table
+2xl:table-cell
 2xl:w-0
 2xl:w-0.5
 2xl:w-1
@@ -926,6 +936,8 @@
 2xl:w-px
 2xl:w-screen
 2xl:w-svw
+block
+flex
 flex-col
 flex-col-reverse
 flex-row
@@ -1036,6 +1048,7 @@ gap-y-80
 gap-y-9
 gap-y-96
 gap-y-px
+grid
 h-0
 h-0.5
 h-1
@@ -1095,6 +1108,11 @@ h-min
 h-px
 h-screen
 h-svh
+hidden
+inline
+inline-block
+inline-flex
+inline-grid
 items-baseline
 items-center
 items-end
@@ -1108,6 +1126,8 @@ justify-evenly
 justify-normal
 justify-start
 justify-stretch
+lg:block
+lg:flex
 lg:flex-col
 lg:flex-col-reverse
 lg:flex-row
@@ -1218,6 +1238,7 @@ lg:gap-y-80
 lg:gap-y-9
 lg:gap-y-96
 lg:gap-y-px
+lg:grid
 lg:h-0
 lg:h-0.5
 lg:h-1
@@ -1277,6 +1298,11 @@ lg:h-min
 lg:h-px
 lg:h-screen
 lg:h-svh
+lg:hidden
+lg:inline
+lg:inline-block
+lg:inline-flex
+lg:inline-grid
 lg:items-baseline
 lg:items-center
 lg:items-end
@@ -1966,6 +1992,8 @@ lg:py-80
 lg:py-9
 lg:py-96
 lg:py-px
+lg:table
+lg:table-cell
 lg:w-0
 lg:w-0.5
 lg:w-1
@@ -2208,6 +2236,8 @@ mb-80
 mb-9
 mb-96
 mb-px
+md:block
+md:flex
 md:flex-col
 md:flex-col-reverse
 md:flex-row
@@ -2318,6 +2348,7 @@ md:gap-y-80
 md:gap-y-9
 md:gap-y-96
 md:gap-y-px
+md:grid
 md:h-0
 md:h-0.5
 md:h-1
@@ -2377,6 +2408,11 @@ md:h-min
 md:h-px
 md:h-screen
 md:h-svh
+md:hidden
+md:inline
+md:inline-block
+md:inline-flex
+md:inline-grid
 md:items-baseline
 md:items-center
 md:items-end
@@ -3066,6 +3102,8 @@ md:py-80
 md:py-9
 md:py-96
 md:py-px
+md:table
+md:table-cell
 md:w-0
 md:w-0.5
 md:w-1
@@ -3640,6 +3678,8 @@ py-80
 py-9
 py-96
 py-px
+sm:block
+sm:flex
 sm:flex-col
 sm:flex-col-reverse
 sm:flex-row
@@ -3750,6 +3790,7 @@ sm:gap-y-80
 sm:gap-y-9
 sm:gap-y-96
 sm:gap-y-px
+sm:grid
 sm:h-0
 sm:h-0.5
 sm:h-1
@@ -3809,6 +3850,11 @@ sm:h-min
 sm:h-px
 sm:h-screen
 sm:h-svh
+sm:hidden
+sm:inline
+sm:inline-block
+sm:inline-flex
+sm:inline-grid
 sm:items-baseline
 sm:items-center
 sm:items-end
@@ -4498,6 +4544,8 @@ sm:py-80
 sm:py-9
 sm:py-96
 sm:py-px
+sm:table
+sm:table-cell
 sm:w-0
 sm:w-0.5
 sm:w-1
@@ -4568,6 +4616,8 @@ sm:w-min
 sm:w-px
 sm:w-screen
 sm:w-svw
+table
+table-cell
 w-0
 w-0.5
 w-1
@@ -4638,6 +4688,8 @@ w-min
 w-px
 w-screen
 w-svw
+xl:block
+xl:flex
 xl:flex-col
 xl:flex-col-reverse
 xl:flex-row
@@ -4748,6 +4800,7 @@ xl:gap-y-80
 xl:gap-y-9
 xl:gap-y-96
 xl:gap-y-px
+xl:grid
 xl:h-0
 xl:h-0.5
 xl:h-1
@@ -4807,6 +4860,11 @@ xl:h-min
 xl:h-px
 xl:h-screen
 xl:h-svh
+xl:hidden
+xl:inline
+xl:inline-block
+xl:inline-flex
+xl:inline-grid
 xl:items-baseline
 xl:items-center
 xl:items-end
@@ -5496,6 +5554,8 @@ xl:py-80
 xl:py-9
 xl:py-96
 xl:py-px
+xl:table
+xl:table-cell
 xl:w-0
 xl:w-0.5
 xl:w-1

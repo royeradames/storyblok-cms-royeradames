@@ -1,8 +1,9 @@
 "use client";
 
 import { storyblokEditable } from "@storyblok/react";
-import { Switch, Label } from "@repo/ui";
+import { Switch, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSwitchBlok extends SbBlokData {
   name: string;
@@ -10,13 +11,17 @@ export interface ShadcnSwitchBlok extends SbBlokData {
   description?: string;
   default_checked?: boolean;
   disabled?: boolean;
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnSwitch({ blok }: { blok: ShadcnSwitchBlok }) {
   return (
     <div
       {...storyblokEditable(blok)}
-      className="flex items-center justify-between"
+      className={cn(
+        "flex items-center justify-between",
+        ...buildStyleClasses(blok.styles),
+      )}
     >
       <div className="space-y-0.5">
         <Label htmlFor={blok.name}>{blok.label}</Label>

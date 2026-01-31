@@ -3,6 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTextBlok extends SbBlokData {
   content: string;
@@ -11,6 +12,7 @@ export interface ShadcnTextBlok extends SbBlokData {
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "default" | "muted" | "primary" | "destructive";
   align?: "left" | "center" | "right";
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 const sizeMap = {
@@ -55,6 +57,7 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         weightMap[blok.weight || "normal"],
         colorMap[blok.color || "default"],
         alignMap[blok.align || "left"],
+        ...buildStyleClasses(blok.styles),
       )}
     >
       {blok.content}

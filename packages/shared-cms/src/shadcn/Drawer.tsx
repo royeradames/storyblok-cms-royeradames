@@ -11,8 +11,10 @@ import {
   DrawerTitle,
   DrawerTrigger,
   Button,
+  cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
+import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnDrawerBlok extends SbBlokData {
   trigger_text: string;
@@ -27,12 +29,17 @@ export interface ShadcnDrawerBlok extends SbBlokData {
   description?: string;
   content?: SbBlokData[];
   footer?: SbBlokData[];
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 export function ShadcnDrawer({ blok }: { blok: ShadcnDrawerBlok }) {
   const [open, setOpen] = useState(false);
 
   return (
+    <div
+      {...storyblokEditable(blok)}
+      className={cn(...buildStyleClasses(blok.styles))}
+    >
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button
@@ -65,5 +72,6 @@ export function ShadcnDrawer({ blok }: { blok: ShadcnDrawerBlok }) {
         </div>
       </DrawerContent>
     </Drawer>
+    </div>
   );
 }
