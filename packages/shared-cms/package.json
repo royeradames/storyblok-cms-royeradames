@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./flex-maps": "./src/shadcn/flex/maps.ts",
+    "./styles": "./src/styles/index.ts",
     "./shadcn": "./src/shadcn/index.ts",
     "./presets": "./src/presets/index.ts",
     "./dev": "./src/dev/index.ts",

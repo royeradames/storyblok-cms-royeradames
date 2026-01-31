@@ -1,8 +1,10 @@
 #!/usr/bin/env bun
 /**
  * Generate Flex composite class safelist for Tailwind v4.
- * Ensures all breakpoint-prefixed Flex classes (sm:, md:, lg:, xl:, 2xl:) are
- * included at build time so CMS-driven Flex options work without purging.
+ * Ensures all Flex classes are included at build time so CMS-driven options
+ * work without purging:
+ * - Breakpoint-prefixed (sm:, md:, lg:, xl:, 2xl:)
+ * - Base (unprefixed) so breakpoint "base" works (e.g. py-32, p-3)
  *
  * Usage (from apps/gateway): bun run scripts/generate-flex-safelist.ts
  * Output: src/app/flex-safelist.txt (one class per line)
@@ -42,28 +44,43 @@ function collectPrefixedClasses(
   return classes;
 }
 
+function collectBaseClasses(map: Record<string, string>): string[] {
+  return Object.values(map) as string[];
+}
+
 function main() {
   const all: string[] = [];
 
-  // Direction, justify, align, gap, width, height, min/max width/height
-  all.push(...collectPrefixedClasses(directionMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(justifyMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(alignMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(gapMap as Record<string, string>));
+  const maps = [
+    directionMap,
+    justifyMap,
+    alignMap,
+    gapMap,
+    widthMap,
+    heightMap,
+    minWidthMap,
+    maxWidthMap,
+    minHeightMap,
+    maxHeightMap,
+    paddingMap,
+    marginMap,
+  ] as Record<string, string>[];
 
-  // flex-wrap (no map, single class)
+  // Prefixed (sm:, md:, ...) for all maps
+  for (const map of maps) {
+    all.push(...collectPrefixedClasses(map));
+  }
+
+  // Base (unprefixed) so breakpoint "base" works
+  for (const map of maps) {
+    all.push(...collectBaseClasses(map));
+  }
+
+  // flex-wrap: prefixed and base
   for (const bp of BREAKPOINTS) {
     all.push(`${bp}:flex-wrap`);
   }
-
-  all.push(...collectPrefixedClasses(widthMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(heightMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(minWidthMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(maxWidthMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(minHeightMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(maxHeightMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(paddingMap as Record<string, string>));
-  all.push(...collectPrefixedClasses(marginMap as Record<string, string>));
+  all.push("flex-wrap");
 
   const unique = [...new Set(all)];
   const content = unique.sort().join("\n") + "\n";
