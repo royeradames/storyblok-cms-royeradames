@@ -1264,10 +1264,21 @@ export const componentDefinitions: StoryblokComponent[] = [
     preview_field: "label",
     schema: {
       label: {
-        type: "text",
+        type: "bloks",
         pos: 0,
-        required: true,
-        description: "Button text",
+        description:
+          "Button content (text, icons, images, etc.). Order = left to right.",
+        restrict_components: true,
+        component_whitelist: [
+          "shadcn_text",
+          "shadcn_richtext",
+          "shadcn_icon",
+          "shadcn_image",
+          "shadcn_badge",
+          "shadcn_avatar",
+          "shadcn_separator",
+          "shadcn_skeleton",
+        ],
       },
       variant: {
         type: "option",

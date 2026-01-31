@@ -1,12 +1,13 @@
 "use client";
 
-import { storyblokEditable } from "@storyblok/react";
+import Link from "next/link";
+import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnButtonBlok extends SbBlokData {
-  label: string;
+  label?: SbBlokData[];
   variant?:
     | "default"
     | "destructive"
@@ -22,11 +23,44 @@ export interface ShadcnButtonBlok extends SbBlokData {
   styles?: FlexBreakpointOptionsBlok[];
 }
 
+function ButtonLabel({ blok }: { blok: ShadcnButtonBlok }) {
+  const labelBloks = blok.label ?? [];
+  if (labelBloks.length > 0 && typeof labelBloks.map === "function") {
+    return (
+      <>
+        {labelBloks.map((b) => (
+          <StoryblokComponent blok={b} key={b._uid} />
+        ))}
+      </>
+    );
+  }
+  return <>Button</>;
+}
+
 export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
   const variant = blok.variant || "default";
   const size = blok.size || "default";
+  const labelContent = <ButtonLabel blok={blok} />;
 
   if (blok.link?.url) {
+    const href = blok.link.url;
+    const isInternal = href.startsWith("/");
+    const target = blok.link.target ?? (isInternal ? "_self" : "_blank");
+    const rel = target === "_blank" ? "noopener noreferrer" : undefined;
+
+    if (isInternal) {
+      return (
+        <Button
+          {...storyblokEditable(blok)}
+          variant={variant}
+          size={size}
+          asChild
+        >
+          <Link href={href}>{labelContent}</Link>
+        </Button>
+      );
+    }
+
     return (
       <Button
         {...storyblokEditable(blok)}
@@ -34,8 +68,8 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
         size={size}
         asChild
       >
-        <a href={blok.link.url} target={blok.link.target || "_self"}>
-          {blok.label}
+        <a href={href} target={target} rel={rel}>
+          {labelContent}
         </a>
       </Button>
     );
@@ -48,7 +82,7 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
       size={size}
       className={cn(...buildStyleClasses(blok.styles))}
     >
-      {blok.label}
+      {labelContent}
     </Button>
   );
 }
