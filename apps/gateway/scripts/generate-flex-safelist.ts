@@ -21,6 +21,8 @@ import {
   maxWidthMap,
   minHeightMap,
   maxHeightMap,
+  paddingMap,
+  marginMap,
 } from "@repo/shared-cms/flex-maps";
 
 const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
@@ -60,6 +62,8 @@ function main() {
   all.push(...collectPrefixedClasses(maxWidthMap as Record<string, string>));
   all.push(...collectPrefixedClasses(minHeightMap as Record<string, string>));
   all.push(...collectPrefixedClasses(maxHeightMap as Record<string, string>));
+  all.push(...collectPrefixedClasses(paddingMap as Record<string, string>));
+  all.push(...collectPrefixedClasses(marginMap as Record<string, string>));
 
   const unique = [...new Set(all)];
   const content = unique.sort().join("\n") + "\n";

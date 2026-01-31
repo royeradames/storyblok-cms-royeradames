@@ -18,6 +18,8 @@ import {
   maxWidthMap,
   minHeightMap,
   maxHeightMap,
+  paddingMap,
+  marginMap,
 } from "../shadcn/flex/maps";
 
 // Helper types for Storyblok field definitions
@@ -141,6 +143,14 @@ const flexMinHeightOptions: StoryblokOption[] = (
 const flexMaxHeightOptions: StoryblokOption[] = (
   Object.keys(maxHeightMap) as (keyof typeof maxHeightMap)[]
 ).map((key) => ({ value: key, name: key }));
+
+const flexPaddingOptions: StoryblokOption[] = (
+  Object.keys(paddingMap) as (keyof typeof paddingMap)[]
+).map((key) => ({ value: String(key), name: String(key) }));
+
+const flexMarginOptions: StoryblokOption[] = (
+  Object.keys(marginMap) as (keyof typeof marginMap)[]
+).map((key) => ({ value: String(key), name: String(key) }));
 
 const flexBreakpointOptions: StoryblokOption[] = [
   { value: "base", name: "Base" },
@@ -346,6 +356,18 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "option",
         pos: 11,
         options: flexMaxHeightOptions,
+      },
+      padding: {
+        type: "option",
+        pos: 12,
+        options: flexPaddingOptions,
+        description: "Padding",
+      },
+      margin: {
+        type: "option",
+        pos: 13,
+        options: flexMarginOptions,
+        description: "Margin",
       },
     },
   },

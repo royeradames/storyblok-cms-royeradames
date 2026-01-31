@@ -14,6 +14,8 @@ import {
   maxWidthMap,
   minHeightMap,
   maxHeightMap,
+  paddingMap,
+  marginMap,
 } from "./maps";
 
 const BREAKPOINT_ORDER = ["base", "sm", "md", "lg", "xl", "2xl"] as const;
@@ -32,6 +34,8 @@ export interface FlexBreakpointOptionsBlok extends SbBlokData {
   max_width?: keyof typeof maxWidthMap;
   min_height?: keyof typeof minHeightMap;
   max_height?: keyof typeof maxHeightMap;
+  padding?: keyof typeof paddingMap;
+  margin?: keyof typeof marginMap;
 }
 
 export interface ShadcnFlexBlok extends SbBlokData {
@@ -79,6 +83,10 @@ function buildClassesFromOptions(
       classes.push(prefix + minHeightMap[opt.min_height]);
     if (opt.max_height && maxHeightMap[opt.max_height])
       classes.push(prefix + maxHeightMap[opt.max_height]);
+    if (opt.padding && paddingMap[opt.padding])
+      classes.push(prefix + paddingMap[opt.padding]);
+    if (opt.margin && marginMap[opt.margin])
+      classes.push(prefix + marginMap[opt.margin]);
   }
 
   return classes;

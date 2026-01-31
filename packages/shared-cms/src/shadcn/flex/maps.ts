@@ -312,3 +312,28 @@ export const maxHeightMap = {
   "max-h-max": "max-h-max",
   "max-h-fit": "max-h-fit",
 } as const;
+
+/** Padding - https://v3.tailwindcss.com/docs/padding */
+export const paddingMap = {
+  ...Object.fromEntries(spacingScale.map((s) => [`p-${s}`, `p-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`px-${s}`, `px-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`py-${s}`, `py-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`pt-${s}`, `pt-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`pr-${s}`, `pr-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`pb-${s}`, `pb-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`pl-${s}`, `pl-${s}`])),
+} as const;
+
+/** Margin - https://v3.tailwindcss.com/docs/margin */
+export const marginMap = {
+  ...Object.fromEntries(spacingScale.map((s) => [`m-${s}`, `m-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`mx-${s}`, `mx-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`my-${s}`, `my-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`mt-${s}`, `mt-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`mr-${s}`, `mr-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`mb-${s}`, `mb-${s}`])),
+  ...Object.fromEntries(spacingScale.map((s) => [`ml-${s}`, `ml-${s}`])),
+  "m-auto": "m-auto",
+  "mx-auto": "mx-auto",
+  "my-auto": "my-auto",
+} as const;
