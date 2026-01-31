@@ -36,6 +36,7 @@ type SchemaField = {
   default_value?: string | number | boolean;
   description?: string;
   options?: { value: string; name: string }[];
+  max_choices?: number;
   restrict_components?: boolean;
   component_whitelist?: string[];
   allow_target_blank?: boolean;
@@ -81,6 +82,9 @@ function transformToStoryblokFormat(
       }
       if (fieldDef.description) field.description = fieldDef.description;
       if (fieldDef.options?.length) field.options = fieldDef.options;
+      if (fieldDef.type === "options" && fieldDef.max_choices != null) {
+        field.max_choices = fieldDef.max_choices;
+      }
 
       if (fieldDef.type === "bloks" && fieldDef.restrict_components) {
         field.restrict_type = "";

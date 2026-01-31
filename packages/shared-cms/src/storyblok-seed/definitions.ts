@@ -49,6 +49,8 @@ interface StoryblokField {
   required?: boolean;
   default_value?: string | number | boolean;
   options?: StoryblokOption[];
+  // For options (multi-select) field type
+  max_choices?: number;
   // For bloks field type
   restrict_type?: string;
   restrict_components?: boolean;
@@ -321,10 +323,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         description: "Tailwind breakpoint (base = no prefix)",
       },
       padding: {
-        type: "option",
+        type: "options",
         pos: 13,
         options: flexPaddingOptions,
-        description: "Padding",
+        max_choices: 4,
+        description:
+          "Box model: pick 0–4 padding directions (e.g. px-4, pb-6).",
       },
       display: {
         type: "option",
@@ -396,10 +400,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexMaxHeightOptions,
       },
       margin: {
-        type: "option",
+        type: "options",
         pos: 14,
         options: flexMarginOptions,
-        description: "Margin",
+        max_choices: 4,
+        description:
+          "Box model: pick 0–4 margin directions (e.g. mx-auto, mt-4).",
       },
     },
   },

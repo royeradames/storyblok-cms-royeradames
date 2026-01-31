@@ -68,10 +68,29 @@ export function buildStyleClasses(
       classes.push(prefix + minHeightMap[opt.min_height]);
     if (opt.max_height && maxHeightMap[opt.max_height])
       classes.push(prefix + maxHeightMap[opt.max_height]);
-    if (opt.padding && paddingMap[opt.padding])
-      classes.push(prefix + paddingMap[opt.padding]);
-    if (opt.margin && marginMap[opt.margin])
-      classes.push(prefix + marginMap[opt.margin]);
+    // Padding: 0–4 directions (multi-options array) or legacy single key
+    const paddingKeys = Array.isArray(opt.padding)
+      ? (opt.padding as (keyof typeof paddingMap)[]).filter(
+          (v) => v && v in paddingMap
+        )
+      : opt.padding && opt.padding in paddingMap
+        ? [opt.padding as keyof typeof paddingMap]
+        : [];
+    paddingKeys.forEach((key) => {
+      if (paddingMap[key]) classes.push(prefix + paddingMap[key]);
+    });
+
+    // Margin: 0–4 directions (multi-options array) or legacy single key
+    const marginKeys = Array.isArray(opt.margin)
+      ? (opt.margin as (keyof typeof marginMap)[]).filter(
+          (v) => v && v in marginMap
+        )
+      : opt.margin && opt.margin in marginMap
+        ? [opt.margin as keyof typeof marginMap]
+        : [];
+    marginKeys.forEach((key) => {
+      if (marginMap[key]) classes.push(prefix + marginMap[key]);
+    });
   }
 
   return classes;

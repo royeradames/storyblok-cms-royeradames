@@ -21,6 +21,7 @@ export type BreakpointKey = (typeof BREAKPOINT_ORDER)[number];
 /**
  * Breakpoint style options (flex layout + padding/margin/sizing).
  * Used by Flex Container and can be reused by other components with a "styles" field.
+ * Padding and margin: multi-options (0–4 directions, box model) or legacy single key.
  */
 export interface FlexBreakpointOptionsBlok extends SbBlokData {
   breakpoint?: BreakpointKey;
@@ -36,6 +37,8 @@ export interface FlexBreakpointOptionsBlok extends SbBlokData {
   max_width?: keyof typeof maxWidthMap;
   min_height?: keyof typeof minHeightMap;
   max_height?: keyof typeof maxHeightMap;
-  padding?: keyof typeof paddingMap;
-  margin?: keyof typeof marginMap;
+  /** 0–4 padding directions (multi-options) or legacy single key */
+  padding?: (keyof typeof paddingMap)[] | keyof typeof paddingMap;
+  /** 0–4 margin directions (multi-options) or legacy single key */
+  margin?: (keyof typeof marginMap)[] | keyof typeof marginMap;
 }
