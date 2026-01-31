@@ -373,8 +373,8 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
-    name: "shadcn_flex",
-    display_name: "Flex Container",
+    name: "shadcn_container",
+    display_name: "Container",
     is_root: false,
     is_nestable: true,
     icon: "block-arrow-pointer",
@@ -382,11 +382,22 @@ export const componentDefinitions: StoryblokComponent[] = [
       items: {
         type: "bloks",
         pos: 0,
-        description: "Items in the flex container",
+        description: "Items in the container",
+      },
+      container_as: {
+        type: "option",
+        pos: 1,
+        default_value: "div",
+        options: [
+          { value: "div", name: "Div" },
+          { value: "section", name: "Section" },
+          { value: "article", name: "Article" },
+        ],
+        description: "HTML wrapper element",
       },
       styles: {
         type: "bloks",
-        pos: 1,
+        pos: 2,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

@@ -10,20 +10,35 @@ import {
 
 export type { FlexBreakpointOptionsBlok } from "../../styles";
 
-export interface ShadcnFlexBlok extends SbBlokData {
+export type ContainerElement = "div" | "section" | "article";
+
+export interface ShadcnContainerBlok extends SbBlokData {
   items?: SbBlokData[];
   styles?: FlexBreakpointOptionsBlok[];
+  container_as?: ContainerElement;
 }
 
-export function ShadcnFlex({ blok }: { blok: ShadcnFlexBlok }) {
+const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
+  div: "div",
+  section: "section",
+  article: "article",
+};
+
+export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
   const styleClasses = buildStyleClasses(blok.styles);
   const hasStyles = styleClasses.length > 0;
   const fallbackClasses = !hasStyles
     ? ["flex-row", "justify-start", "items-stretch"]
     : [];
 
+  const as =
+    blok.container_as && ELEMENT_MAP[blok.container_as]
+      ? blok.container_as
+      : "div";
+  const Component = as;
+
   return (
-    <div
+    <Component
       {...storyblokEditable(blok)}
       className={cn(
         "flex",
@@ -35,6 +50,6 @@ export function ShadcnFlex({ blok }: { blok: ShadcnFlexBlok }) {
       {blok.items?.map((nestedBlok) => (
         <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
       ))}
-    </div>
+    </Component>
   );
 }

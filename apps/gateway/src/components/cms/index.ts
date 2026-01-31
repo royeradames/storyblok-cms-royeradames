@@ -1,7 +1,7 @@
 /**
  * Gateway app-specific component map
  *
- * Shared components are registered with "shared_" prefix (e.g. shared_shadcn_flex).
+ * Shared components are registered with "shared_" prefix (e.g. shared_shadcn_container).
  * App-specific components have no prefix (e.g. page).
  */
 import { components as sharedComponents } from "@repo/shared-cms";

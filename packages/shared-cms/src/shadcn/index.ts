@@ -2,10 +2,10 @@
 export { ShadcnSection, type ShadcnSectionBlok } from "./Section";
 export { ShadcnGrid, type ShadcnGridBlok } from "./Grid";
 export {
-  ShadcnFlex,
-  type ShadcnFlexBlok,
+  ShadcnContainer,
+  type ShadcnContainerBlok,
   type FlexBreakpointOptionsBlok,
-} from "./flex/Flex";
+} from "./container/Container";
 
 // Typography & Content
 export { ShadcnText, type ShadcnTextBlok } from "./Text";

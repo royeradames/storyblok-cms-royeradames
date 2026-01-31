@@ -180,125 +180,33 @@
       "icon": "block-table"
     },
     {
-      "name": "shadcn_flex",
-      "display_name": "Flex Container",
+      "name": "shadcn_container",
+      "display_name": "Container",
       "is_root": false,
       "is_nestable": true,
       "schema": {
         "items": {
           "type": "bloks",
           "pos": 0,
-          "description": "Items in the flex container"
+          "description": "Items in the container"
         },
-        "direction": {
+        "container_as": {
           "type": "option",
           "pos": 1,
-          "default_value": "row",
+          "default_value": "div",
           "options": [
-            {
-              "value": "row",
-              "name": "Row"
-            },
-            {
-              "value": "column",
-              "name": "Column"
-            },
-            {
-              "value": "row-reverse",
-              "name": "Row Reverse"
-            },
-            {
-              "value": "column-reverse",
-              "name": "Column Reverse"
-            }
-          ]
+            { "value": "div", "name": "Div" },
+            { "value": "section", "name": "Section" },
+            { "value": "article", "name": "Article" }
+          ],
+          "description": "HTML wrapper element"
         },
-        "justify": {
-          "type": "option",
+        "styles": {
+          "type": "bloks",
           "pos": 2,
-          "default_value": "start",
-          "options": [
-            {
-              "value": "start",
-              "name": "Start"
-            },
-            {
-              "value": "center",
-              "name": "Center"
-            },
-            {
-              "value": "end",
-              "name": "End"
-            },
-            {
-              "value": "between",
-              "name": "Space Between"
-            },
-            {
-              "value": "around",
-              "name": "Space Around"
-            },
-            {
-              "value": "evenly",
-              "name": "Space Evenly"
-            }
-          ]
-        },
-        "align": {
-          "type": "option",
-          "pos": 3,
-          "default_value": "stretch",
-          "options": [
-            {
-              "value": "start",
-              "name": "Start"
-            },
-            {
-              "value": "center",
-              "name": "Center"
-            },
-            {
-              "value": "end",
-              "name": "End"
-            },
-            {
-              "value": "stretch",
-              "name": "Stretch"
-            },
-            {
-              "value": "baseline",
-              "name": "Baseline"
-            }
-          ]
-        },
-        "gap": {
-          "type": "option",
-          "pos": 4,
-          "default_value": "md",
-          "options": [
-            {
-              "value": "none",
-              "name": "None"
-            },
-            {
-              "value": "sm",
-              "name": "Small"
-            },
-            {
-              "value": "md",
-              "name": "Medium"
-            },
-            {
-              "value": "lg",
-              "name": "Large"
-            }
-          ]
-        },
-        "wrap": {
-          "type": "boolean",
-          "pos": 5,
-          "default_value": "false",
-          "description": "Allow items to wrap to next line"
+          "description": "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+          "restrict_components": true,
+          "component_whitelist": ["flex_breakpoint_options"]
         }
       },
       "icon": "block-arrow-pointer"

@@ -22,7 +22,7 @@ import { Feature } from "./storyblok/Feature";
 // Component imports for the map
 import { ShadcnSection } from "./shadcn/Section";
 import { ShadcnGrid } from "./shadcn/Grid";
-import { ShadcnFlex } from "./shadcn/flex/Flex";
+import { ShadcnContainer } from "./shadcn/container/Container";
 import { ShadcnText } from "./shadcn/Text";
 import { ShadcnRichText } from "./shadcn/RichText";
 import { ShadcnAlert } from "./shadcn/Alert";
@@ -89,7 +89,7 @@ export const components = {
   // === Layout ===
   shadcn_section: ShadcnSection,
   shadcn_grid: ShadcnGrid,
-  shadcn_flex: ShadcnFlex,
+  shadcn_container: ShadcnContainer,
 
   // === Typography & Content ===
   shadcn_text: ShadcnText,
