@@ -13,9 +13,10 @@ export type { FlexBreakpointOptionsBlok } from "../../styles";
 export type ContainerElement = "div" | "section" | "article";
 
 export interface ShadcnContainerBlok extends SbBlokData {
+  name?: string;
+  container_as?: ContainerElement;
   items?: SbBlokData[];
   styles?: FlexBreakpointOptionsBlok[];
-  container_as?: ContainerElement;
 }
 
 const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
@@ -40,6 +41,7 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
   return (
     <Component
       {...storyblokEditable(blok)}
+      {...(blok.name && { "data-name": blok.name })}
       className={cn(
         "flex",
         ...fallbackClasses,

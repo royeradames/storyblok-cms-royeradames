@@ -379,10 +379,10 @@ export const componentDefinitions: StoryblokComponent[] = [
     is_nestable: true,
     icon: "block-arrow-pointer",
     schema: {
-      items: {
-        type: "bloks",
+      name: {
+        type: "text",
         pos: 0,
-        description: "Items in the container",
+        description: "Sets data-name attribute on the container (e.g. for testing or hooks)",
       },
       container_as: {
         type: "option",
@@ -395,9 +395,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         ],
         description: "HTML wrapper element",
       },
-      styles: {
+      items: {
         type: "bloks",
         pos: 2,
+        description: "Items in the container",
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
