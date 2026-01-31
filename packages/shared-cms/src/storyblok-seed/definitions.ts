@@ -12,6 +12,12 @@ import {
   justifyMap,
   alignMap,
   gapMap,
+  widthMap,
+  heightMap,
+  minWidthMap,
+  maxWidthMap,
+  minHeightMap,
+  maxHeightMap,
 } from "../shadcn/flex/maps";
 
 // Helper types for Storyblok field definitions
@@ -111,6 +117,39 @@ const flexAlignOptions: StoryblokOption[] = (
 const flexGapOptions: StoryblokOption[] = (
   Object.keys(gapMap) as (keyof typeof gapMap)[]
 ).map((key) => ({ value: key, name: key }));
+
+const flexWidthOptions: StoryblokOption[] = (
+  Object.keys(widthMap) as (keyof typeof widthMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexHeightOptions: StoryblokOption[] = (
+  Object.keys(heightMap) as (keyof typeof heightMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexMinWidthOptions: StoryblokOption[] = (
+  Object.keys(minWidthMap) as (keyof typeof minWidthMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexMaxWidthOptions: StoryblokOption[] = (
+  Object.keys(maxWidthMap) as (keyof typeof maxWidthMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexMinHeightOptions: StoryblokOption[] = (
+  Object.keys(minHeightMap) as (keyof typeof minHeightMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexMaxHeightOptions: StoryblokOption[] = (
+  Object.keys(maxHeightMap) as (keyof typeof maxHeightMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexBreakpointOptions: StoryblokOption[] = [
+  { value: "base", name: "Base" },
+  { value: "sm", name: "SM (640px)" },
+  { value: "md", name: "MD (768px)" },
+  { value: "lg", name: "LG (1024px)" },
+  { value: "xl", name: "XL (1280px)" },
+  { value: "2xl", name: "2XL (1536px)" },
+];
 
 const sideOptions: StoryblokOption[] = [
   { value: "top", name: "Top" },
@@ -237,16 +276,17 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
-    name: "shadcn_flex",
-    display_name: "Flex Container",
+    name: "flex_breakpoint_options",
+    display_name: "Flex Breakpoint Options",
     is_root: false,
-    is_nestable: true,
-    icon: "block-arrow-pointer",
+    is_nestable: false,
     schema: {
-      items: {
-        type: "bloks",
+      breakpoint: {
+        type: "option",
         pos: 0,
-        description: "Items in the flex container",
+        default_value: "base",
+        options: flexBreakpointOptions,
+        description: "Tailwind breakpoint (base = no prefix)",
       },
       direction: {
         type: "option",
@@ -276,6 +316,59 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 5,
         default_value: false,
         description: "Allow items to wrap to next line",
+      },
+      width: {
+        type: "option",
+        pos: 6,
+        options: flexWidthOptions,
+      },
+      height: {
+        type: "option",
+        pos: 7,
+        options: flexHeightOptions,
+      },
+      min_width: {
+        type: "option",
+        pos: 8,
+        options: flexMinWidthOptions,
+      },
+      max_width: {
+        type: "option",
+        pos: 9,
+        options: flexMaxWidthOptions,
+      },
+      min_height: {
+        type: "option",
+        pos: 10,
+        options: flexMinHeightOptions,
+      },
+      max_height: {
+        type: "option",
+        pos: 11,
+        options: flexMaxHeightOptions,
+      },
+    },
+  },
+
+  {
+    name: "shadcn_flex",
+    display_name: "Flex Container",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-arrow-pointer",
+    schema: {
+      items: {
+        type: "bloks",
+        pos: 0,
+        description: "Items in the flex container",
+      },
+      options: {
+        type: "bloks",
+        pos: 1,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["flex_breakpoint_options"],
       },
     },
   },

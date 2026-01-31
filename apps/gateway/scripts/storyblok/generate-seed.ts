@@ -135,12 +135,14 @@ function main() {
     const schema = { ...comp.schema };
     for (const key of Object.keys(schema)) {
       const field = schema[key];
+      if (!field) continue;
       if (
         field.type === "bloks" &&
         field.component_whitelist?.includes(SHARED_WHITELIST_PLACEHOLDER)
       ) {
         schema[key] = {
           ...field,
+          type: field.type,
           component_whitelist: [...sharedPrefixedNames],
         };
       }

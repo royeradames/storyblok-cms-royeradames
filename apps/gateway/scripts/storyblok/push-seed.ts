@@ -5,7 +5,12 @@
  * Loads STORYBLOK_SPACE_ID and STORYBLOK_PERSONAL_ACCESS_TOKEN from the app .env
  * (apps/gateway/.env). No fallback – both must be set.
  *
- * Usage (from apps/gateway): bun run storyblok:seed:push
+ * Usage (from apps/gateway):
+ *   bun run storyblok:seed:push                    # push all components
+ *   bun run storyblok:seed:push -- shared_shadcn_flex,shared_flex_breakpoint_options  # push only these
+ *   STORYBLOK_SEED_FILTER=shared_shadcn_flex,shared_flex_breakpoint_options bun run storyblok:seed:push
+ *
+ * Filter: env STORYBLOK_SEED_FILTER or CLI args (comma-separated component names). If set, only those components are created/updated.
  * Reads: apps/gateway/.storyblok-seed.json
  */
 
@@ -15,6 +20,25 @@ import * as path from "path";
 
 // Load app .env (apps/gateway/.env)
 config({ path: path.join(process.cwd(), ".env") });
+
+function parseFilter(): Set<string> | null {
+  const envFilter = process.env.STORYBLOK_SEED_FILTER;
+  const args = process.argv.slice(2);
+  const cliArg = args.find((a) => a === "--filter" || a === "-f");
+  const cliValueIndex = args.indexOf(cliArg ?? "") + 1;
+  const cliValue =
+    cliArg && args[cliValueIndex] && !args[cliValueIndex].startsWith("-")
+      ? args[cliValueIndex]
+      : null;
+  const positional = args.find((a) => !a.startsWith("-") && a !== cliValue);
+  const filterStr = cliValue ?? positional ?? envFilter ?? null;
+  if (!filterStr) return null;
+  const names = filterStr
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return names.length ? new Set(names) : null;
+}
 
 const SPACE_ID = process.env.STORYBLOK_SPACE_ID;
 const TOKEN = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
@@ -55,7 +79,7 @@ async function fetchExistingComponents(): Promise<
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch existing components: ${response.status} ${response.statusText}`,
+      `Failed to fetch existing components: ${response.status} ${response.statusText}`
     );
   }
 
@@ -80,14 +104,14 @@ async function createComponent(component: StoryblokComponent): Promise<void> {
   if (!response.ok) {
     const error = await response.text();
     throw new Error(
-      `Failed to create ${component.name}: ${response.status} - ${error}`,
+      `Failed to create ${component.name}: ${response.status} - ${error}`
     );
   }
 }
 
 async function updateComponent(
   id: number,
-  component: StoryblokComponent,
+  component: StoryblokComponent
 ): Promise<void> {
   const response = await fetch(
     `${API_BASE}/spaces/${SPACE_ID}/components/${id}`,
@@ -98,13 +122,13 @@ async function updateComponent(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ component }),
-    },
+    }
   );
 
   if (!response.ok) {
     const error = await response.text();
     throw new Error(
-      `Failed to update ${component.name}: ${response.status} - ${error}`,
+      `Failed to update ${component.name}: ${response.status} - ${error}`
     );
   }
 }
@@ -133,9 +157,36 @@ async function main() {
   const seedData = JSON.parse(fs.readFileSync(SEED_FILE, "utf-8")) as {
     components: StoryblokComponent[];
   };
-  const components = seedData.components;
+  const allComponents = seedData.components;
 
-  console.log(`📄 Loaded ${components.length} components`);
+  const filter = parseFilter();
+  const components = filter
+    ? allComponents.filter((c) => filter.has(c.name))
+    : allComponents;
+
+  if (filter && components.length === 0) {
+    console.error("❌ No components in seed file match the filter.");
+    console.error("   Filter:", [...filter].join(", "));
+    process.exit(1);
+  }
+
+  if (filter) {
+    const missing = [...filter].filter(
+      (name) => !allComponents.some((c) => c.name === name)
+    );
+    if (missing.length > 0) {
+      console.warn(
+        "⚠️  Names in filter not found in seed file:",
+        missing.join(", ")
+      );
+    }
+  }
+
+  console.log(
+    `📄 Loaded ${allComponents.length} components${
+      filter ? ` (filter: ${components.length})` : ""
+    }`
+  );
   console.log(`🎯 Space: ${SPACE_ID}\n`);
 
   const existingComponents = await fetchExistingComponents();
@@ -151,12 +202,16 @@ async function main() {
 
     try {
       if (existing) {
-        process.stdout.write(`${progress} Updating: ${component.display_name}...`);
+        process.stdout.write(
+          `${progress} Updating: ${component.display_name}...`
+        );
         await updateComponent(existing.id, component);
         console.log(" ✅");
         updated++;
       } else {
-        process.stdout.write(`${progress} Creating: ${component.display_name}...`);
+        process.stdout.write(
+          `${progress} Creating: ${component.display_name}...`
+        );
         await createComponent(component);
         console.log(" ✅");
         created++;
