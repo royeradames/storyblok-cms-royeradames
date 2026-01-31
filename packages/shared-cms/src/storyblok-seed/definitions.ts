@@ -320,6 +320,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexBreakpointOptions,
         description: "Tailwind breakpoint (base = no prefix)",
       },
+      padding: {
+        type: "option",
+        pos: 13,
+        options: flexPaddingOptions,
+        description: "Padding",
+      },
       display: {
         type: "option",
         pos: 1,
@@ -331,19 +337,22 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "option",
         pos: 2,
         options: flexDirectionOptions,
-        description: "Only applied when set (opt-in). Container uses its own defaults when empty.",
+        description:
+          "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       justify: {
         type: "option",
         pos: 3,
         options: flexJustifyOptions,
-        description: "Only applied when set (opt-in). Container uses its own defaults when empty.",
+        description:
+          "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       align: {
         type: "option",
         pos: 4,
         options: flexAlignOptions,
-        description: "Only applied when set (opt-in). Container uses its own defaults when empty.",
+        description:
+          "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       gap: {
         type: "option",
@@ -386,12 +395,6 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 12,
         options: flexMaxHeightOptions,
       },
-      padding: {
-        type: "option",
-        pos: 13,
-        options: flexPaddingOptions,
-        description: "Padding",
-      },
       margin: {
         type: "option",
         pos: 14,
@@ -411,7 +414,8 @@ export const componentDefinitions: StoryblokComponent[] = [
       name: {
         type: "text",
         pos: 0,
-        description: "Sets data-name attribute on the container (e.g. for testing or hooks)",
+        description:
+          "Sets data-name attribute on the container (e.g. for testing or hooks)",
       },
       container_as: {
         type: "option",
@@ -1331,14 +1335,22 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 1,
         description: "Card title (e.g. Text or Button component)",
         restrict_components: true,
-        component_whitelist: ["shadcn_text", "shadcn_richtext", "shadcn_button"],
+        component_whitelist: [
+          "shadcn_text",
+          "shadcn_richtext",
+          "shadcn_button",
+        ],
       },
       description: {
         type: "bloks",
         pos: 2,
         description: "Card description (e.g. Text or Button component)",
         restrict_components: true,
-        component_whitelist: ["shadcn_text", "shadcn_richtext", "shadcn_button"],
+        component_whitelist: [
+          "shadcn_text",
+          "shadcn_richtext",
+          "shadcn_button",
+        ],
       },
       content: {
         type: "bloks",
