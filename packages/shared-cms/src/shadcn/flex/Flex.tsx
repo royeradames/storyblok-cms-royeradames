@@ -40,7 +40,7 @@ export interface FlexBreakpointOptionsBlok extends SbBlokData {
 
 export interface ShadcnFlexBlok extends SbBlokData {
   items?: SbBlokData[];
-  options?: FlexBreakpointOptionsBlok[];
+  styles?: FlexBreakpointOptionsBlok[];
 }
 
 function getBreakpointPrefix(breakpoint: BreakpointKey): string {
@@ -93,13 +93,15 @@ function buildClassesFromOptions(
 }
 
 export function ShadcnFlex({ blok }: { blok: ShadcnFlexBlok }) {
-  const hasOptions = blok.options && blok.options.length > 0;
+  // Support both "styles" (new) and "options" (legacy) until content is re-saved
+  const styleBloks = blok.styles ?? (blok as SbBlokData & { options?: FlexBreakpointOptionsBlok[] }).options ?? [];
+  const hasStyles = styleBloks.length > 0;
 
-  const optionClasses = hasOptions
-    ? buildClassesFromOptions(blok.options as FlexBreakpointOptionsBlok[])
+  const styleClasses = hasStyles
+    ? buildClassesFromOptions(styleBloks as FlexBreakpointOptionsBlok[])
     : [];
 
-  const fallbackClasses = !hasOptions
+  const fallbackClasses = !hasStyles
     ? ["flex-row", "justify-start", "items-stretch"]
     : [];
 
@@ -109,7 +111,7 @@ export function ShadcnFlex({ blok }: { blok: ShadcnFlexBlok }) {
       className={cn(
         "flex",
         ...fallbackClasses,
-        ...optionClasses,
+        ...styleClasses,
         (blok as SbBlokData & { class_name?: string }).class_name
       )}
     >

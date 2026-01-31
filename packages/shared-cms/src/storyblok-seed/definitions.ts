@@ -384,7 +384,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 0,
         description: "Items in the flex container",
       },
-      options: {
+      styles: {
         type: "bloks",
         pos: 1,
         description:
