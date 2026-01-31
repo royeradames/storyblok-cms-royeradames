@@ -12,6 +12,7 @@ export { ShadcnText, type ShadcnTextBlok } from "./Text";
 export { ShadcnRichText, type ShadcnRichTextBlok } from "./RichText";
 export { ShadcnAlert, type ShadcnAlertBlok } from "./Alert";
 export { ShadcnBadge, type ShadcnBadgeBlok } from "./Badge";
+export { ShadcnIcon, type ShadcnIconBlok } from "./Icon";
 export { ShadcnSeparator, type ShadcnSeparatorBlok } from "./Separator";
 
 // Navigation

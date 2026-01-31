@@ -548,6 +548,44 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
+    name: "shadcn_icon",
+    display_name: "Icon",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-image",
+    preview_field: "name",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description: "Lucide icon name (e.g. camera, alert-circle, info)",
+      },
+      size: {
+        type: "number",
+        pos: 1,
+        default_value: 24,
+        description: "Icon size in pixels",
+      },
+      color: {
+        type: "text",
+        pos: 2,
+        description: "Icon color (e.g. currentColor, #333)",
+      },
+      stroke_width: {
+        type: "number",
+        pos: 3,
+        description: "Stroke width",
+      },
+      class_name: {
+        type: "text",
+        pos: 4,
+        description: "Optional CSS class (e.g. Tailwind)",
+      },
+    },
+  },
+
+  {
     name: "shadcn_separator",
     display_name: "Separator",
     is_root: false,

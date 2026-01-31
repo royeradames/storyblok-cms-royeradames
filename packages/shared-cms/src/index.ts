@@ -27,6 +27,7 @@ import { ShadcnText } from "./shadcn/Text";
 import { ShadcnRichText } from "./shadcn/RichText";
 import { ShadcnAlert } from "./shadcn/Alert";
 import { ShadcnBadge } from "./shadcn/Badge";
+import { ShadcnIcon } from "./shadcn/Icon";
 import { ShadcnSeparator } from "./shadcn/Separator";
 import { ShadcnAccordion } from "./shadcn/Accordion";
 import { ShadcnTabs } from "./shadcn/Tabs";
@@ -95,6 +96,7 @@ export const components = {
   shadcn_rich_text: ShadcnRichText,
   shadcn_alert: ShadcnAlert,
   shadcn_badge: ShadcnBadge,
+  shadcn_icon: ShadcnIcon,
   shadcn_separator: ShadcnSeparator,
 
   // === Navigation ===
