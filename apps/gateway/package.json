@@ -19,6 +19,7 @@
     "storyblok:seed:generate": "bun scripts/storyblok/generate-seed.ts",
     "storyblok:seed:push": "bun scripts/storyblok/push-seed.ts",
     "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push",
+    "storyblok:migrate-flex-options-to-styles": "bun scripts/storyblok/migrate-flex-options-to-styles.ts",
     "flex:safelist": "bun scripts/generate-flex-safelist.ts"
   },
   "dependencies": {
