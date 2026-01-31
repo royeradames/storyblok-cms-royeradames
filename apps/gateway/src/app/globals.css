@@ -3,6 +3,9 @@
 
 @config "../../tailwind.config.ts";
 
+/* Flex composite classes (breakpoint-prefixed) so CMS-driven Flex options work at build time */
+@source "./flex-safelist.txt";
+
 @custom-variant dark (&:is(.dark *));
 
 /* shadcn/ui v4 theming with OKLCH colors */

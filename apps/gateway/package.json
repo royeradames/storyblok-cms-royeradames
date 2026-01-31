@@ -18,7 +18,8 @@
     "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
     "storyblok:seed:generate": "bun scripts/storyblok/generate-seed.ts",
     "storyblok:seed:push": "bun scripts/storyblok/push-seed.ts",
-    "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push"
+    "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push",
+    "flex:safelist": "bun scripts/generate-flex-safelist.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

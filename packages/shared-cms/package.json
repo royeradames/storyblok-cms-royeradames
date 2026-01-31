@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
+    "./flex-maps": "./src/shadcn/flex/maps.ts",
     "./shadcn": "./src/shadcn/index.ts",
     "./presets": "./src/presets/index.ts",
     "./dev": "./src/dev/index.ts",
