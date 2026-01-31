@@ -53,11 +53,12 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
     <Element
       {...storyblokEditable(blok)}
       className={cn(
+        "text-wrap",
         sizeMap[blok.size || "base"],
         weightMap[blok.weight || "normal"],
         colorMap[blok.color || "default"],
         alignMap[blok.align || "left"],
-        ...buildStyleClasses(blok.styles),
+        ...buildStyleClasses(blok.styles)
       )}
     >
       {blok.content}

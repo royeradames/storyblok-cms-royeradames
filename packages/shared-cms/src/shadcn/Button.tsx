@@ -15,7 +15,7 @@ export interface ShadcnButtonBlok extends SbBlokData {
     | "secondary"
     | "ghost"
     | "link";
-  size?: "default" | "sm" | "lg" | "icon";
+  size?: "default" | "sm" | "lg" | "icon" | "dynamic";
   link?: {
     url: string;
     target?: string;

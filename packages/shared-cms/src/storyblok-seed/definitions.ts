@@ -95,6 +95,7 @@ const buttonSizeOptions: StoryblokOption[] = [
   { value: "sm", name: "Small" },
   { value: "lg", name: "Large" },
   { value: "icon", name: "Icon" },
+  { value: "dynamic", name: "Dynamic" },
 ];
 
 const gapOptions: StoryblokOption[] = [
