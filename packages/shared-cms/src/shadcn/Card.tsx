@@ -14,8 +14,9 @@ import type { SbBlokData } from "@storyblok/react";
 import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCardBlok extends SbBlokData {
-  title?: string;
-  description?: string;
+  image?: SbBlokData[];
+  title?: SbBlokData[];
+  description?: SbBlokData[];
   content?: SbBlokData[];
   footer?: SbBlokData[];
   styles?: FlexBreakpointOptionsBlok[];
@@ -27,24 +28,43 @@ export function ShadcnCard({ blok }: { blok: ShadcnCardBlok }) {
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
     >
-      {(blok.title || blok.description) && (
+      {/* Image before header (shadcn: add image before the card header) */}
+      {blok.image?.[0] != null && (
+        <StoryblokComponent blok={blok.image[0]} key={blok.image[0]._uid} />
+      )}
+
+      {(blok.title?.[0] ?? blok.description?.[0]) != null && (
         <CardHeader>
-          {blok.title && <CardTitle>{blok.title}</CardTitle>}
-          {blok.description && (
-            <CardDescription>{blok.description}</CardDescription>
+          {blok.title?.[0] != null && (
+            <CardTitle>
+              <StoryblokComponent
+                blok={blok.title[0]}
+                key={blok.title[0]._uid}
+              />
+            </CardTitle>
+          )}
+          {blok.description?.[0] != null && (
+            <CardDescription>
+              <StoryblokComponent
+                blok={blok.description[0]}
+                key={blok.description[0]._uid}
+              />
+            </CardDescription>
           )}
         </CardHeader>
       )}
-      {blok.content && blok.content.length > 0 && (
+
+      {(blok.content?.length ?? 0) > 0 && (
         <CardContent>
-          {blok.content.map((nestedBlok) => (
+          {(blok.content ?? []).map((nestedBlok) => (
             <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
           ))}
         </CardContent>
       )}
-      {blok.footer && blok.footer.length > 0 && (
+
+      {(blok.footer?.length ?? 0) > 0 && (
         <CardFooter>
-          {blok.footer.map((nestedBlok) => (
+          {(blok.footer ?? []).map((nestedBlok) => (
             <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
           ))}
         </CardFooter>

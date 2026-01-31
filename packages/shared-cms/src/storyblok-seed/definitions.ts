@@ -1306,29 +1306,41 @@ export const componentDefinitions: StoryblokComponent[] = [
     icon: "block-wallet",
     preview_field: "title",
     schema: {
-      title: {
-        type: "text",
+      image: {
+        type: "bloks",
         pos: 0,
-        description: "Card title",
+        description:
+          "Image before the card header (shadcn: add image before header)",
+        restrict_components: true,
+        component_whitelist: ["shadcn_image"],
+      },
+      title: {
+        type: "bloks",
+        pos: 1,
+        description: "Card title (e.g. Text or Button component)",
+        restrict_components: true,
+        component_whitelist: ["shadcn_text", "shadcn_richtext", "shadcn_button"],
       },
       description: {
-        type: "textarea",
-        pos: 1,
-        description: "Card description",
+        type: "bloks",
+        pos: 2,
+        description: "Card description (e.g. Text or Button component)",
+        restrict_components: true,
+        component_whitelist: ["shadcn_text", "shadcn_richtext", "shadcn_button"],
       },
       content: {
         type: "bloks",
-        pos: 2,
+        pos: 3,
         description: "Card content",
       },
       footer: {
         type: "bloks",
-        pos: 3,
+        pos: 4,
         description: "Card footer (usually buttons)",
       },
       styles: {
         type: "bloks",
-        pos: 4,
+        pos: 5,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
