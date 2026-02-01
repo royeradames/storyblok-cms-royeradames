@@ -107,6 +107,17 @@ const buttonSizeOptions: StoryblokOption[] = [
   { value: "dynamic", name: "Dynamic" },
 ];
 
+const iconSizeOptions: StoryblokOption[] = [
+  { value: "xs", name: "XS" },
+  { value: "sm", name: "SM" },
+  { value: "default", name: "Default" },
+  { value: "lg", name: "LG" },
+  { value: "xl", name: "XL" },
+  { value: "2xl", name: "2XL" },
+  { value: "3xl", name: "3XL" },
+  { value: "4xl", name: "4XL" },
+];
+
 const gapOptions: StoryblokOption[] = [
   { value: "none", name: "None" },
   { value: "sm", name: "Small" },
@@ -678,10 +689,11 @@ export const componentDefinitions: StoryblokComponent[] = [
         description: "Lucide icon name (e.g. camera, alert-circle, info)",
       },
       size: {
-        type: "number",
+        type: "option",
         pos: 1,
-        default_value: 24,
-        description: "Icon size in pixels",
+        options: iconSizeOptions,
+        default_value: "default",
+        description: "Icon size (xs → 4xl)",
       },
       color_light: {
         type: "custom",
