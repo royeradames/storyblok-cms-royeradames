@@ -537,15 +537,29 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "destructive", name: "Destructive" },
         ],
       },
+      color_light: {
+        type: "custom",
+        pos: 5,
+        default_value: "",
+        description: "Text color in light theme. Overrides semantic color when set.",
+        field_type: "native-color-picker",
+      },
+      color_dark: {
+        type: "custom",
+        pos: 6,
+        default_value: "",
+        description: "Text color in dark theme. Overrides semantic color when set.",
+        field_type: "native-color-picker",
+      },
       align: {
         type: "option",
-        pos: 5,
+        pos: 7,
         default_value: "left",
         options: alignOptions,
       },
       styles: {
         type: "bloks",
-        pos: 6,
+        pos: 8,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

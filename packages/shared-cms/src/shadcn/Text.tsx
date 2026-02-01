@@ -4,6 +4,10 @@ import { storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import {
+  type NativeColorPickerValue,
+  useThemeColor,
+} from "../storyblok/plugins";
 
 export interface ShadcnTextBlok extends SbBlokData {
   content: string;
@@ -11,6 +15,10 @@ export interface ShadcnTextBlok extends SbBlokData {
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "default" | "muted" | "primary" | "destructive";
+  /** Light theme color (native-color-picker). Overrides semantic color when set. */
+  color_light?: NativeColorPickerValue;
+  /** Dark theme color (native-color-picker). Overrides semantic color when set. */
+  color_dark?: NativeColorPickerValue;
   align?: "left" | "center" | "right";
   styles?: FlexBreakpointOptionsBlok[];
 }
@@ -48,6 +56,7 @@ const alignMap = {
 
 export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
   const Element = blok.element || "p";
+  const themeColor = useThemeColor(blok.color_light, blok.color_dark);
 
   return (
     <Element
@@ -56,10 +65,11 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         "text-wrap",
         sizeMap[blok.size || "base"],
         weightMap[blok.weight || "normal"],
-        colorMap[blok.color || "default"],
+        themeColor ? undefined : colorMap[blok.color || "default"],
         alignMap[blok.align || "left"],
         ...buildStyleClasses(blok.styles)
       )}
+      style={themeColor ? { color: themeColor } : undefined}
     >
       {blok.content}
     </Element>
