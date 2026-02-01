@@ -200,6 +200,24 @@ const alignOptions: StoryblokOption[] = [
   { value: "right", name: "Right" },
 ];
 
+const lineHeightOptions: StoryblokOption[] = [
+  { value: "none", name: "None" },
+  { value: "tight", name: "Tight" },
+  { value: "snug", name: "Snug" },
+  { value: "normal", name: "Normal" },
+  { value: "relaxed", name: "Relaxed" },
+  { value: "loose", name: "Loose" },
+];
+
+const letterSpacingOptions: StoryblokOption[] = [
+  { value: "tighter", name: "Tighter" },
+  { value: "tight", name: "Tight" },
+  { value: "normal", name: "Normal" },
+  { value: "wide", name: "Wide" },
+  { value: "wider", name: "Wider" },
+  { value: "widest", name: "Widest" },
+];
+
 const orientationOptions: StoryblokOption[] = [
   { value: "horizontal", name: "Horizontal" },
   { value: "vertical", name: "Vertical" },
@@ -557,9 +575,23 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "left",
         options: alignOptions,
       },
+      line_height: {
+        type: "option",
+        pos: 8,
+        default_value: "normal",
+        options: lineHeightOptions,
+        description: "Line height",
+      },
+      letter_spacing: {
+        type: "option",
+        pos: 9,
+        default_value: "normal",
+        options: letterSpacingOptions,
+        description: "Letter spacing",
+      },
       styles: {
         type: "bloks",
-        pos: 8,
+        pos: 10,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

@@ -20,6 +20,8 @@ export interface ShadcnTextBlok extends SbBlokData {
   /** Dark theme color (native-color-picker). Overrides semantic color when set. */
   color_dark?: NativeColorPickerValue;
   align?: "left" | "center" | "right";
+  line_height?: "none" | "tight" | "snug" | "normal" | "relaxed" | "loose";
+  letter_spacing?: "tighter" | "tight" | "normal" | "wide" | "wider" | "widest";
   styles?: FlexBreakpointOptionsBlok[];
 }
 
@@ -54,6 +56,24 @@ const alignMap = {
   right: "text-right",
 };
 
+const lineHeightMap = {
+  none: "leading-none",
+  tight: "leading-tight",
+  snug: "leading-snug",
+  normal: "leading-normal",
+  relaxed: "leading-relaxed",
+  loose: "leading-loose",
+};
+
+const letterSpacingMap = {
+  tighter: "tracking-tighter",
+  tight: "tracking-tight",
+  normal: "tracking-normal",
+  wide: "tracking-wide",
+  wider: "tracking-wider",
+  widest: "tracking-widest",
+};
+
 export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
   const Element = blok.element || "p";
   const themeColor = useThemeColor(blok.color_light, blok.color_dark);
@@ -67,6 +87,8 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         weightMap[blok.weight || "normal"],
         themeColor ? undefined : colorMap[blok.color || "default"],
         alignMap[blok.align || "left"],
+        lineHeightMap[blok.line_height ?? "normal"],
+        letterSpacingMap[blok.letter_spacing ?? "normal"],
         ...buildStyleClasses(blok.styles)
       )}
       style={themeColor ? { color: themeColor } : undefined}
