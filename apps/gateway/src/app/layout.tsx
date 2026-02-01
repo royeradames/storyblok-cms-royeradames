@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import { components } from "@/components/cms";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 // Initialize Storyblok for server-side (using NEXT_PUBLIC_ so same token works client + server)
@@ -21,8 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen antialiased">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

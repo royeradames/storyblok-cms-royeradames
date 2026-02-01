@@ -1,3 +1,6 @@
+// Lucide dynamic icon (same as ShadcnIcon uses; for app-level icon by name)
+export { DynamicIcon, type IconName } from "lucide-react/dynamic";
+
 // Storyblok default components
 export * from "./storyblok";
 

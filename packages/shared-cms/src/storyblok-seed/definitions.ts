@@ -36,7 +36,8 @@ type StoryblokFieldType =
   | "multiasset"
   | "multilink"
   | "bloks"
-  | "table";
+  | "table"
+  | "custom";
 
 interface StoryblokOption {
   value: string;
@@ -62,6 +63,8 @@ interface StoryblokField {
   // For number
   min_value?: number;
   max_value?: number;
+  // For custom/plugin field type (e.g. color picker)
+  field_type?: string;
   // Description for editors
   description?: string;
 }
@@ -676,24 +679,35 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: 24,
         description: "Icon size in pixels",
       },
-      color: {
-        type: "text",
+      color_light: {
+        type: "custom",
         pos: 2,
-        description: "Icon color (e.g. currentColor, #333)",
+        default_value: "",
+        description:
+          "Icon color in light theme. Overrides default when set.",
+        field_type: "native-color-picker",
+      },
+      color_dark: {
+        type: "custom",
+        pos: 3,
+        default_value: "",
+        description:
+          "Icon color in dark theme. Overrides default when set.",
+        field_type: "native-color-picker",
       },
       stroke_width: {
         type: "number",
-        pos: 3,
+        pos: 4,
         description: "Stroke width",
       },
       class_name: {
         type: "text",
-        pos: 4,
+        pos: 5,
         description: "Optional CSS class (e.g. Tailwind)",
       },
       styles: {
         type: "bloks",
-        pos: 5,
+        pos: 6,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
