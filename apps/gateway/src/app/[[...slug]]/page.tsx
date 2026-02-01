@@ -1,6 +1,9 @@
 import { getStoryblokApi, StoryblokStory } from "@storyblok/react/rsc";
 import { draftMode } from "next/headers";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { SeoMetatagsValue } from "@/types/seo";
+import { metadataFromStory } from "@/lib/metadata";
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
@@ -21,6 +24,23 @@ async function fetchStory(slug: string, version: StoryblokVersion) {
   } catch {
     return null;
   }
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const resolvedSearchParams = await searchParams;
+  const slugPath = slug ? slug.join("/") : "home";
+  const { isEnabled: isDraftMode } = await draftMode();
+  const isVisualEditor = resolvedSearchParams._storyblok !== undefined;
+  const version: StoryblokVersion =
+    isDraftMode || isVisualEditor ? "draft" : "published";
+
+  const story = await fetchStory(slugPath, version);
+  const meta = story?.content?.metadata as SeoMetatagsValue | undefined;
+  return metadataFromStory(meta);
 }
 
 export default async function Page({ params, searchParams }: PageProps) {

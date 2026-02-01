@@ -13,6 +13,8 @@ export interface StoryblokField {
   options?: { value: string; name: string }[];
   restrict_components?: boolean;
   component_whitelist?: string[];
+  /** Plugin field type (e.g. "seo_metatags", "native-color-picker"). */
+  field_type?: string;
 }
 
 export interface StoryblokComponentSchema {
@@ -56,6 +58,12 @@ export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
         component_whitelist: ["shared_flex_breakpoint_options"],
+      },
+      metadata: {
+        type: "custom",
+        pos: 2,
+        description: "SEO and social meta tags",
+        field_type: "seo-metatags",
       },
     },
   },

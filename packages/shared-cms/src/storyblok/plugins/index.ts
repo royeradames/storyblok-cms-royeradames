@@ -4,3 +4,4 @@ export {
   getColorValue,
 } from "./native-color-picker";
 export { useThemeColor } from "./use-theme-color";
+export { useMounted } from "./use-mounted";

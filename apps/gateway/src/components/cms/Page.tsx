@@ -3,7 +3,11 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "@repo/shared-cms/styles";
+import {
+  buildStyleClasses,
+  type FlexBreakpointOptionsBlok,
+} from "@repo/shared-cms/styles";
+import type { SeoMetatagsValue } from "@/types/seo";
 
 /**
  * Gateway-specific Page component
@@ -14,6 +18,8 @@ import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "@repo/shared-
 export interface PageBlok extends SbBlokData {
   body?: SbBlokData[];
   styles?: FlexBreakpointOptionsBlok[];
+  /** SEO and social meta tags (seo_metatags plugin). Used in generateMetadata. */
+  metadata?: SeoMetatagsValue;
 }
 
 export function Page({ blok }: { blok: PageBlok }) {

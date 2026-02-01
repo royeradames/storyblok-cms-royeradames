@@ -7,6 +7,7 @@ import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
 import {
   type NativeColorPickerValue,
   useThemeColor,
+  useMounted,
 } from "../storyblok/plugins";
 
 export interface ShadcnTextBlok extends SbBlokData {
@@ -77,6 +78,9 @@ const letterSpacingMap = {
 export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
   const Element = blok.element || "p";
   const themeColor = useThemeColor(blok.color_light, blok.color_dark);
+  const mounted = useMounted();
+  // Apply theme color only after mount to avoid hydration mismatch (server has no theme).
+  const useThemeColorStyle = mounted && themeColor;
 
   return (
     <Element
@@ -85,13 +89,13 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         "text-wrap",
         sizeMap[blok.size || "base"],
         weightMap[blok.weight || "normal"],
-        themeColor ? undefined : colorMap[blok.color || "default"],
+        useThemeColorStyle ? undefined : colorMap[blok.color || "default"],
         alignMap[blok.align || "left"],
         lineHeightMap[blok.line_height ?? "normal"],
         letterSpacingMap[blok.letter_spacing ?? "normal"],
         ...buildStyleClasses(blok.styles)
       )}
-      style={themeColor ? { color: themeColor } : undefined}
+      style={useThemeColorStyle ? { color: themeColor } : undefined}
     >
       {blok.content}
     </Element>
