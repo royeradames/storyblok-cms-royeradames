@@ -631,6 +631,8 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: [
           { value: "p", name: "Paragraph" },
           { value: "span", name: "Span" },
+          { value: "q", name: "Quote (inline)" },
+          { value: "blockquote", name: "Block quote" },
           { value: "h1", name: "Heading 1" },
           { value: "h2", name: "Heading 2" },
           { value: "h3", name: "Heading 3" },
@@ -638,6 +640,8 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "h5", name: "Heading 5" },
           { value: "h6", name: "Heading 6" },
         ],
+        description:
+          "HTML element. Quote (inline) for short quotations; Block quote for extended quotations (indented). See https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/q and https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote",
       },
       size: {
         type: "option",
