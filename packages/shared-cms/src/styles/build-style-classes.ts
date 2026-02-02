@@ -17,8 +17,7 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
-  borderDirectionMap,
-  getBorderClass,
+  borderClassMap,
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
@@ -97,18 +96,16 @@ export function buildStyleClasses(
       if (marginMap[key]) classes.push(prefix + marginMap[key]);
     });
 
-    // Border: direction × width (default 1px). Width field removed; always use 1px.
+    // Border: multi-select of Tailwind border-width classes (e.g. border-b, border-l-4).
     const borderKeys = Array.isArray(opt.border)
-      ? (opt.border as (keyof typeof borderDirectionMap)[]).filter(
-          (v) => v && v in borderDirectionMap
+      ? (opt.border as (keyof typeof borderClassMap)[]).filter(
+          (v) => v && v in borderClassMap
         )
       : [];
-    if (borderKeys.length > 0) {
-      borderKeys.forEach((dir) => {
-        const cls = getBorderClass(dir, "border");
-        if (cls) classes.push(prefix + cls);
-      });
-    }
+    borderKeys.forEach((key) => {
+      const cls = borderClassMap[key];
+      if (cls) classes.push(prefix + cls);
+    });
     if (opt.border_color && borderColorMap[opt.border_color])
       classes.push(prefix + borderColorMap[opt.border_color]);
     if (opt.border_style && opt.border_style in borderStyleMap)

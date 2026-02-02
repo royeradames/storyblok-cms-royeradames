@@ -13,7 +13,7 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
-  borderDirectionMap,
+  borderClassMap,
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
@@ -45,8 +45,8 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   padding?: (keyof typeof paddingMap)[] | keyof typeof paddingMap;
   /** 0–4 margin directions (multi-options) or legacy single key */
   margin?: (keyof typeof marginMap)[] | keyof typeof marginMap;
-  /** Border sides (multi-select): border, border-t, border-r, border-b, border-l. Width fixed at 1px. */
-  border?: (keyof typeof borderDirectionMap)[];
+  /** Border width classes (multi-select): all Tailwind border-* width utilities (e.g. border-b, border-l-4). */
+  border?: (keyof typeof borderClassMap)[];
   /** Border color (semantic) */
   border_color?: keyof typeof borderColorMap;
   /** Border style (solid, dashed, dotted, etc.) */

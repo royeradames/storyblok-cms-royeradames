@@ -21,7 +21,8 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
-  borderDirectionMap,
+  borderClassMap,
+  borderClassLabels,
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
@@ -197,19 +198,11 @@ const flexMarginOptions: StoryblokOption[] = (
   name: optionNameWithSpacingPx(String(key)),
 }));
 
-const borderDirectionLabels: Record<keyof typeof borderDirectionMap, string> = {
-  border: "All",
-  "border-t": "Top",
-  "border-r": "Right",
-  "border-b": "Bottom",
-  "border-l": "Left",
-};
-
 const flexBorderOptions: StoryblokOption[] = (
-  Object.keys(borderDirectionMap) as (keyof typeof borderDirectionMap)[]
+  Object.keys(borderClassMap) as (keyof typeof borderClassMap)[]
 ).map((key) => ({
   value: key,
-  name: `${borderDirectionLabels[key]} (${key})`,
+  name: borderClassLabels[key],
 }));
 
 const borderColorLabels: Record<keyof typeof borderColorMap, string> = {
@@ -543,9 +536,9 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "options",
         pos: 15,
         options: flexBorderOptions,
-        max_choices: 5,
+        max_choices: 20,
         description:
-          "Border sides (multi-select). Options show class names (e.g. Bottom (border-b)). Width is 1px.",
+          "Border width (multi-select). All Tailwind border-* utilities: sides (All, Top, Right, Bottom, Left, X, Y, Start, End) × 0/1/2/4/8px. Use search to filter.",
       },
       border_color: {
         type: "option",
