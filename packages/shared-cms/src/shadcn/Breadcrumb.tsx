@@ -11,18 +11,18 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnBreadcrumbItemBlok extends SbBlokData {
   label: string;
   href?: string;
   is_current?: boolean;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export interface ShadcnBreadcrumbBlok extends SbBlokData {
   items: ShadcnBreadcrumbItemBlok[];
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnBreadcrumb({ blok }: { blok: ShadcnBreadcrumbBlok }) {

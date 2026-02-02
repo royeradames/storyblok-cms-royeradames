@@ -12,18 +12,18 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTableCellBlok extends SbBlokData {
   content: string;
   is_header?: boolean;
   align?: "left" | "center" | "right";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export interface ShadcnTableRowBlok extends SbBlokData {
   cells: ShadcnTableCellBlok[];
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export interface ShadcnTableBlok extends SbBlokData {
@@ -31,7 +31,7 @@ export interface ShadcnTableBlok extends SbBlokData {
   headers?: ShadcnTableCellBlok[];
   rows?: ShadcnTableRowBlok[];
   striped?: boolean;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnTable({ blok }: { blok: ShadcnTableBlok }) {

@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { AspectRatio, Skeleton, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnImageBlok extends SbBlokData {
   image: {
@@ -15,7 +15,7 @@ export interface ShadcnImageBlok extends SbBlokData {
   object_fit?: "cover" | "contain" | "fill" | "none";
   rounded?: "none" | "sm" | "md" | "lg" | "full";
   caption?: string;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const ratioMap = {

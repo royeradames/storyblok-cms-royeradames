@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { HoverCard, HoverCardContent, HoverCardTrigger, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnHoverCardBlok extends SbBlokData {
   trigger?: SbBlokData[];
@@ -11,7 +11,7 @@ export interface ShadcnHoverCardBlok extends SbBlokData {
   side?: "top" | "right" | "bottom" | "left";
   open_delay?: number;
   close_delay?: number;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnHoverCard({ blok }: { blok: ShadcnHoverCardBlok }) {

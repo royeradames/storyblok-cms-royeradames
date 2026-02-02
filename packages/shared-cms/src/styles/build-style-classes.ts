@@ -1,7 +1,7 @@
 import {
   BREAKPOINT_ORDER,
   type BreakpointKey,
-  type FlexBreakpointOptionsBlok,
+  type StylesBreakpointOptionsBlok,
 } from "./types";
 import {
   displayMap,
@@ -31,7 +31,7 @@ function getBreakpointPrefix(breakpoint: BreakpointKey): string {
  * Handles undefined/null/empty: returns [] so callers can pass blok.styles directly.
  */
 export function buildStyleClasses(
-  styles: FlexBreakpointOptionsBlok[] | null | undefined
+  styles: StylesBreakpointOptionsBlok[] | null | undefined
 ): string[] {
   const list = styles ?? [];
   if (!Array.isArray(list) || list.length === 0) return [];

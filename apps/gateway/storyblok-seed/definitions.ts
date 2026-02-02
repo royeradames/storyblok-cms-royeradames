@@ -57,7 +57,7 @@ export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
-        component_whitelist: ["shared_flex_breakpoint_options"],
+        component_whitelist: ["shared_styles_breakpoint_options"],
       },
       metadata: {
         type: "custom",

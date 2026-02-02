@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 import {
   type NativeColorPickerValue,
   useThemeColor,
@@ -23,7 +23,7 @@ export interface ShadcnTextBlok extends SbBlokData {
   align?: "left" | "center" | "right";
   line_height?: "none" | "tight" | "snug" | "normal" | "relaxed" | "loose";
   letter_spacing?: "tighter" | "tight" | "normal" | "wide" | "wider" | "widest";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const sizeMap = {

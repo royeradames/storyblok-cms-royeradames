@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Progress, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnProgressBlok extends SbBlokData {
   value: number;
@@ -11,7 +11,7 @@ export interface ShadcnProgressBlok extends SbBlokData {
   show_label?: boolean;
   label_position?: "top" | "inside" | "bottom";
   size?: "sm" | "md" | "lg";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const sizeMap = {

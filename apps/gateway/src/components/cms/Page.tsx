@@ -5,7 +5,7 @@ import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
-  type FlexBreakpointOptionsBlok,
+  type StylesBreakpointOptionsBlok,
 } from "@repo/shared-cms/styles";
 import type { SeoMetatagsValue } from "@/types/seo";
 
@@ -17,7 +17,7 @@ import type { SeoMetatagsValue } from "@/types/seo";
  */
 export interface PageBlok extends SbBlokData {
   body?: SbBlokData[];
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
   /** SEO and social meta tags (seo_metatags plugin). Used in generateMetadata. */
   metadata?: SeoMetatagsValue;
 }

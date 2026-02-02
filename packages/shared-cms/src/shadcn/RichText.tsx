@@ -7,12 +7,12 @@ import {
 } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
   prose_size?: "sm" | "base" | "lg";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
   component: string;
   _uid: string;
 }

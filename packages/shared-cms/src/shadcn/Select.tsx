@@ -11,13 +11,13 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSelectOptionBlok extends SbBlokData {
   value: string;
   label: string;
   disabled?: boolean;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export interface ShadcnSelectBlok extends SbBlokData {
@@ -28,7 +28,7 @@ export interface ShadcnSelectBlok extends SbBlokData {
   default_value?: string;
   disabled?: boolean;
   helper_text?: string;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnSelect({ blok }: { blok: ShadcnSelectBlok }) {

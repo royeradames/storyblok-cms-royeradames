@@ -5,10 +5,10 @@ import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
-  type FlexBreakpointOptionsBlok,
+  type StylesBreakpointOptionsBlok,
 } from "../../styles";
 
-export type { FlexBreakpointOptionsBlok } from "../../styles";
+export type { StylesBreakpointOptionsBlok } from "../../styles";
 
 export type ContainerElement = "div" | "section" | "article";
 
@@ -16,7 +16,7 @@ export interface ShadcnContainerBlok extends SbBlokData {
   name?: string;
   container_as?: ContainerElement;
   items?: SbBlokData[];
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {

@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSectionBlok extends SbBlokData {
   content?: SbBlokData[];
@@ -11,7 +11,7 @@ export interface ShadcnSectionBlok extends SbBlokData {
   background?: "default" | "muted" | "primary" | "secondary";
   max_width?: "sm" | "md" | "lg" | "xl" | "full";
   id?: string;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const paddingMap = {

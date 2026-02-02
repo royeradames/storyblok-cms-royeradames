@@ -4,14 +4,14 @@ import { storyblokEditable } from "@storyblok/react";
 import { Alert, AlertTitle, AlertDescription, cn } from "@repo/ui";
 import { AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAlertBlok extends SbBlokData {
   title?: string;
   description?: string;
   variant?: "default" | "destructive";
   icon?: "info" | "warning" | "success" | "error" | "none";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const iconMap = {

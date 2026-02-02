@@ -14,7 +14,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSheetBlok extends SbBlokData {
   trigger_text: string;
@@ -30,7 +30,7 @@ export interface ShadcnSheetBlok extends SbBlokData {
   content?: SbBlokData[];
   footer?: SbBlokData[];
   side?: "top" | "right" | "bottom" | "left";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnSheet({ blok }: { blok: ShadcnSheetBlok }) {

@@ -3,12 +3,12 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Separator, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSeparatorBlok extends SbBlokData {
   orientation?: "horizontal" | "vertical";
   decorative?: boolean;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnSeparator({ blok }: { blok: ShadcnSeparatorBlok }) {

@@ -3,13 +3,13 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { AspectRatio, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAspectRatioBlok extends SbBlokData {
   ratio?: "square" | "video" | "portrait" | "wide" | "custom";
   custom_ratio?: number;
   content?: SbBlokData[];
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const ratioMap = {

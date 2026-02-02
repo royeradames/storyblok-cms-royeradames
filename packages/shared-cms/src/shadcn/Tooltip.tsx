@@ -9,14 +9,14 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTooltipBlok extends SbBlokData {
   content: string;
   trigger?: SbBlokData[];
   side?: "top" | "right" | "bottom" | "left";
   delay?: number;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnTooltip({ blok }: { blok: ShadcnTooltipBlok }) {

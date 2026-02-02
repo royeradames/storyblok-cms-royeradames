@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnFormBlok extends SbBlokData {
   action?: string;
@@ -17,7 +17,7 @@ export interface ShadcnFormBlok extends SbBlokData {
     | "secondary"
     | "ghost";
   layout?: "vertical" | "horizontal" | "inline";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const layoutMap = {

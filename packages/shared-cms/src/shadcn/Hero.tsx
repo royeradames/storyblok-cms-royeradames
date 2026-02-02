@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnHeroBlok extends SbBlokData {
   headline: string;
@@ -14,7 +14,7 @@ export interface ShadcnHeroBlok extends SbBlokData {
   };
   cta?: SbBlokData[];
   alignment?: "left" | "center" | "right";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnHero({ blok }: { blok: ShadcnHeroBlok }) {

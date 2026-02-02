@@ -22,11 +22,11 @@ export const BREAKPOINT_ORDER = ["base", "sm", "md", "lg", "xl", "2xl"] as const
 export type BreakpointKey = (typeof BREAKPOINT_ORDER)[number];
 
 /**
- * Breakpoint style options (flex layout + padding/margin/sizing).
- * Used by Flex Container and can be reused by other components with a "styles" field.
+ * Breakpoint style options (layout, spacing, border, sizing).
+ * Used by Container and other components with a "styles" field.
  * Padding and margin: multi-options (0–4 directions, box model) or legacy single key.
  */
-export interface FlexBreakpointOptionsBlok extends SbBlokData {
+export interface StylesBreakpointOptionsBlok extends SbBlokData {
   breakpoint?: BreakpointKey;
   display?: keyof typeof displayMap;
   direction?: keyof typeof directionMap;

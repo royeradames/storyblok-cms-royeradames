@@ -3,14 +3,14 @@
 import { storyblokEditable } from "@storyblok/react";
 import { RadioGroup, RadioGroupItem, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnRadioOptionBlok extends SbBlokData {
   value: string;
   label: string;
   description?: string;
   disabled?: boolean;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export interface ShadcnRadioGroupBlok extends SbBlokData {
@@ -19,7 +19,7 @@ export interface ShadcnRadioGroupBlok extends SbBlokData {
   options: ShadcnRadioOptionBlok[];
   default_value?: string;
   orientation?: "horizontal" | "vertical";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnRadioGroup({ blok }: { blok: ShadcnRadioGroupBlok }) {

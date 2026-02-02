@@ -14,7 +14,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnDialogBlok extends SbBlokData {
   trigger_text: string;
@@ -30,7 +30,7 @@ export interface ShadcnDialogBlok extends SbBlokData {
   content?: SbBlokData[];
   footer?: SbBlokData[];
   size?: "sm" | "md" | "lg" | "xl" | "full";
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 const sizeMap = {

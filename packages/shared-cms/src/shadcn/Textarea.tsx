@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Textarea, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type FlexBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTextareaBlok extends SbBlokData {
   name: string;
@@ -13,7 +13,7 @@ export interface ShadcnTextareaBlok extends SbBlokData {
   required?: boolean;
   disabled?: boolean;
   helper_text?: string;
-  styles?: FlexBreakpointOptionsBlok[];
+  styles?: StylesBreakpointOptionsBlok[];
 }
 
 export function ShadcnTextarea({ blok }: { blok: ShadcnTextareaBlok }) {
