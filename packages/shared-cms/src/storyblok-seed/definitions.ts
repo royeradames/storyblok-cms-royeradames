@@ -271,7 +271,9 @@ const textSizeOptionsWithPx: StoryblokOption[] = (
   const label =
     key === "base"
       ? "Base"
-      : key.replace(/(\d*)xl$/i, "$1XL").replace(/^[a-z]+$/, (m) => m.toUpperCase());
+      : key
+          .replace(/(\d*)xl$/i, "$1XL")
+          .replace(/^[a-z]+$/, (m) => m.toUpperCase());
   return { value: key, name: `${label} (${px})` };
 });
 
@@ -486,7 +488,8 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "option",
         pos: 5,
         options: flexGapOptions,
-        description: "Gap between items. Options show pixel values (e.g. gap-2 (8px)).",
+        description:
+          "Gap between items. Options show pixel values (e.g. gap-2 (8px)).",
       },
       wrap: {
         type: "boolean",
@@ -562,7 +565,8 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "option",
         pos: 19,
         options: textSizeOptionsWithPx,
-        description: "Text size (font-size) per breakpoint. Options show px (e.g. Base (16px)).",
+        description:
+          "Text size (font-size) per breakpoint. Options show px (e.g. Base (16px)).",
       },
     },
   },
@@ -640,8 +644,6 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "h5", name: "Heading 5" },
           { value: "h6", name: "Heading 6" },
         ],
-        description:
-          "HTML element. Quote (inline) for short quotations; Block quote for extended quotations (indented). See https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/q and https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote",
       },
       size: {
         type: "option",
@@ -675,14 +677,16 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "custom",
         pos: 5,
         default_value: "",
-        description: "Text color in light theme. Overrides semantic color when set.",
+        description:
+          "Text color in light theme. Overrides semantic color when set.",
         field_type: "native-color-picker",
       },
       color_dark: {
         type: "custom",
         pos: 6,
         default_value: "",
-        description: "Text color in dark theme. Overrides semantic color when set.",
+        description:
+          "Text color in dark theme. Overrides semantic color when set.",
         field_type: "native-color-picker",
       },
       align: {
@@ -861,16 +865,14 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "custom",
         pos: 2,
         default_value: "",
-        description:
-          "Icon color in light theme. Overrides default when set.",
+        description: "Icon color in light theme. Overrides default when set.",
         field_type: "native-color-picker",
       },
       color_dark: {
         type: "custom",
         pos: 3,
         default_value: "",
-        description:
-          "Icon color in dark theme. Overrides default when set.",
+        description: "Icon color in dark theme. Overrides default when set.",
         field_type: "native-color-picker",
       },
       stroke_width: {
