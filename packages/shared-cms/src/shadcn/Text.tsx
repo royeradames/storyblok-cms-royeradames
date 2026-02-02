@@ -22,9 +22,7 @@ export interface ShadcnTextBlok extends SbBlokData {
     | "h5"
     | "h6"
     | "q"
-    | "blockquote"
-    | "header"
-    | "hgroup";
+    | "blockquote";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "default" | "muted" | "primary" | "destructive";

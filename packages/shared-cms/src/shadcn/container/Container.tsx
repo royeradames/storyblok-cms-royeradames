@@ -10,7 +10,7 @@ import {
 
 export type { StylesBreakpointOptionsBlok } from "../../styles";
 
-export type ContainerElement = "div" | "section" | "article";
+export type ContainerElement = "div" | "section" | "article" | "header" | "hgroup";
 
 export interface ShadcnContainerBlok extends SbBlokData {
   name?: string;
@@ -23,6 +23,8 @@ const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
   div: "div",
   section: "section",
   article: "article",
+  header: "header",
+  hgroup: "hgroup",
 };
 
 export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
