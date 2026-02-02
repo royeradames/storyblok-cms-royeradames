@@ -21,7 +21,16 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
+  spacingTokenToPx,
+  textSizeToPx,
 } from "../shadcn/flex/maps";
+
+/** Option name with px suffix when key uses a spacing token (e.g. "gap-2" -> "gap-2 (8px)"). */
+function optionNameWithSpacingPx(key: string): string {
+  const token = String(key).split("-").pop() ?? "";
+  const px = spacingTokenToPx[token];
+  return px ? `${key} (${px})` : key;
+}
 
 // Helper types for Storyblok field definitions
 type StoryblokFieldType =
@@ -144,39 +153,45 @@ const flexAlignOptions: StoryblokOption[] = (
 
 const flexGapOptions: StoryblokOption[] = (
   Object.keys(gapMap) as (keyof typeof gapMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexWidthOptions: StoryblokOption[] = (
   Object.keys(widthMap) as (keyof typeof widthMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexHeightOptions: StoryblokOption[] = (
   Object.keys(heightMap) as (keyof typeof heightMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexMinWidthOptions: StoryblokOption[] = (
   Object.keys(minWidthMap) as (keyof typeof minWidthMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexMaxWidthOptions: StoryblokOption[] = (
   Object.keys(maxWidthMap) as (keyof typeof maxWidthMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexMinHeightOptions: StoryblokOption[] = (
   Object.keys(minHeightMap) as (keyof typeof minHeightMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexMaxHeightOptions: StoryblokOption[] = (
   Object.keys(maxHeightMap) as (keyof typeof maxHeightMap)[]
-).map((key) => ({ value: key, name: key }));
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexPaddingOptions: StoryblokOption[] = (
   Object.keys(paddingMap) as (keyof typeof paddingMap)[]
-).map((key) => ({ value: String(key), name: String(key) }));
+).map((key) => ({
+  value: String(key),
+  name: optionNameWithSpacingPx(String(key)),
+}));
 
 const flexMarginOptions: StoryblokOption[] = (
   Object.keys(marginMap) as (keyof typeof marginMap)[]
-).map((key) => ({ value: String(key), name: String(key) }));
+).map((key) => ({
+  value: String(key),
+  name: optionNameWithSpacingPx(String(key)),
+}));
 
 const flexBreakpointOptions: StoryblokOption[] = [
   { value: "base", name: "Base" },
@@ -186,6 +201,18 @@ const flexBreakpointOptions: StoryblokOption[] = [
   { value: "xl", name: "XL (1280px)" },
   { value: "2xl", name: "2XL (1536px)" },
 ];
+
+/** Text size options with px in label (e.g. "XS (12px)", "Base (16px)", "2XL (24px)"). */
+const textSizeOptionsWithPx: StoryblokOption[] = (
+  Object.keys(textSizeToPx) as (keyof typeof textSizeToPx)[]
+).map((key) => {
+  const px = textSizeToPx[key];
+  const label =
+    key === "base"
+      ? "Base"
+      : key.replace(/(\d*)xl$/i, "$1XL").replace(/^[a-z]+$/, (m) => m.toUpperCase());
+  return { value: key, name: `${label} (${px})` };
+});
 
 const sideOptions: StoryblokOption[] = [
   { value: "top", name: "Top" },
@@ -364,7 +391,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexPaddingOptions,
         max_choices: 4,
         description:
-          "Box model: pick 0–4 padding directions (e.g. px-4, pb-6).",
+          "Box model: pick 0–4 padding directions. Options show pixel values (e.g. p-4 (16px), pb-6 (24px)).",
       },
       display: {
         type: "option",
@@ -398,6 +425,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "option",
         pos: 5,
         options: flexGapOptions,
+        description: "Gap between items. Options show pixel values (e.g. gap-2 (8px)).",
       },
       wrap: {
         type: "boolean",
@@ -441,7 +469,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexMarginOptions,
         max_choices: 4,
         description:
-          "Box model: pick 0–4 margin directions (e.g. mx-auto, mt-4).",
+          "Box model: pick 0–4 margin directions. Options show pixel values (e.g. mt-4 (16px)); mx-auto has no px.",
       },
     },
   },
@@ -479,7 +507,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "bloks",
         pos: 3,
         description:
-          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl). Gap, padding, margin, and sizing options show pixel values.",
         restrict_components: true,
         component_whitelist: ["flex_breakpoint_options"],
       },
@@ -522,16 +550,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "option",
         pos: 2,
         default_value: "base",
-        options: [
-          { value: "xs", name: "Extra Small" },
-          { value: "sm", name: "Small" },
-          { value: "base", name: "Base" },
-          { value: "lg", name: "Large" },
-          { value: "xl", name: "XL" },
-          { value: "2xl", name: "2XL" },
-          { value: "3xl", name: "3XL" },
-          { value: "4xl", name: "4XL" },
-        ],
+        options: textSizeOptionsWithPx,
       },
       weight: {
         type: "option",
@@ -593,7 +612,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         type: "bloks",
         pos: 10,
         description:
-          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl). Gap, padding, margin, and sizing options show pixel values.",
         restrict_components: true,
         component_whitelist: ["flex_breakpoint_options"],
       },
