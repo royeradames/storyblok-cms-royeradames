@@ -18,8 +18,10 @@ import {
   paddingMap,
   marginMap,
   borderDirectionMap,
-  borderWidthMap,
+  getBorderClass,
   borderColorMap,
+  borderStyleMap,
+  boxShadowMap,
 } from "./maps";
 
 function getBreakpointPrefix(breakpoint: BreakpointKey): string {
@@ -95,19 +97,24 @@ export function buildStyleClasses(
       if (marginMap[key]) classes.push(prefix + marginMap[key]);
     });
 
-    // Border: sides (multi-select), width, color
+    // Border: direction × width (default 1px). Width field removed; always use 1px.
     const borderKeys = Array.isArray(opt.border)
       ? (opt.border as (keyof typeof borderDirectionMap)[]).filter(
           (v) => v && v in borderDirectionMap
         )
       : [];
-    borderKeys.forEach((key) => {
-      if (borderDirectionMap[key]) classes.push(prefix + borderDirectionMap[key]);
-    });
-    if (opt.border_width && borderWidthMap[opt.border_width])
-      classes.push(prefix + borderWidthMap[opt.border_width]);
+    if (borderKeys.length > 0) {
+      borderKeys.forEach((dir) => {
+        const cls = getBorderClass(dir, "border");
+        if (cls) classes.push(prefix + cls);
+      });
+    }
     if (opt.border_color && borderColorMap[opt.border_color])
       classes.push(prefix + borderColorMap[opt.border_color]);
+    if (opt.border_style && opt.border_style in borderStyleMap)
+      classes.push(prefix + borderStyleMap[opt.border_style as keyof typeof borderStyleMap]);
+    if (opt.shadow && opt.shadow in boxShadowMap)
+      classes.push(prefix + boxShadowMap[opt.shadow as keyof typeof boxShadowMap]);
   }
 
   return classes;

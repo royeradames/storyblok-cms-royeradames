@@ -14,8 +14,9 @@ import {
   paddingMap,
   marginMap,
   borderDirectionMap,
-  borderWidthMap,
   borderColorMap,
+  borderStyleMap,
+  boxShadowMap,
 } from "./maps";
 
 export const BREAKPOINT_ORDER = ["base", "sm", "md", "lg", "xl", "2xl"] as const;
@@ -44,10 +45,12 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   padding?: (keyof typeof paddingMap)[] | keyof typeof paddingMap;
   /** 0–4 margin directions (multi-options) or legacy single key */
   margin?: (keyof typeof marginMap)[] | keyof typeof marginMap;
-  /** Border sides (multi-select): border, border-t, border-r, border-b, border-l */
+  /** Border sides (multi-select): border, border-t, border-r, border-b, border-l. Width fixed at 1px. */
   border?: (keyof typeof borderDirectionMap)[];
-  /** Border width (applies to selected sides) */
-  border_width?: keyof typeof borderWidthMap;
   /** Border color (semantic) */
   border_color?: keyof typeof borderColorMap;
+  /** Border style (solid, dashed, dotted, etc.) */
+  border_style?: keyof typeof borderStyleMap;
+  /** Box shadow */
+  shadow?: keyof typeof boxShadowMap;
 }

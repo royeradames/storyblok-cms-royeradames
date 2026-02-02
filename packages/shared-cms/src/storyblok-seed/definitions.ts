@@ -22,9 +22,9 @@ import {
   paddingMap,
   marginMap,
   borderDirectionMap,
-  borderWidthMap,
-  borderWidthToPx,
   borderColorMap,
+  borderStyleMap,
+  boxShadowMap,
   spacingTokenToPx,
   textSizeToPx,
 } from "../shadcn/flex/maps";
@@ -212,13 +212,6 @@ const flexBorderOptions: StoryblokOption[] = (
   name: `${borderDirectionLabels[key]} (${key})`,
 }));
 
-const flexBorderWidthOptions: StoryblokOption[] = (
-  Object.keys(borderWidthMap) as (keyof typeof borderWidthMap)[]
-).map((key) => ({
-  value: key,
-  name: `${key} (${borderWidthToPx[key as keyof typeof borderWidthToPx]})`,
-}));
-
 const borderColorLabels: Record<keyof typeof borderColorMap, string> = {
   "border-border": "Default",
   "border-input": "Input",
@@ -233,6 +226,39 @@ const flexBorderColorOptions: StoryblokOption[] = (
 ).map((key) => ({
   value: key,
   name: borderColorLabels[key],
+}));
+
+const borderStyleLabels: Record<keyof typeof borderStyleMap, string> = {
+  "border-solid": "Solid",
+  "border-dashed": "Dashed",
+  "border-dotted": "Dotted",
+  "border-double": "Double",
+  "border-none": "None",
+};
+
+const flexBorderStyleOptions: StoryblokOption[] = (
+  Object.keys(borderStyleMap) as (keyof typeof borderStyleMap)[]
+).map((key) => ({
+  value: key,
+  name: borderStyleLabels[key],
+}));
+
+const boxShadowLabels: Record<keyof typeof boxShadowMap, string> = {
+  "shadow-none": "None",
+  "shadow-sm": "SM",
+  shadow: "Default",
+  "shadow-md": "MD",
+  "shadow-lg": "LG",
+  "shadow-xl": "XL",
+  "shadow-2xl": "2XL",
+  "shadow-inner": "Inner",
+};
+
+const flexShadowOptions: StoryblokOption[] = (
+  Object.keys(boxShadowMap) as (keyof typeof boxShadowMap)[]
+).map((key) => ({
+  value: key,
+  name: boxShadowLabels[key],
 }));
 
 const flexBreakpointOptions: StoryblokOption[] = [
@@ -519,19 +545,25 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexBorderOptions,
         max_choices: 5,
         description:
-          "Border sides (multi-select). Options show class names (e.g. Bottom (border-b)).",
-      },
-      border_width: {
-        type: "option",
-        pos: 16,
-        options: flexBorderWidthOptions,
-        description: "Border width. Options show pixel values (e.g. border (1px), border-2 (2px)).",
+          "Border sides (multi-select). Options show class names (e.g. Bottom (border-b)). Width is 1px.",
       },
       border_color: {
         type: "option",
-        pos: 17,
+        pos: 16,
         options: flexBorderColorOptions,
         description: "Border color (semantic).",
+      },
+      border_style: {
+        type: "option",
+        pos: 17,
+        options: flexBorderStyleOptions,
+        description: "Border style (solid, dashed, dotted, etc.).",
+      },
+      shadow: {
+        type: "option",
+        pos: 18,
+        options: flexShadowOptions,
+        description: "Box shadow (Tailwind scale).",
       },
     },
   },

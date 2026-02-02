@@ -425,6 +425,32 @@ export const borderWidthToPx: Record<keyof typeof borderWidthMap, string> = {
   "border-8": "8px",
 };
 
+/** Width key → suffix for side-specific class (e.g. border-8 → "-8", border → "" for 1px). */
+const borderWidthSuffix: Record<keyof typeof borderWidthMap, string> = {
+  "border-0": "-0",
+  border: "",
+  "border-2": "-2",
+  "border-4": "-4",
+  "border-8": "-8",
+};
+
+/**
+ * (Direction × width) → Tailwind class. Use this so width applies only to selected sides.
+ * - direction "border" (all): returns global width class (border-0, border, border-2, …).
+ * - direction "border-t" | "border-r" | "border-b" | "border-l": returns side-specific class (border-t-8, etc.).
+ * Invalid width defaults to 1px so we never output "border-b-undefined".
+ */
+export function getBorderClass(
+  direction: keyof typeof borderDirectionMap,
+  width: keyof typeof borderWidthMap
+): string {
+  const safeWidth =
+    width && width in borderWidthMap ? (width as keyof typeof borderWidthMap) : "border";
+  if (direction === "border") return borderWidthMap[safeWidth];
+  const suffix = borderWidthSuffix[safeWidth];
+  return direction + suffix;
+}
+
 /** Border color (semantic). */
 export const borderColorMap = {
   "border-border": "border-border",
@@ -433,4 +459,25 @@ export const borderColorMap = {
   "border-muted": "border-muted",
   "border-destructive": "border-destructive",
   "border-foreground": "border-foreground",
+} as const;
+
+/** Border style (solid, dashed, dotted, etc.). */
+export const borderStyleMap = {
+  "border-solid": "border-solid",
+  "border-dashed": "border-dashed",
+  "border-dotted": "border-dotted",
+  "border-double": "border-double",
+  "border-none": "border-none",
+} as const;
+
+/** Box shadow (Tailwind default scale). */
+export const boxShadowMap = {
+  "shadow-none": "shadow-none",
+  "shadow-sm": "shadow-sm",
+  shadow: "shadow",
+  "shadow-md": "shadow-md",
+  "shadow-lg": "shadow-lg",
+  "shadow-xl": "shadow-xl",
+  "shadow-2xl": "shadow-2xl",
+  "shadow-inner": "shadow-inner",
 } as const;
