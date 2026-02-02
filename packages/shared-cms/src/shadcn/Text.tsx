@@ -12,7 +12,19 @@ import {
 
 export interface ShadcnTextBlok extends SbBlokData {
   content: string;
-  element?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "q" | "blockquote" | "header" | "hgroup";
+  element?:
+    | "p"
+    | "span"
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "h5"
+    | "h6"
+    | "q"
+    | "blockquote"
+    | "header"
+    | "hgroup";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "default" | "muted" | "primary" | "destructive";
