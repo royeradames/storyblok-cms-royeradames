@@ -637,6 +637,8 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "span", name: "Span" },
           { value: "q", name: "Quote (inline)" },
           { value: "blockquote", name: "Block quote" },
+          { value: "header", name: "Header" },
+          { value: "hgroup", name: "Heading group" },
           { value: "h1", name: "Heading 1" },
           { value: "h2", name: "Heading 2" },
           { value: "h3", name: "Heading 3" },

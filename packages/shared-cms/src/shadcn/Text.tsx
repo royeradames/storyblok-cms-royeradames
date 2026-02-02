@@ -12,14 +12,7 @@ import {
 
 export interface ShadcnTextBlok extends SbBlokData {
   content: string;
-  /**
-   * HTML wrapper element. Use "q" for short inline quotations (browsers add
-   * quotation marks). Use "blockquote" for extended quotations (usually
-   * rendered with indentation). Source URL via cite attribute.
-   * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/q
-   * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/blockquote
-   */
-  element?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "q" | "blockquote";
+  element?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "q" | "blockquote" | "header" | "hgroup";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
   color?: "default" | "muted" | "primary" | "destructive";
