@@ -1,13 +1,13 @@
 #!/usr/bin/env bun
 /**
- * Generate Flex composite class safelist for Tailwind v4.
- * Ensures all Flex classes are included at build time so CMS-driven options
- * work without purging:
+ * Generate Styles composite class safelist for Tailwind v4.
+ * Ensures all Styles Breakpoint Options classes are included at build time
+ * so CMS-driven options work without purging:
  * - Breakpoint-prefixed (sm:, md:, lg:, xl:, 2xl:)
- * - Base (unprefixed) so breakpoint "base" works (e.g. py-32, p-3)
+ * - Base (unprefixed) so breakpoint "base" works (e.g. py-32, text-lg)
  *
- * Usage (from apps/gateway): bun run scripts/generate-flex-safelist.ts
- * Output: src/app/flex-safelist.txt (one class per line)
+ * Usage (from apps/gateway): bun run scripts/generate-styles-safelist.ts
+ * Output: src/app/styles-safelist.txt (one class per line)
  */
 
 import * as fs from "fs";
@@ -26,10 +26,15 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
+  borderClassMap,
+  borderColorMap,
+  borderStyleMap,
+  boxShadowMap,
+  textSizeMap,
 } from "@repo/shared-cms/flex-maps";
 
 const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
-const OUT_PATH = path.join(process.cwd(), "src/app/flex-safelist.txt");
+const OUT_PATH = path.join(process.cwd(), "src/app/styles-safelist.txt");
 
 function collectPrefixedClasses(
   map: Record<string, string>,
@@ -66,6 +71,11 @@ function main() {
     maxHeightMap,
     paddingMap,
     marginMap,
+    borderClassMap,
+    borderColorMap,
+    borderStyleMap,
+    boxShadowMap,
+    textSizeMap,
   ] as Record<string, string>[];
 
   // Prefixed (sm:, md:, ...) for all maps
@@ -88,7 +98,7 @@ function main() {
   const content = unique.sort().join("\n") + "\n";
 
   fs.writeFileSync(OUT_PATH, content, "utf-8");
-  console.log(`Wrote ${unique.length} Flex safelist classes to ${OUT_PATH}`);
+  console.log(`Wrote ${unique.length} Styles safelist classes to ${OUT_PATH}`);
 }
 
 main();

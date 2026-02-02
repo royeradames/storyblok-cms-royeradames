@@ -558,6 +558,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexShadowOptions,
         description: "Box shadow (Tailwind scale).",
       },
+      text_size: {
+        type: "option",
+        pos: 19,
+        options: textSizeOptionsWithPx,
+        description: "Text size (font-size) per breakpoint. Options show px (e.g. Base (16px)).",
+      },
     },
   },
 

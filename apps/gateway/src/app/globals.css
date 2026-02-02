@@ -3,8 +3,8 @@
 
 @config "../../tailwind.config.ts";
 
-/* Flex composite classes (breakpoint-prefixed) so CMS-driven Flex options work at build time */
-@source "./flex-safelist.txt";
+/* Styles composite classes (breakpoint-prefixed) so CMS-driven Styles options work at build time */
+@source "./styles-safelist.txt";
 
 @custom-variant dark (&:is(.dark *));
 

@@ -24,7 +24,7 @@
     "storyblok:migrate-flex-breakpoint-to-styles-breakpoint": "bun scripts/storyblok/migrate-flex-breakpoint-to-styles-breakpoint.ts",
     "storyblok:migrate-flex-to-container": "bun scripts/storyblok/migrate-flex-to-container.ts",
     "storyblok:delete-component": "bun scripts/storyblok/delete-component.ts",
-    "flex:safelist": "bun scripts/generate-flex-safelist.ts"
+    "styles:safelist": "bun scripts/generate-styles-safelist.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

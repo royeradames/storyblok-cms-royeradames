@@ -21,6 +21,7 @@ import {
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
+  textSizeMap,
 } from "./maps";
 
 function getBreakpointPrefix(breakpoint: BreakpointKey): string {
@@ -112,6 +113,8 @@ export function buildStyleClasses(
       classes.push(prefix + borderStyleMap[opt.border_style as keyof typeof borderStyleMap]);
     if (opt.shadow && opt.shadow in boxShadowMap)
       classes.push(prefix + boxShadowMap[opt.shadow as keyof typeof boxShadowMap]);
+    if (opt.text_size && opt.text_size in textSizeMap)
+      classes.push(prefix + textSizeMap[opt.text_size as keyof typeof textSizeMap]);
   }
 
   return classes;

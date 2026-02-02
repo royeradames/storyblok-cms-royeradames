@@ -17,6 +17,7 @@ import {
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
+  textSizeMap,
 } from "./maps";
 
 export const BREAKPOINT_ORDER = ["base", "sm", "md", "lg", "xl", "2xl"] as const;
@@ -53,4 +54,6 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   border_style?: keyof typeof borderStyleMap;
   /** Box shadow */
   shadow?: keyof typeof boxShadowMap;
+  /** Text size (font-size) per breakpoint */
+  text_size?: keyof typeof textSizeMap;
 }
