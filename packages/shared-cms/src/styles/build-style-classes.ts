@@ -17,6 +17,9 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
+  borderDirectionMap,
+  borderWidthMap,
+  borderColorMap,
 } from "./maps";
 
 function getBreakpointPrefix(breakpoint: BreakpointKey): string {
@@ -91,6 +94,20 @@ export function buildStyleClasses(
     marginKeys.forEach((key) => {
       if (marginMap[key]) classes.push(prefix + marginMap[key]);
     });
+
+    // Border: sides (multi-select), width, color
+    const borderKeys = Array.isArray(opt.border)
+      ? (opt.border as (keyof typeof borderDirectionMap)[]).filter(
+          (v) => v && v in borderDirectionMap
+        )
+      : [];
+    borderKeys.forEach((key) => {
+      if (borderDirectionMap[key]) classes.push(prefix + borderDirectionMap[key]);
+    });
+    if (opt.border_width && borderWidthMap[opt.border_width])
+      classes.push(prefix + borderWidthMap[opt.border_width]);
+    if (opt.border_color && borderColorMap[opt.border_color])
+      classes.push(prefix + borderColorMap[opt.border_color]);
   }
 
   return classes;

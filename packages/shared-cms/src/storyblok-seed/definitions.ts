@@ -21,6 +21,10 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
+  borderDirectionMap,
+  borderWidthMap,
+  borderWidthToPx,
+  borderColorMap,
   spacingTokenToPx,
   textSizeToPx,
 } from "../shadcn/flex/maps";
@@ -191,6 +195,44 @@ const flexMarginOptions: StoryblokOption[] = (
 ).map((key) => ({
   value: String(key),
   name: optionNameWithSpacingPx(String(key)),
+}));
+
+const borderDirectionLabels: Record<keyof typeof borderDirectionMap, string> = {
+  border: "All",
+  "border-t": "Top",
+  "border-r": "Right",
+  "border-b": "Bottom",
+  "border-l": "Left",
+};
+
+const flexBorderOptions: StoryblokOption[] = (
+  Object.keys(borderDirectionMap) as (keyof typeof borderDirectionMap)[]
+).map((key) => ({
+  value: key,
+  name: `${borderDirectionLabels[key]} (${key})`,
+}));
+
+const flexBorderWidthOptions: StoryblokOption[] = (
+  Object.keys(borderWidthMap) as (keyof typeof borderWidthMap)[]
+).map((key) => ({
+  value: key,
+  name: `${key} (${borderWidthToPx[key as keyof typeof borderWidthToPx]})`,
+}));
+
+const borderColorLabels: Record<keyof typeof borderColorMap, string> = {
+  "border-border": "Default",
+  "border-input": "Input",
+  "border-primary": "Primary",
+  "border-muted": "Muted",
+  "border-destructive": "Destructive",
+  "border-foreground": "Foreground",
+};
+
+const flexBorderColorOptions: StoryblokOption[] = (
+  Object.keys(borderColorMap) as (keyof typeof borderColorMap)[]
+).map((key) => ({
+  value: key,
+  name: borderColorLabels[key],
 }));
 
 const flexBreakpointOptions: StoryblokOption[] = [
@@ -471,6 +513,26 @@ export const componentDefinitions: StoryblokComponent[] = [
         description:
           "Box model: pick 0–4 margin directions. Options show pixel values (e.g. mt-4 (16px)); mx-auto has no px.",
       },
+      border: {
+        type: "options",
+        pos: 15,
+        options: flexBorderOptions,
+        max_choices: 5,
+        description:
+          "Border sides (multi-select). Options show class names (e.g. Bottom (border-b)).",
+      },
+      border_width: {
+        type: "option",
+        pos: 16,
+        options: flexBorderWidthOptions,
+        description: "Border width. Options show pixel values (e.g. border (1px), border-2 (2px)).",
+      },
+      border_color: {
+        type: "option",
+        pos: 17,
+        options: flexBorderColorOptions,
+        description: "Border color (semantic).",
+      },
     },
   },
 
@@ -557,10 +619,10 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 3,
         default_value: "normal",
         options: [
-          { value: "normal", name: "Normal" },
-          { value: "medium", name: "Medium" },
-          { value: "semibold", name: "Semibold" },
-          { value: "bold", name: "Bold" },
+          { value: "normal", name: "Normal (400)" },
+          { value: "medium", name: "Medium (500)" },
+          { value: "semibold", name: "Semibold (600)" },
+          { value: "bold", name: "Bold (700)" },
         ],
       },
       color: {

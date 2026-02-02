@@ -397,3 +397,40 @@ export const marginMap = {
   "mx-auto": "mx-auto",
   "my-auto": "my-auto",
 } as const;
+
+/** Border sides (multi-select). Tailwind: border = all, border-t/r/b/l = per side. */
+export const borderDirectionMap = {
+  border: "border",
+  "border-t": "border-t",
+  "border-r": "border-r",
+  "border-b": "border-b",
+  "border-l": "border-l",
+} as const;
+
+/** Border width. Labels show px (Tailwind: border = 1px, border-2 = 2px, etc.). */
+export const borderWidthMap = {
+  "border-0": "border-0",
+  border: "border",
+  "border-2": "border-2",
+  "border-4": "border-4",
+  "border-8": "border-8",
+} as const;
+
+/** Border width in px for option labels. */
+export const borderWidthToPx: Record<keyof typeof borderWidthMap, string> = {
+  "border-0": "0px",
+  border: "1px",
+  "border-2": "2px",
+  "border-4": "4px",
+  "border-8": "8px",
+};
+
+/** Border color (semantic). */
+export const borderColorMap = {
+  "border-border": "border-border",
+  "border-input": "border-input",
+  "border-primary": "border-primary",
+  "border-muted": "border-muted",
+  "border-destructive": "border-destructive",
+  "border-foreground": "border-foreground",
+} as const;
