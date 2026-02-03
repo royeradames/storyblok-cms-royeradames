@@ -10,7 +10,15 @@ import {
 
 export type { StylesBreakpointOptionsBlok } from "../../styles";
 
-export type ContainerElement = "div" | "section" | "article" | "header" | "hgroup";
+export type ContainerElement =
+  | "div"
+  | "section"
+  | "article"
+  | "header"
+  | "hgroup"
+  | "ul"
+  | "ol"
+  | "li";
 
 export interface ShadcnContainerBlok extends SbBlokData {
   name?: string;
@@ -25,15 +33,20 @@ const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
   article: "article",
   header: "header",
   hgroup: "hgroup",
+  ul: "ul",
+  ol: "ol",
+  li: "li",
 };
+
+function renderItems(items: SbBlokData[] | undefined) {
+  return items?.map((nestedBlok) => (
+    <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
+  ));
+}
 
 export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
   const styleClasses = buildStyleClasses(blok.styles);
   const hasStyles = styleClasses.length > 0;
-  const fallbackClasses = !hasStyles
-    ? ["flex-row", "justify-start", "items-stretch"]
-    : [];
-
   const as =
     blok.container_as && ELEMENT_MAP[blok.container_as]
       ? blok.container_as
@@ -45,15 +58,13 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
       {...storyblokEditable(blok)}
       {...(blok.name && { "data-name": blok.name })}
       className={cn(
-        "flex",
-        ...fallbackClasses,
+        (as === "ul" || as === "ol" ? undefined : "flex"),
+        as !== "ul" && as !== "ol" && !hasStyles && "flex-row justify-start items-stretch",
         ...styleClasses,
         (blok as SbBlokData & { class_name?: string }).class_name
       )}
     >
-      {blok.items?.map((nestedBlok) => (
-        <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
-      ))}
+      {renderItems(blok.items)}
     </Component>
   );
 }
