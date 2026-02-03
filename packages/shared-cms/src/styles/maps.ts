@@ -461,7 +461,9 @@ export function getBorderClass(
   width: keyof typeof borderWidthMap
 ): string {
   const safeWidth =
-    width && width in borderWidthMap ? (width as keyof typeof borderWidthMap) : "border";
+    width && width in borderWidthMap
+      ? (width as keyof typeof borderWidthMap)
+      : "border";
   if (direction === "border") return borderWidthMap[safeWidth];
   const suffix = borderWidthSuffix[safeWidth];
   return direction + suffix;
@@ -566,3 +568,26 @@ export const boxShadowMap = {
   "shadow-2xl": "shadow-2xl",
   "shadow-inner": "shadow-inner",
 } as const;
+
+/**
+ * Tailwind variants (modifiers). When set, all utilities in the style block get this prefix.
+ * Order in output: breakpoint + variant + utility (e.g. sm:last:border-b).
+ */
+export const variantMap = {
+  none: "",
+  last: "last:",
+  first: "first:",
+  only: "only:",
+  odd: "odd:",
+  even: "even:",
+  hover: "hover:",
+  focus: "focus:",
+  focus_visible: "focus-visible:",
+  group_hover: "group-hover:",
+  group_focus: "group-focus:",
+} as const;
+
+export type VariantKey = keyof typeof variantMap;
+
+/** Utility class for parent: marks element as group for group-hover/group-focus on children. */
+export const GROUP_CLASS = "group";

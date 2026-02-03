@@ -22,10 +22,19 @@ import {
   borderStyleMap,
   boxShadowMap,
   textSizeMap,
+  variantMap,
+  GROUP_CLASS,
 } from "./maps";
 
 function getBreakpointPrefix(breakpoint: BreakpointKey): string {
   return breakpoint === "base" ? "" : `${breakpoint}:`;
+}
+
+function getVariantPrefix(
+  variant: StylesBreakpointOptionsBlok["variant"]
+): string {
+  if (!variant || variant === "none") return "";
+  return variantMap[variant] ?? "";
 }
 
 /**
@@ -47,10 +56,13 @@ export function buildStyleClasses(
   const classes: string[] = [];
 
   for (const opt of sorted) {
-    const prefix = getBreakpointPrefix(
+    const breakpointPrefix = getBreakpointPrefix(
       (opt.breakpoint ?? "base") as BreakpointKey
     );
+    const variantPrefix = getVariantPrefix(opt.variant);
+    const prefix = breakpointPrefix + variantPrefix;
 
+    if (opt.group) classes.push(breakpointPrefix + GROUP_CLASS);
     if (opt.display && displayMap[opt.display])
       classes.push(prefix + displayMap[opt.display]);
     if (opt.direction && directionMap[opt.direction])
@@ -79,8 +91,8 @@ export function buildStyleClasses(
           (v) => v && v in paddingMap
         )
       : opt.padding && opt.padding in paddingMap
-        ? [opt.padding as keyof typeof paddingMap]
-        : [];
+      ? [opt.padding as keyof typeof paddingMap]
+      : [];
     paddingKeys.forEach((key) => {
       if (paddingMap[key]) classes.push(prefix + paddingMap[key]);
     });
@@ -91,8 +103,8 @@ export function buildStyleClasses(
           (v) => v && v in marginMap
         )
       : opt.margin && opt.margin in marginMap
-        ? [opt.margin as keyof typeof marginMap]
-        : [];
+      ? [opt.margin as keyof typeof marginMap]
+      : [];
     marginKeys.forEach((key) => {
       if (marginMap[key]) classes.push(prefix + marginMap[key]);
     });
@@ -110,11 +122,17 @@ export function buildStyleClasses(
     if (opt.border_color && borderColorMap[opt.border_color])
       classes.push(prefix + borderColorMap[opt.border_color]);
     if (opt.border_style && opt.border_style in borderStyleMap)
-      classes.push(prefix + borderStyleMap[opt.border_style as keyof typeof borderStyleMap]);
+      classes.push(
+        prefix + borderStyleMap[opt.border_style as keyof typeof borderStyleMap]
+      );
     if (opt.shadow && opt.shadow in boxShadowMap)
-      classes.push(prefix + boxShadowMap[opt.shadow as keyof typeof boxShadowMap]);
+      classes.push(
+        prefix + boxShadowMap[opt.shadow as keyof typeof boxShadowMap]
+      );
     if (opt.text_size && opt.text_size in textSizeMap)
-      classes.push(prefix + textSizeMap[opt.text_size as keyof typeof textSizeMap]);
+      classes.push(
+        prefix + textSizeMap[opt.text_size as keyof typeof textSizeMap]
+      );
   }
 
   return classes;

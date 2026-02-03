@@ -28,6 +28,7 @@ import {
   boxShadowMap,
   spacingTokenToPx,
   textSizeToPx,
+  variantMap,
 } from "../shadcn/flex/maps";
 
 /** Option name with px suffix when key uses a spacing token (e.g. "gap-2" -> "gap-2 (8px)"). */
@@ -263,6 +264,23 @@ const flexBreakpointOptions: StoryblokOption[] = [
   { value: "2xl", name: "2XL (1536px)" },
 ];
 
+const variantOptionLabels: Record<keyof typeof variantMap, string> = {
+  none: "None",
+  last: "Last",
+  first: "First",
+  only: "Only",
+  odd: "Odd",
+  even: "Even",
+  hover: "Hover",
+  focus: "Focus",
+  focus_visible: "Focus visible",
+  group_hover: "Group hover",
+  group_focus: "Group focus",
+};
+const flexVariantOptions: StoryblokOption[] = (
+  Object.keys(variantMap) as (keyof typeof variantMap)[]
+).map((key) => ({ value: key, name: variantOptionLabels[key] }));
+
 /** Text size options with px in label (e.g. "XS (12px)", "Base (16px)", "2XL (24px)"). */
 const textSizeOptionsWithPx: StoryblokOption[] = (
   Object.keys(textSizeToPx) as (keyof typeof textSizeToPx)[]
@@ -447,6 +465,21 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "base",
         options: flexBreakpointOptions,
         description: "Tailwind breakpoint (base = no prefix)",
+      },
+      variant: {
+        type: "option",
+        pos: 0.5,
+        default_value: "none",
+        options: flexVariantOptions,
+        description:
+          "Tailwind variant: prefix for all utilities in this block (e.g. last:, hover:)",
+      },
+      group: {
+        type: "boolean",
+        pos: 0.6,
+        default_value: false,
+        description:
+          "Add 'group' class on container so children can use group-hover:, group-focus:",
       },
       padding: {
         type: "options",

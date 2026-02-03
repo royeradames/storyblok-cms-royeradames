@@ -18,18 +18,32 @@ import {
   borderStyleMap,
   boxShadowMap,
   textSizeMap,
+  type VariantKey,
 } from "./maps";
 
-export const BREAKPOINT_ORDER = ["base", "sm", "md", "lg", "xl", "2xl"] as const;
+export const BREAKPOINT_ORDER = [
+  "base",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+] as const;
 export type BreakpointKey = (typeof BREAKPOINT_ORDER)[number];
 
 /**
  * Breakpoint style options (layout, spacing, border, sizing).
  * Used by Container and other components with a "styles" field.
  * Padding and margin: multi-options (0–4 directions, box model) or legacy single key.
+ * Variant: Tailwind variant prefix (e.g. last:, hover:) applied to all utilities in this block.
+ * Group: add "group" utility on container (for group-hover/group-focus on children).
  */
 export interface StylesBreakpointOptionsBlok extends SbBlokData {
   breakpoint?: BreakpointKey;
+  /** Tailwind variant (last:, first:, hover:, etc.). Applied to all utilities in this block. */
+  variant?: VariantKey;
+  /** Add "group" class on container so children can use group-hover:, group-focus:. */
+  group?: boolean;
   display?: keyof typeof displayMap;
   direction?: keyof typeof directionMap;
   justify?: keyof typeof justifyMap;

@@ -31,10 +31,16 @@ import {
   borderStyleMap,
   boxShadowMap,
   textSizeMap,
+  variantMap,
+  GROUP_CLASS,
 } from "@repo/shared-cms/flex-maps";
 
 const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
 const OUT_PATH = path.join(process.cwd(), "src/app/styles-safelist.txt");
+
+const VARIANTS = (
+  Object.keys(variantMap) as (keyof typeof variantMap)[]
+).filter((k) => k !== "none");
 
 function collectPrefixedClasses(
   map: Record<string, string>,
@@ -45,6 +51,36 @@ function collectPrefixedClasses(
   for (const bp of breakpoints) {
     for (const v of values) {
       classes.push(`${bp}:${v}`);
+    }
+  }
+  return classes;
+}
+
+function collectVariantPrefixedClasses(map: Record<string, string>): string[] {
+  const classes: string[] = [];
+  const values = Object.values(map) as string[];
+  for (const variant of VARIANTS) {
+    const prefix = variantMap[variant];
+    if (!prefix) continue;
+    for (const v of values) {
+      classes.push(prefix + v);
+    }
+  }
+  return classes;
+}
+
+function collectBreakpointVariantPrefixedClasses(
+  map: Record<string, string>
+): string[] {
+  const classes: string[] = [];
+  const values = Object.values(map) as string[];
+  for (const bp of BREAKPOINTS) {
+    for (const variant of VARIANTS) {
+      const prefix = variantMap[variant];
+      if (!prefix) continue;
+      for (const v of values) {
+        classes.push(`${bp}:${prefix}${v}`);
+      }
     }
   }
   return classes;
@@ -78,21 +114,47 @@ function main() {
     textSizeMap,
   ] as Record<string, string>[];
 
-  // Prefixed (sm:, md:, ...) for all maps
-  for (const map of maps) {
-    all.push(...collectPrefixedClasses(map));
-  }
-
   // Base (unprefixed) so breakpoint "base" works
   for (const map of maps) {
     all.push(...collectBaseClasses(map));
   }
 
-  // flex-wrap: prefixed and base
+  // Prefixed (sm:, md:, ...) for all maps
+  for (const map of maps) {
+    all.push(...collectPrefixedClasses(map));
+  }
+
+  // Variant-prefixed (last:, hover:, etc.) for all maps
+  for (const map of maps) {
+    all.push(...collectVariantPrefixedClasses(map));
+  }
+
+  // Breakpoint + variant (sm:last:, etc.) for all maps
+  for (const map of maps) {
+    all.push(...collectBreakpointVariantPrefixedClasses(map));
+  }
+
+  // flex-wrap: base, prefixed, variant-prefixed, breakpoint+variant
+  all.push("flex-wrap");
   for (const bp of BREAKPOINTS) {
     all.push(`${bp}:flex-wrap`);
   }
-  all.push("flex-wrap");
+  for (const variant of VARIANTS) {
+    const prefix = variantMap[variant];
+    if (prefix) all.push(prefix + "flex-wrap");
+  }
+  for (const bp of BREAKPOINTS) {
+    for (const variant of VARIANTS) {
+      const prefix = variantMap[variant];
+      if (prefix) all.push(`${bp}:${prefix}flex-wrap`);
+    }
+  }
+
+  // group: base and breakpoint-prefixed
+  all.push(GROUP_CLASS);
+  for (const bp of BREAKPOINTS) {
+    all.push(`${bp}:${GROUP_CLASS}`);
+  }
 
   const unique = [...new Set(all)];
   const content = unique.sort().join("\n") + "\n";
