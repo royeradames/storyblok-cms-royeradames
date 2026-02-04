@@ -201,8 +201,6 @@ export function generateElements(blok: CaseStudies2Blok) {
 
 function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
   return studies.map((study) => {
-    console.log("getCaseStudiesItems");
-    console.log(study);
     return {
       _uid: study._uid,
       name: "case-study",
