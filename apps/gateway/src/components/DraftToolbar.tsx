@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button, Badge } from "@repo/ui";
@@ -8,11 +9,31 @@ import { DynamicIcon } from "@repo/shared-cms";
 export function DraftToolbar() {
   const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
+  const [isLogging, setIsLogging] = useState(false);
 
   const isDark = resolvedTheme === "dark";
 
   function toggleTheme() {
     setTheme(isDark ? "light" : "dark");
+  }
+
+  async function logPageBlok() {
+    const pathSlug = pathname?.replace(/^\/preview\/?/, "").replace(/\/$/, "") ?? "";
+    const slug = pathSlug === "" ? "home" : pathSlug;
+
+    setIsLogging(true);
+    try {
+      const res = await fetch(
+        `/api/preview-story?slug=${encodeURIComponent(slug)}`,
+      );
+      if (!res.ok) throw new Error("Fetch failed");
+      const story = await res.json();
+      console.log("Page blok (story.content):", story?.content);
+    } catch (e) {
+      console.error("Could not load preview story:", e);
+    } finally {
+      setIsLogging(false);
+    }
   }
 
   return (
@@ -27,6 +48,15 @@ export function DraftToolbar() {
           </span>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={logPageBlok}
+            disabled={isLogging}
+            title="Log current page blok to console"
+          >
+            {isLogging ? "…" : "Log page blok"}
+          </Button>
           <Button size="sm" variant="outline" asChild>
             <a href="/preview/dev">Scenario Manager</a>
           </Button>
