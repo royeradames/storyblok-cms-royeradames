@@ -6,9 +6,5 @@ import { generateElements } from "./structure";
 
 export function CaseStudies2Section({ blok }: { blok: CaseStudies2Blok }) {
   const fullBlok = generateElements(blok);
-  return (
-    <div {...storyblokEditable(blok)}>
-      <StoryblokComponent blok={fullBlok} />
-    </div>
-  );
+  return <StoryblokComponent blok={fullBlok} />;
 }

@@ -25,6 +25,7 @@ export interface ShadcnContainerBlok extends SbBlokData {
   container_as?: ContainerElement;
   items?: SbBlokData[];
   styles?: StylesBreakpointOptionsBlok[];
+  sectionBlok?: SbBlokData;
 }
 
 const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
@@ -58,7 +59,7 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
   const Component = as;
   return (
     <Component
-      {...storyblokEditable(blok)}
+      {...storyblokEditable(blok.sectionBlok ? blok.sectionBlok : blok)}
       {...(blok.name && { "data-name": blok.name })}
       className={cn(
         as === "ul" || as === "ol" ? undefined : "flex",
@@ -67,7 +68,7 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
           !hasStyles &&
           "flex-row justify-start items-stretch",
         ...styleClasses,
-        (blok as SbBlokData & { class_name?: string }).class_name
+        (blok as SbBlokData & { class_name?: string }).class_name,
       )}
     >
       {renderItems(blok.items)}

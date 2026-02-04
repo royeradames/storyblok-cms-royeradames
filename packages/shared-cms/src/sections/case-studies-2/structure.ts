@@ -196,6 +196,7 @@ export function generateElements(blok: CaseStudies2Blok) {
     ],
     component: "shared_shadcn_container",
     container_as: "section",
+    sectionBlok: blok,
   };
 }
 
@@ -645,6 +646,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
       ],
       component: "shared_shadcn_container",
       container_as: "li",
+      sectionBlok: study,
     };
   });
 }
@@ -769,6 +771,7 @@ function getStatisticsItems(statistics: StatisticInput[]) {
       ],
       component: "shared_shadcn_container",
       container_as: "div",
+      sectionBlok: statistic,
     };
   });
 }
