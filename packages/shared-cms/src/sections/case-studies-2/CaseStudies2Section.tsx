@@ -8,7 +8,7 @@ export function CaseStudies2Section({ blok }: { blok: CaseStudies2Blok }) {
   const fullBlok = generateElements(blok);
   return (
     <div {...storyblokEditable(blok)}>
-      <StoryblokComponent blok={fullBlok} key={fullBlok._uid} />
+      <StoryblokComponent blok={fullBlok} />
     </div>
   );
 }
