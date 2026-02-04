@@ -200,26 +200,27 @@ export function generateElements(blok: CaseStudies2Blok) {
 }
 
 function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
-  return [
-    {
-      _uid: "b892dcc9-dd00-4f55-a64f-7931ab0bb9a4",
+  return studies.map((study) => {
+    console.log("getCaseStudiesItems");
+    console.log(study);
+    return {
+      _uid: study._uid,
       name: "case-study",
       items: [
         {
           _uid: "e5265ac2-40f1-4c23-a8eb-d429881d76ba",
           image: {
-            id: 140495677412865,
-            alt: "",
-            name: "",
-            focus: "",
-            title: "",
-            source: "",
-            filename:
-              "https://a.storyblok.com/f/290156609668258/1200x1200/827039a479/placeholder-1.svg",
-            copyright: "",
-            fieldtype: "asset",
-            meta_data: {},
-            is_external_url: false,
+            id: study.image.id,
+            alt: study.image.alt,
+            name: study.image.name,
+            focus: study.image.focus,
+            title: study.image.title,
+            source: study.image.source,
+            filename: study.image.filename,
+            copyright: study.image.copyright,
+            fieldtype: study.image.fieldtype,
+            meta_data: study.image.meta_data,
+            is_external_url: study.image.is_external_url,
           },
           styles: [
             {
@@ -796,8 +797,8 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
       ],
       component: "shared_shadcn_container",
       container_as: "li",
-    },
-  ];
+    };
+  });
 }
 
 function getStatisticsItems(
