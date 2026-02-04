@@ -2,6 +2,14 @@ import type { StylesBreakpointOptionsBlok } from "../../styles";
 
 /** Storyblok asset shape for image/logo fields (image block). */
 export type StoryblokImageAsset = {
+  id: string;
+  name: string;
+  title: string;
+  source: string;
+  copyright: string;
+  fieldtype: string;
+  meta_data: Record<string, any>;
+  is_external_url: boolean;
   filename: string;
   alt?: string;
   focus?: string;
