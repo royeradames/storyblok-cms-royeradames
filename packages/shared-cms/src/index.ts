@@ -10,6 +10,9 @@ export * from "./shadcn";
 // Presets
 export * from "./presets";
 
+// Sections (predetermined section components)
+export * from "./sections";
+
 // Dev scenario system
 export * from "./dev";
 
@@ -62,6 +65,7 @@ import { ShadcnSelect } from "./shadcn/Select";
 import { ShadcnSlider } from "./shadcn/Slider";
 import { ShadcnTable } from "./shadcn/Table";
 import { PresetHeroDefault } from "./presets/HeroDefault";
+import { CaseStudies2Section } from "./sections";
 import { DevScenarioPicker } from "./dev/ScenarioPicker";
 
 /**
@@ -141,6 +145,9 @@ export const components = {
 
   // === Presets ===
   preset_hero_default: PresetHeroDefault,
+
+  // === Sections ===
+  case_studies_2_section: CaseStudies2Section,
 
   // === Dev Components ===
   dev_scenario_picker: DevScenarioPicker,

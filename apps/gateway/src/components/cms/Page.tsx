@@ -23,6 +23,8 @@ export interface PageBlok extends SbBlokData {
 }
 
 export function Page({ blok }: { blok: PageBlok }) {
+  console.log(blok);
+  console.log({ ...storyblokEditable(blok) });
   return (
     <main
       {...storyblokEditable(blok)}

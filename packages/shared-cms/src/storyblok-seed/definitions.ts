@@ -2701,6 +2701,109 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
     },
   },
+
+  // ============================================
+  // SECTIONS (predetermined section components)
+  // ============================================
+  {
+    name: "case_studies_2_statistic",
+    display_name: "Case Studies 2 Statistic",
+    is_root: false,
+    is_nestable: false,
+    schema: {
+      headline_number: {
+        type: "text",
+        pos: 0,
+        description: "Headline number (e.g. 98%, 3.8x)",
+      },
+      what_it_measures: {
+        type: "text",
+        pos: 1,
+        description: "Label (e.g. Customer Satisfaction)",
+      },
+      source_or_context: {
+        type: "text",
+        pos: 2,
+        description: "Source or context (e.g. From verified reviews)",
+      },
+    },
+  },
+  {
+    name: "case_studies_2_study",
+    display_name: "Case Studies 2 Study",
+    is_root: false,
+    is_nestable: false,
+    schema: {
+      image: {
+        type: "asset",
+        pos: 0,
+        filetypes: ["images"],
+        description: "Study image",
+      },
+      quote: {
+        type: "textarea",
+        pos: 1,
+        description: "Quote text",
+      },
+      name: {
+        type: "text",
+        pos: 2,
+        description: "Person name",
+      },
+      position: {
+        type: "text",
+        pos: 3,
+        description: "Position (e.g. Product Director)",
+      },
+      company_logo: {
+        type: "asset",
+        pos: 4,
+        filetypes: ["images"],
+        description: "Company logo image",
+      },
+      statistics: {
+        type: "bloks",
+        pos: 5,
+        description: "Statistics for this study",
+        restrict_components: true,
+        component_whitelist: ["case_studies_2_statistic"],
+      },
+    },
+  },
+  {
+    name: "case_studies_2_section",
+    display_name: "Case Studies 2 Section",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-buildin",
+    schema: {
+      name: {
+        type: "text",
+        pos: 0,
+        description: "Section name (e.g. case-studies-2)",
+      },
+      description: {
+        type: "textarea",
+        pos: 1,
+        description: "Section description / subtitle",
+      },
+      studies: {
+        type: "bloks",
+        pos: 2,
+        description: "Case studies",
+        restrict_components: true,
+        component_whitelist: ["case_studies_2_study"],
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["styles_breakpoint_options"],
+      },
+    },
+  },
 ];
 
 // Export component names for easy reference

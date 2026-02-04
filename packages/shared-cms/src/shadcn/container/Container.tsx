@@ -39,6 +39,10 @@ const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
 };
 
 function renderItems(items: SbBlokData[] | undefined) {
+  // console.log("items", items);
+  if (!items || typeof items.map !== "function") {
+    return;
+  }
   return items?.map((nestedBlok) => (
     <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
   ));
@@ -52,14 +56,16 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
       ? blok.container_as
       : "div";
   const Component = as;
-
   return (
     <Component
       {...storyblokEditable(blok)}
       {...(blok.name && { "data-name": blok.name })}
       className={cn(
-        (as === "ul" || as === "ol" ? undefined : "flex"),
-        as !== "ul" && as !== "ol" && !hasStyles && "flex-row justify-start items-stretch",
+        as === "ul" || as === "ol" ? undefined : "flex",
+        as !== "ul" &&
+          as !== "ol" &&
+          !hasStyles &&
+          "flex-row justify-start items-stretch",
         ...styleClasses,
         (blok as SbBlokData & { class_name?: string }).class_name
       )}
