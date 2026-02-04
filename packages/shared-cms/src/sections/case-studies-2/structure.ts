@@ -1,4 +1,4 @@
-import type { CaseStudies2Blok } from "./case-studies-2.types";
+import type { CaseStudies2Blok, StatisticInput } from "./case-studies-2.types";
 
 export function generateElements(blok: CaseStudies2Blok) {
   return {
@@ -433,37 +433,8 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                 },
                 {
                   _uid: "4d716fd3-8b83-439f-97d0-e78ea649e065",
-                  name: "",
-                  items: [
-                    {
-                      _uid: "8c761f84-48e2-40d9-aab9-1b36d4371a0d",
-                      name: "statistic",
-                      items: getStatisticsItems(studies[0]?.statistics ?? []),
-                      styles: [
-                        {
-                          gap: "gap-2",
-                          _uid: "ad9f9727-0daa-410f-a0bd-2fe2cd56242e",
-                          wrap: false,
-                          align: "",
-                          width: "",
-                          height: "",
-                          margin: [],
-                          display: "",
-                          justify: "",
-                          padding: [],
-                          component: "shared_styles_breakpoint_options",
-                          direction: "flex-col",
-                          max_width: "",
-                          min_width: "",
-                          breakpoint: "base",
-                          max_height: "",
-                          min_height: "",
-                        },
-                      ],
-                      component: "shared_shadcn_container",
-                      container_as: "div",
-                    },
-                  ],
+                  name: "statistics",
+                  items: getStatisticsItems(study.statistics),
                   styles: [
                     {
                       gap: "gap-6",
@@ -680,9 +651,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
   });
 }
 
-function getStatisticsItems(
-  statistics: CaseStudies2Blok["studies"][number]["statistics"],
-) {
+function getStatisticsItems(statistics: StatisticInput[]) {
   return statistics.map((statistic) => {
     const statisticUid = (suffix: string) => `${statistic._uid}-${suffix}`;
     return {
