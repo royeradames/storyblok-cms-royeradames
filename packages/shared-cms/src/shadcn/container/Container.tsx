@@ -40,7 +40,6 @@ const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
 };
 
 function renderItems(items: SbBlokData[] | undefined) {
-  // console.log("items", items);
   if (!items || typeof items.map !== "function") {
     return;
   }
@@ -57,18 +56,21 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
       ? blok.container_as
       : "div";
   const Component = as;
+
+  const isListElement = as === "ul" || as === "ol";
+  const isFlexContainer = !isListElement;
+  const hasNoCustomStyles = !hasStyles;
+  const useDefaultFlexLayout = isFlexContainer && hasNoCustomStyles;
   return (
     <Component
       {...storyblokEditable(blok.sectionBlok ? blok.sectionBlok : blok)}
       {...(blok.name && { "data-name": blok.name })}
       className={cn(
-        as === "ul" || as === "ol" ? undefined : "flex",
-        as !== "ul" &&
-          as !== "ol" &&
-          !hasStyles &&
-          "flex-row justify-start items-stretch",
+        {
+          flex: isFlexContainer,
+          "flex-row justify-start items-stretch": useDefaultFlexLayout,
+        },
         ...styleClasses,
-        (blok as SbBlokData & { class_name?: string }).class_name,
       )}
     >
       {renderItems(blok.items)}
