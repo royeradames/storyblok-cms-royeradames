@@ -2,19 +2,19 @@ import type { CaseStudies2Blok, StatisticInput } from "./case-studies-2.types";
 
 export function generateElements(blok: CaseStudies2Blok) {
   return {
-    _uid: "33dabb22-e464-4d89-8dee-aac8fb6ee74f",
+    _uid: blok._uid,
     name: "case-studies-2",
     items: [
       {
-        _uid: "5fa62138-ff88-4a91-837c-541baa547115",
+        _uid: `${blok._uid}-1`,
         name: "header",
         items: [
           {
-            _uid: "cc3c2c94-a007-4feb-9ebd-830c287c5702",
+            _uid: `${blok._uid}-1-1`,
             name: "hero-wrapper",
             items: [
               {
-                _uid: "75c06cdc-b3ab-4585-b359-c40b291f5452",
+                _uid: `${blok._uid}-1-1-1`,
                 size: "base",
                 align: "center",
                 color: "primary",
@@ -23,12 +23,12 @@ export function generateElements(blok: CaseStudies2Blok) {
                 element: "p",
                 component: "shared_shadcn_text",
                 color_dark: {
-                  _uid: "1dc19d40-7dfb-4dca-8f42-f923c83e0b79",
+                  _uid: `${blok._uid}-1-1-1-1`,
                   color: "#f40000",
                   plugin: "native-color-picker",
                 },
                 color_light: {
-                  _uid: "4fb8f4fc-e467-43cb-8bb9-c5c83533f549",
+                  _uid: `${blok._uid}-1-1-1-2`,
                   color: "",
                   plugin: "native-color-picker",
                 },
@@ -36,14 +36,14 @@ export function generateElements(blok: CaseStudies2Blok) {
                 letter_spacing: "wide",
               },
               {
-                _uid: "be47b3bb-ca01-4e84-9b35-d6dc4f67152f",
+                _uid: `${blok._uid}-1-1-2`,
                 size: "4xl",
                 align: "center",
                 color: "primary",
                 styles: [
                   {
                     gap: "",
-                    _uid: "be73cf20-12ce-47f9-8ad0-fe36a782539a",
+                    _uid: `${blok._uid}-1-1-2-1`,
                     wrap: false,
                     align: "",
                     width: "",
@@ -72,12 +72,12 @@ export function generateElements(blok: CaseStudies2Blok) {
                 element: "h2",
                 component: "shared_shadcn_text",
                 color_dark: {
-                  _uid: "ed4ae582-8bed-433f-aa99-a9cf46a193f2",
+                  _uid: `${blok._uid}-1-1-2-2`,
                   color: "#f40000",
                   plugin: "native-color-picker",
                 },
                 color_light: {
-                  _uid: "567d6979-b1d1-403e-872b-1f80afe223e9",
+                  _uid: `${blok._uid}-1-1-2-3`,
                   color: "#f40000",
                   plugin: "native-color-picker",
                 },
@@ -88,7 +88,7 @@ export function generateElements(blok: CaseStudies2Blok) {
             styles: [
               {
                 gap: "gap-6",
-                _uid: "a74d33da-243a-4b5d-ad4d-ffb764a2f523",
+                _uid: `${blok._uid}-1-1-3`,
                 wrap: false,
                 align: "items-center",
                 width: "",
@@ -114,7 +114,7 @@ export function generateElements(blok: CaseStudies2Blok) {
         styles: [
           {
             gap: "",
-            _uid: "81c3798d-97a4-4716-816c-345d47f9c761",
+            _uid: `${blok._uid}-1-2`,
             wrap: false,
             align: "items-center",
             width: "w-full",
@@ -133,13 +133,13 @@ export function generateElements(blok: CaseStudies2Blok) {
         container_as: "header",
       },
       {
-        _uid: "c77dc262-89ca-4733-a61b-2ade11ae524b",
+        _uid: `${blok._uid}-2`,
         name: "case-studies",
         items: getCaseStudiesItems(blok.studies),
         styles: [
           {
             gap: "",
-            _uid: "193fcf18-11b2-4a92-893c-be535def1caa",
+            _uid: `${blok._uid}-2`,
             wrap: false,
             align: "",
             group: true,
@@ -171,7 +171,7 @@ export function generateElements(blok: CaseStudies2Blok) {
     styles: [
       {
         gap: "",
-        _uid: "420c2279-4001-4d6e-b7f9-6303a3db30ae",
+        _uid: `${blok._uid}-3`,
         wrap: false,
         align: "",
         width: "",
@@ -206,7 +206,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
       name: "case-study",
       items: [
         {
-          _uid: "e5265ac2-40f1-4c23-a8eb-d429881d76ba",
+          _uid: `${study._uid}-1`,
           image: {
             id: study.image.id,
             alt: study.image.alt,
@@ -223,7 +223,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
           styles: [
             {
               gap: "",
-              _uid: "dd742586-c72a-40c5-8762-2fc038c28fb5",
+              _uid: `${study._uid}-1-1`,
               wrap: false,
               align: "",
               width: "",
@@ -248,18 +248,18 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
           aspect_ratio: "auto",
         },
         {
-          _uid: "238b6c58-eaaa-4c95-8485-444f85693d7f",
+          _uid: `${study._uid}-2`,
           name: "case-study-content",
           items: [
             {
-              _uid: "a20c1c17-f0c5-4dff-abfd-3dd01a655394",
+              _uid: `${study._uid}-2-1`,
               size: "base",
               align: "left",
               color: "default",
               styles: [
                 {
                   gap: "",
-                  _uid: "be6c8e4f-71ef-44c5-ad6d-a0c1a7d5948b",
+                  _uid: `${study._uid}-2-1-1`,
                   wrap: false,
                   align: "",
                   width: "",
@@ -287,12 +287,12 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
               element: "q",
               component: "shared_shadcn_text",
               color_dark: {
-                _uid: "c73a280e-4374-423d-bfe5-2a26d687b5ef",
+                _uid: `${study._uid}-2-1-2`,
                 color: "#f40000",
                 plugin: "native-color-picker",
               },
               color_light: {
-                _uid: "e05272b6-fa5b-491a-8741-c27db87bf1e1",
+                _uid: `${study._uid}-2-1-3`,
                 color: "#f40000",
                 plugin: "native-color-picker",
               },
@@ -300,15 +300,15 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
               letter_spacing: "normal",
             },
             {
-              _uid: "156793c2-4317-4ced-bc44-5ec1e9afc8cb",
+              _uid: `${study._uid}-2-2`,
               name: "",
               items: [
                 {
-                  _uid: "ffe3646d-0bc0-419a-bc33-3d0175c4159f",
+                  _uid: `${study._uid}-2-2-1`,
                   name: "person",
                   items: [
                     {
-                      _uid: "ed1a9350-abf9-407f-a1fd-30501e26c54e",
+                      _uid: `${study._uid}-2-2-1-1`,
                       size: "base",
                       align: "left",
                       color: "default",
@@ -318,12 +318,12 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                       element: "p",
                       component: "shared_shadcn_text",
                       color_dark: {
-                        _uid: "efd1fcda-6506-4a26-b8f3-97dd1b9267ef",
+                        _uid: `${study._uid}-2-2-1-1-1`,
                         color: "#f40000",
                         plugin: "native-color-picker",
                       },
                       color_light: {
-                        _uid: "995dbe02-f100-4d86-a3e1-fc120b1ef3b0",
+                        _uid: `${study._uid}-2-2-1-1-2`,
                         color: "#f40000",
                         plugin: "native-color-picker",
                       },
@@ -331,11 +331,11 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                       letter_spacing: "normal",
                     },
                     {
-                      _uid: "4aa21bcc-ff44-442f-a466-aa47cfc3ba53",
+                      _uid: `${study._uid}-2-2-1-2`,
                       name: "position-and-logo",
                       items: [
                         {
-                          _uid: "81ae8578-bff2-4b9e-88ed-6a1db595525c",
+                          _uid: `${study._uid}-2-2-1-2-1`,
                           size: "base",
                           align: "left",
                           color: "muted",
@@ -345,12 +345,12 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                           element: "p",
                           component: "shared_shadcn_text",
                           color_dark: {
-                            _uid: "97c11833-646e-4761-a30c-1feb3bbcc812",
+                            _uid: `${study._uid}-2-2-1-2-1-1`,
                             color: "#f40000",
                             plugin: "native-color-picker",
                           },
                           color_light: {
-                            _uid: "3055a088-db93-4586-b94d-2346e58c7daa",
+                            _uid: `${study._uid}-2-2-1-2-1-2`,
                             color: "#f40000",
                             plugin: "native-color-picker",
                           },
@@ -358,7 +358,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                           letter_spacing: "normal",
                         },
                         {
-                          _uid: "6160e6dc-79e0-459a-a0a7-0055f851b2d4",
+                          _uid: `${study._uid}-2-2-1-2-2`,
                           image: {
                             id: study.company_logo.id,
                             alt: study.company_logo.alt,
@@ -383,7 +383,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                       styles: [
                         {
                           gap: "gap-4",
-                          _uid: "b831162d-ea38-4501-a6d6-fcd7a97e8e5c",
+                          _uid: `${study._uid}-2-2-1-2-3`,
                           wrap: false,
                           align: "",
                           width: "",
@@ -408,7 +408,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                   styles: [
                     {
                       gap: "gap-1",
-                      _uid: "6a6b1ce6-61dc-4fd4-9a79-2d24e271723a",
+                      _uid: `${study._uid}-2-2-1-3`,
                       wrap: false,
                       align: "",
                       width: "",
@@ -430,13 +430,13 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
                   container_as: "div",
                 },
                 {
-                  _uid: "4d716fd3-8b83-439f-97d0-e78ea649e065",
+                  _uid: `${study._uid}-2-2-2`,
                   name: "statistics",
                   items: getStatisticsItems(study.statistics),
                   styles: [
                     {
                       gap: "gap-6",
-                      _uid: "ae774b5e-acd9-4af1-9f1a-7a1b5dd12af2",
+                      _uid: `${study._uid}-2-2-2-1`,
                       wrap: false,
                       align: "",
                       width: "",
@@ -461,7 +461,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
               styles: [
                 {
                   gap: "gap-10",
-                  _uid: "8e3f2231-e63e-429a-99a3-d12cf8a9e915",
+                  _uid: `${study._uid}-2-2-3`,
                   wrap: false,
                   align: "",
                   width: "",
@@ -491,7 +491,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
           styles: [
             {
               gap: "gap-10",
-              _uid: "81731e44-c187-4986-b385-08b1d08992bf",
+              _uid: `${study._uid}-2-3`,
               wrap: false,
               align: "",
               width: "",
@@ -521,7 +521,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
       styles: [
         {
           gap: "",
-          _uid: "d6aac2c1-59ef-4b0a-9f4e-5e3f2f8b239a",
+          _uid: `${study._uid}-3`,
           wrap: false,
           align: "",
           group: false,
@@ -547,7 +547,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
         },
         {
           gap: "gap-10",
-          _uid: "465a30c5-9ce0-497f-bdeb-96b45f5d0d9b",
+          _uid: `${study._uid}-4`,
           wrap: false,
           align: "",
           width: "",
@@ -572,7 +572,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
         },
         {
           gap: "",
-          _uid: "6c3d1d9a-7fdc-4904-9368-06a4a2eb6e83",
+          _uid: `${study._uid}-5`,
           wrap: false,
           align: "",
           width: "",
@@ -596,7 +596,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
         },
         {
           gap: "",
-          _uid: "51e95ddc-bfef-4815-975e-c3a387babaae",
+          _uid: `${study._uid}-6`,
           wrap: false,
           align: "",
           width: "",
@@ -620,7 +620,7 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
         },
         {
           gap: "",
-          _uid: "b5248e8c-9fab-4c13-b97a-d281b5ba3dc6",
+          _uid: `${study._uid}-7`,
           wrap: false,
           align: "",
           width: "",
@@ -651,20 +651,19 @@ function getCaseStudiesItems(studies: CaseStudies2Blok["studies"]) {
 
 function getStatisticsItems(statistics: StatisticInput[]) {
   return statistics.map((statistic) => {
-    const statisticUid = (suffix: string) => `${statistic._uid}-${suffix}`;
     return {
       _uid: statistic._uid,
       name: "statistic",
       items: [
         {
-          _uid: statisticUid("number"),
+          _uid: `${statistic._uid}-1`,
           size: "4xl",
           align: "left",
           color: "default",
           styles: [
             {
               gap: "",
-              _uid: statisticUid("number-styles"),
+              _uid: `${statistic._uid}-1-1`,
               wrap: false,
               align: "",
               width: "",
@@ -688,12 +687,12 @@ function getStatisticsItems(statistics: StatisticInput[]) {
           element: "p",
           component: "shared_shadcn_text",
           color_dark: {
-            _uid: statisticUid("number-color-dark"),
+            _uid: `${statistic._uid}-1-2`,
             color: "#f40000",
             plugin: "native-color-picker",
           },
           color_light: {
-            _uid: statisticUid("number-color-light"),
+            _uid: `${statistic._uid}-1-3`,
             color: "#f40000",
             plugin: "native-color-picker",
           },
@@ -701,7 +700,7 @@ function getStatisticsItems(statistics: StatisticInput[]) {
           letter_spacing: "normal",
         },
         {
-          _uid: statisticUid("label"),
+          _uid: `${statistic._uid}-2`,
           size: "lg",
           align: "left",
           color: "default",
@@ -711,12 +710,12 @@ function getStatisticsItems(statistics: StatisticInput[]) {
           element: "p",
           component: "shared_shadcn_text",
           color_dark: {
-            _uid: statisticUid("label-color-dark"),
+            _uid: `${statistic._uid}-2-1`,
             color: "#f40000",
             plugin: "native-color-picker",
           },
           color_light: {
-            _uid: statisticUid("label-color-light"),
+            _uid: `${statistic._uid}-2-2`,
             color: "#f40000",
             plugin: "native-color-picker",
           },
@@ -724,7 +723,7 @@ function getStatisticsItems(statistics: StatisticInput[]) {
           letter_spacing: "normal",
         },
         {
-          _uid: statisticUid("sublabel"),
+          _uid: `${statistic._uid}-3`,
           size: "base",
           align: "left",
           color: "muted",
@@ -734,12 +733,12 @@ function getStatisticsItems(statistics: StatisticInput[]) {
           element: "p",
           component: "shared_shadcn_text",
           color_dark: {
-            _uid: statisticUid("sublabel-color-dark"),
+            _uid: `${statistic._uid}-3-1`,
             color: "#f40000",
             plugin: "native-color-picker",
           },
           color_light: {
-            _uid: statisticUid("sublabel-color-light"),
+            _uid: `${statistic._uid}-3-2`,
             color: "#f40000",
             plugin: "native-color-picker",
           },
@@ -750,7 +749,7 @@ function getStatisticsItems(statistics: StatisticInput[]) {
       styles: [
         {
           gap: "gap-2",
-          _uid: statisticUid("styles"),
+          _uid: `${statistic._uid}-4`,
           wrap: false,
           align: "",
           width: "",
