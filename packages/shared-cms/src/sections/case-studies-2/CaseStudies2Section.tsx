@@ -2,9 +2,9 @@
 
 import { StoryblokComponent } from "@storyblok/react";
 import type { CaseStudies2Blok } from "./case-studies-2.types";
-import { generateElements } from "./structure";
+import { generateStructure } from "./generatedStructure";
 
 export function CaseStudies2Section({ blok }: { blok: CaseStudies2Blok }) {
-  const fullBlok = generateElements(blok);
+  const fullBlok = generateStructure(blok);
   return <StoryblokComponent blok={fullBlok} />;
 }

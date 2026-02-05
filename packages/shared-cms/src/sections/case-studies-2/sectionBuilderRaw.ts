@@ -32,6 +32,7 @@ export function caseStudies2SectionBuilderRaw() {
                 },
                 line_height: "normal",
                 letter_spacing: "wide",
+                data_field_name: "description",
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "6d7b2000-4d4f-41af-bcff-cd82a2c60b20", "id": "141503480340431"}-->',
               },
@@ -85,6 +86,7 @@ export function caseStudies2SectionBuilderRaw() {
                 },
                 line_height: "",
                 letter_spacing: "",
+                data_field_name: "name",
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "048b6fcd-b9ba-44f9-a745-d278cca400da", "id": "141503480340431"}-->',
               },
@@ -196,6 +198,7 @@ export function caseStudies2SectionBuilderRaw() {
                 component: "shared_shadcn_image",
                 object_fit: "cover",
                 aspect_ratio: "auto",
+                data_field_name: "image",
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_image", "space": "290156609668258", "uid": "2d56dfe9-65ea-44b8-bf91-41426482892a", "id": "141503480340431"}-->',
               },
@@ -253,6 +256,7 @@ export function caseStudies2SectionBuilderRaw() {
                     },
                     line_height: "normal",
                     letter_spacing: "normal",
+                    data_field_name: "quote",
                     _editable:
                       '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "38c57764-2858-412e-b379-952880cf78d7", "id": "141503480340431"}-->',
                   },
@@ -286,6 +290,7 @@ export function caseStudies2SectionBuilderRaw() {
                             },
                             line_height: "normal",
                             letter_spacing: "normal",
+                            data_field_name: "name",
                             _editable:
                               '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "331042b2-6690-42ec-bb9a-f8d3b4c8774f", "id": "141503480340431"}-->',
                           },
@@ -315,6 +320,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 },
                                 line_height: "normal",
                                 letter_spacing: "normal",
+                                data_field_name: "position",
                                 _editable:
                                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "5d899afe-35d3-4397-a396-188e9fdc9166", "id": "141503480340431"}-->',
                               },
@@ -340,6 +346,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 component: "shared_shadcn_image",
                                 object_fit: "cover",
                                 aspect_ratio: "auto",
+                                data_field_name: "company-logo",
                                 _editable:
                                   '<!--#storyblok#{"name": "shared_shadcn_image", "space": "290156609668258", "uid": "071be5a7-d36f-4a73-b0be-338eb80eb8cf", "id": "141503480340431"}-->',
                               },
@@ -455,6 +462,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 },
                                 line_height: "none",
                                 letter_spacing: "normal",
+                                data_field_name: "headline_number",
                                 _editable:
                                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "5a5aec35-fd25-4898-984d-f96820d649f6", "id": "141503480340431"}-->',
                               },
@@ -480,6 +488,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 },
                                 line_height: "normal",
                                 letter_spacing: "normal",
+                                data_field_name: "what_it_measures",
                                 _editable:
                                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "52122944-f187-4f45-8f4c-3016e583b722", "id": "141503480340431"}-->',
                               },
@@ -505,6 +514,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 },
                                 line_height: "normal",
                                 letter_spacing: "normal",
+                                data_field_name: "source_or_context",
                                 _editable:
                                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "15b207fc-b6f1-4e71-a0d9-fc8c82d20d0b", "id": "141503480340431"}-->',
                               },

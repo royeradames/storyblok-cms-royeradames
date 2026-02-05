@@ -46,6 +46,9 @@ export function ShadcnImage({ blok }: { blok: ShadcnImageBlok }) {
   const objectFit = objectFitMap[blok.object_fit || "cover"];
   const rounded = roundedMap[blok.rounded || "md"];
 
+  if (!blok?.image?.filename) {
+    return null;
+  }
   const imageElement = (
     <img
       src={blok.image.filename}
