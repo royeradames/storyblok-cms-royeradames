@@ -33,27 +33,14 @@ export function generateStructure(blok: CaseStudies2Blok) {
 }
 
 function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
-  console.log("formatRaw");
+  // console.log("formatRaw");
   const dataFieldsNames = cmsData.data_fields;
-  const intialStructure = structuredClone(baseStructure);
-  console.log("intial structure", intialStructure);
-  console.log("cmsData", cmsData);
+  // const intialStructure = structuredClone(baseStructure);
+  // console.log("intial structure", intialStructure);
+  // console.log("cmsData", cmsData);
   const sectionData = organizeSectionsData(cmsData);
-  console.log("sectionData", sectionData);
-  for (const [
-    index,
-    [structureKeyLevel1, structureValueLevel1],
-  ] of Object.entries(baseStructure).entries()) {
-    takeActionOnStructure(
-      structureKeyLevel1,
-      structureValueLevel1,
-      sectionData,
-      baseStructure,
-      dataFieldsNames,
-    );
-    runNestedObject(structureValueLevel1, sectionData, dataFieldsNames);
-    runNestedArray(structureValueLevel1, sectionData, dataFieldsNames);
-  }
+  // console.log("sectionData", sectionData);
+  runNestedObject(baseStructure, sectionData, dataFieldsNames);
 
   // raw needs to be formated has the generateElements function does
   //   console.error("raw not formated", baseStructure);
@@ -123,12 +110,8 @@ function runNestedObject(
       structureObject,
       dataFieldsNames,
     );
-    if (isObject(nestedStructureValue)) {
-      runNestedObject(nestedStructureValue, sectionData, dataFieldsNames);
-    }
-    if (Array.isArray(nestedStructureValue)) {
-      runNestedArray(nestedStructureValue, sectionData, dataFieldsNames);
-    }
+    runNestedObject(nestedStructureValue, sectionData, dataFieldsNames);
+    runNestedArray(nestedStructureValue, sectionData, dataFieldsNames);
   }
 }
 
@@ -250,10 +233,37 @@ function connnectDataFieldToCmsField(
     return dataField.data_field_name === structureValue;
   });
   if (!dataField) {
-    console.error("dataField not found", structureValue, structureObject);
+    console.error(
+      "dataField not found",
+      structureValue,
+      dataFieldsNames,
+      structureObject,
+    );
     return;
   }
 
+  console.log(
+    "-------------------------------- \n",
+    "dataField.cms_field_key:",
+    dataField.cms_field_key,
+    "\n",
+    "structureObject[dataField.cms_field_key]:",
+    structureObject[dataField.cms_field_key],
+    "\n",
+    "structureObject:",
+    structureObject,
+  ); // an object json that takes in a array item
+  console.log(
+    "sectionData[dataField.data_entry_section]:",
+    dataField.data_entry_section,
+    "\n",
+    sectionData[dataField.data_entry_section],
+    "\n",
+    "sectionData:",
+    sectionData,
+    "-------------------------------- \n",
+  ); // an array
+
   structureObject[dataField.cms_field_key] =
-    sectionData[dataField.data_field_name];
+    sectionData[dataField.data_entry_section][0][structureObject[structureKey]];
 }
