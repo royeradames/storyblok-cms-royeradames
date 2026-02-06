@@ -47,9 +47,11 @@ export type CaseStudies2SectionInput = {
 export type DataFieldsEntry = {
   data_field_name: string;
   cms_field_key: string;
+  data_entry_section: string;
 };
 
 export type CaseStudies2Blok = CaseStudies2SectionInput & {
+  data_sections: string[];
   data_fields: DataFieldsEntry[];
   _uid: string;
   /** Unprefixed (shared-cms) or prefixed (e.g. gateway: shared_case_studies_2_section). */

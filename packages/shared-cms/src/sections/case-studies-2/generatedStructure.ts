@@ -37,6 +37,9 @@ function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
   const dataFieldsNames = cmsData.data_fields;
   const intialStructure = structuredClone(baseStructure);
   console.log("intial structure", intialStructure);
+  console.log("cmsData", cmsData);
+  const sectionData = organizeSectionsData(cmsData);
+  console.log("sectionData", sectionData);
   for (const [
     index,
     [structureKeyLevel1, structureValueLevel1],
@@ -44,37 +47,66 @@ function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
     takeActionOnStructure(
       structureKeyLevel1,
       structureValueLevel1,
-      cmsData,
+      sectionData,
       baseStructure,
       dataFieldsNames,
-      `-${index}`,
     );
-    runNestedObject(
-      structureValueLevel1,
-      cmsData,
-      dataFieldsNames,
-      `-${index}`,
-    );
-    runNestedArray(structureValueLevel1, cmsData, dataFieldsNames, `-${index}`);
+    runNestedObject(structureValueLevel1, sectionData, dataFieldsNames);
+    runNestedArray(structureValueLevel1, sectionData, dataFieldsNames);
   }
 
   // raw needs to be formated has the generateElements function does
   //   console.error("raw not formated", baseStructure);
   //   const formatedRaw = generateElements(cmsData);
   //   return formatedRaw;
-  console.log("final structure", baseStructure);
-  console.log(
-    "is the same structure?",
-    deepEqual(baseStructure, intialStructure),
-  );
+
+  // console.log("final structure", baseStructure);
+  // console.log(
+  //   "is the same structure?",
+  //   deepEqual(baseStructure, intialStructure),
+  // );
   return baseStructure;
 }
 
+const SECTION_DATA_KEY = "data_entry_section";
+const DATA_FIELDS_KEY = "data_fields";
+function organizeSectionsData(cmsData: CaseStudies2Blok): Record<string, any> {
+  const dataSectionsNames = cmsData.data_sections;
+  const sectionsData: Record<string, any> = {};
+  dataSectionsNames.forEach((sectionName) => {
+    sectionsData[sectionName] = [];
+  });
+  populateSectionsData(cmsData, sectionsData);
+  return sectionsData;
+}
+
+function populateSectionsData(
+  cmsData: Record<string, any>,
+  sectionsData: Record<string, any>,
+) {
+  for (const [key, value] of Object.entries(cmsData)) {
+    if (SECTION_DATA_KEY === key) {
+      if (value in sectionsData) {
+        sectionsData[value].push(cmsData);
+      }
+    }
+
+    if (Array.isArray(value)) {
+      if (key === DATA_FIELDS_KEY) {
+        continue;
+      }
+      value.forEach((item) => {
+        if (isObject(item)) {
+          populateSectionsData(item, sectionsData);
+        }
+      });
+    }
+  }
+}
 function runNestedObject(
   structureObject: unknown,
-  cmsData: CaseStudies2Blok,
+  sectionData: Record<string, any>,
   dataFieldsNames: DataFieldsEntry[],
-  devLevel: string,
 ) {
   if (!isObject(structureObject)) {
     return;
@@ -87,61 +119,62 @@ function runNestedObject(
     takeActionOnStructure(
       nestedStructureKey,
       nestedStructureValue,
-      cmsData,
+      sectionData,
       structureObject,
       dataFieldsNames,
-      `${devLevel}-${nestedIndex}`,
     );
     if (isObject(nestedStructureValue)) {
-      runNestedObject(
-        nestedStructureValue,
-        cmsData,
-        dataFieldsNames,
-        `${devLevel}-${nestedIndex}`,
-      );
+      runNestedObject(nestedStructureValue, sectionData, dataFieldsNames);
     }
     if (Array.isArray(nestedStructureValue)) {
-      runNestedArray(
-        nestedStructureValue,
-        cmsData,
-        dataFieldsNames,
-        `${devLevel}-${nestedIndex}`,
-      );
+      runNestedArray(nestedStructureValue, sectionData, dataFieldsNames);
     }
   }
 }
 
 function runNestedArray(
   structureValue: unknown,
-  cmsData: CaseStudies2Blok,
+  sectionData: Record<string, any>,
   dataFieldsNames: DataFieldsEntry[],
-  devLevel: string,
 ) {
   if (!Array.isArray(structureValue)) {
     return;
   }
   structureValue.forEach((nestedStructureObject: unknown) => {
-    runNestedObject(nestedStructureObject, cmsData, dataFieldsNames, devLevel);
+    runNestedObject(nestedStructureObject, sectionData, dataFieldsNames);
   });
 }
 
 function takeActionOnStructure(
   structureKey: string,
   structureValue: unknown,
-  cmsData: CaseStudies2Blok,
-  baseStructure: Record<string, any>,
+  sectionData: Record<string, any>,
+  structure: Record<string, any>,
   dataFieldsNames: DataFieldsEntry[],
-  devLevel: string,
 ) {
-  addSectionBlok(structureKey, cmsData, baseStructure);
-  updateUid(structureKey, devLevel, cmsData, baseStructure);
-  deleteEditableField(structureKey, baseStructure);
+  if (Array.isArray(structureValue)) {
+    return;
+  }
+  if (isObject(structureValue)) {
+    connnectDataFieldToCmsField(
+      structureKey,
+      structureValue,
+      dataFieldsNames,
+      sectionData,
+      structure,
+    );
+    return;
+  }
+
+  addSectionBlok(structureKey, sectionData, structure);
+  updateUid(structureKey, structure);
+  deleteEditableField(structureKey, structure);
   connnectDataFieldToCmsField(
     structureKey,
     structureValue,
     dataFieldsNames,
-    cmsData,
-    baseStructure,
+    sectionData,
+    structure,
   );
 }
 
@@ -149,13 +182,13 @@ const SECTION_BLOK_KEY = "sectionBlok";
 const DATA_SECTION_NAME_KEY = "data_section_name";
 function addSectionBlok(
   structureKey: string,
-  cmsData: CaseStudies2Blok,
+  sectionData: Record<string, any>,
   stuctureObject: Record<string, any>,
 ): void {
   if (structureKey !== DATA_SECTION_NAME_KEY) {
     return;
   }
-  stuctureObject[SECTION_BLOK_KEY] = cmsData;
+  stuctureObject[SECTION_BLOK_KEY] = sectionData;
 }
 
 function isObject(value: unknown): value is Record<string, any> {
@@ -163,22 +196,12 @@ function isObject(value: unknown): value is Record<string, any> {
 }
 function updateUid(
   structureKey: string,
-  devLevel: string,
-  cmsData: CaseStudies2Blok,
   stuctureObject: Record<string, any>,
 ): void {
   if ("_uid" !== structureKey) {
     return;
   }
-  if (!devLevel) {
-    console.error("devLevel is required");
-    return;
-  }
-  if (devLevel[0] === "0") {
-    stuctureObject._uid = cmsData._uid;
-    return;
-  }
-  stuctureObject._uid = `${cmsData._uid}-${devLevel}`;
+  stuctureObject._uid = crypto.randomUUID();
   return;
 }
 
@@ -198,18 +221,39 @@ function connnectDataFieldToCmsField(
   structureKey: string,
   structureValue: unknown,
   dataFieldsNames: DataFieldsEntry[],
-  cmsData: CaseStudies2Blok,
+  sectionData: Record<string, any>,
   structureObject: Record<string, any>,
 ): void {
   if (structureKey !== CMS_DATA_FIELD_NAME) {
     return;
   }
-  const dataField = dataFieldsNames.find(
-    (dataField) => dataField.data_field_name === structureValue,
-  );
+  const dataField = dataFieldsNames.find((dataField) => {
+    // console.log("dataField", dataField, structureValue, structureObject);
+    // console.log(
+    //   "dataField.data_field_name \n",
+    //   dataField.data_field_name + "\n",
+    //   "structureValue",
+    //   structureValue + "\n",
+    //   "dataField.data_field_name === structureValue \n",
+    //   dataField.data_field_name === structureValue,
+    //   "\n",
+    // );
+    // console.log(
+    //   "dataField.data_entry_section \n",
+    //   dataField.data_entry_section + "\n",
+    //   "structureObject.data_entry_section \n",
+    //   structureObject.data_entry_section + "\n",
+    //   "dataField.data_entry_section === structureObject.data_entry_section \n",
+    //   dataField.data_entry_section === structureObject.data_entry_section,
+    //   "\n",
+    // );
+    return dataField.data_field_name === structureValue;
+  });
   if (!dataField) {
+    console.error("dataField not found", structureValue, structureObject);
     return;
   }
-  structureObject[dataField.data_field_name] =
-    cmsData[dataField.cms_field_key as unknown as keyof CaseStudies2Blok];
+
+  structureObject[dataField.cms_field_key] =
+    sectionData[dataField.data_field_name];
 }
