@@ -34,12 +34,11 @@ export function generateStructure(blok: CaseStudies2Blok) {
 
 function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
   // console.log("formatRaw");
-  const dataFieldsNames = cmsData.data_fields;
   const intialStructure = structuredClone(baseStructure);
   // console.log("cmsData", cmsData);
   const sectionData = organizeSectionsData(cmsData);
   // console.log("sectionData", sectionData);
-  runNestedObject(baseStructure, sectionData, dataFieldsNames);
+  runNestedObject(baseStructure, sectionData);
 
   // raw needs to be formated has the generateElements function does
   //   console.error("raw not formated", baseStructure);
@@ -58,24 +57,26 @@ function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
 
 const SECTION_DATA_KEY = "data_entry_section";
 const DATA_FIELDS_KEY = "data_fields";
-function organizeSectionsData(cmsData: CaseStudies2Blok): Record<string, any> {
-  const dataSectionsNames = cmsData.data_sections;
-  const sectionsData: Record<string, any> = {};
+function organizeSectionsData(
+  premadeData: CaseStudies2Blok,
+): Record<string, any> {
+  const dataSectionsNames = premadeData.data_sections;
+  const structurePremadeData: Record<string, any> = {};
   dataSectionsNames.forEach((sectionName) => {
-    sectionsData[sectionName] = [];
+    structurePremadeData[sectionName] = [];
   });
-  populateSectionsData(cmsData, sectionsData);
-  return sectionsData;
+  populateSectionsData(premadeData, structurePremadeData);
+  return structurePremadeData;
 }
 
 function populateSectionsData(
-  cmsData: Record<string, any>,
-  sectionsData: Record<string, any>,
+  premadeData: Record<string, any>,
+  structurePremadeData: Record<string, any>,
 ) {
-  for (const [key, value] of Object.entries(cmsData)) {
+  for (const [key, value] of Object.entries(premadeData)) {
     if (SECTION_DATA_KEY === key) {
-      if (value in sectionsData) {
-        sectionsData[value].push(cmsData);
+      if (value in structurePremadeData) {
+        structurePremadeData[value].push(premadeData);
       }
     }
 
@@ -85,61 +86,57 @@ function populateSectionsData(
       }
       value.forEach((item) => {
         if (isObject(item)) {
-          populateSectionsData(item, sectionsData);
+          populateSectionsData(item, structurePremadeData);
         }
       });
     }
   }
 }
 function runNestedObject(
-  structureObject: unknown,
-  sectionData: Record<string, any>,
-  dataFieldsNames: DataFieldsEntry[],
+  builderObject: unknown,
+  premadeData: Record<string, any>,
 ) {
-  if (!isObject(structureObject)) {
+  if (!isObject(builderObject)) {
     return;
   }
 
   for (const [
     nestedIndex,
-    [nestedStructureKey, nestedStructureValue],
-  ] of Object.entries(structureObject).entries()) {
+    [nestedBuilderKey, nestedBuilderValue],
+  ] of Object.entries(builderObject).entries()) {
     takeActionOnStructure(
-      nestedStructureKey,
-      nestedStructureValue,
-      sectionData,
-      structureObject,
-      dataFieldsNames,
+      nestedBuilderKey,
+      nestedBuilderValue,
+      premadeData,
+      builderObject,
     );
-    runNestedObject(nestedStructureValue, sectionData, dataFieldsNames);
-    runNestedArray(nestedStructureValue, sectionData, dataFieldsNames);
+    runNestedObject(nestedBuilderValue, premadeData);
+    runNestedArray(nestedBuilderValue, premadeData);
   }
 }
 
 function runNestedArray(
-  structureValue: unknown,
-  sectionData: Record<string, any>,
-  dataFieldsNames: DataFieldsEntry[],
+  builderValue: unknown,
+  premadeData: Record<string, any>,
 ) {
-  if (!Array.isArray(structureValue)) {
+  if (!Array.isArray(builderValue)) {
     return;
   }
-  structureValue.forEach((nestedStructureObject: unknown) => {
-    runNestedObject(nestedStructureObject, sectionData, dataFieldsNames);
+  builderValue.forEach((nestedStructureObject: unknown) => {
+    runNestedObject(nestedStructureObject, premadeData);
   });
 }
 
 function takeActionOnStructure(
   builderLoopKey: string,
-  structureValue: unknown,
+  builderValue: unknown,
   premadeData: Record<string, any>,
   builderObject: Record<string, any>,
-  dataFieldsNames: DataFieldsEntry[],
 ) {
-  if (Array.isArray(structureValue)) {
+  if (Array.isArray(builderValue)) {
     return;
   }
-  if (isObject(structureValue)) {
+  if (isObject(builderValue)) {
     connnectDataFieldToCmsField(builderLoopKey, premadeData, builderObject);
     return;
   }
