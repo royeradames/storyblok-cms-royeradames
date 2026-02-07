@@ -1,259 +1,265 @@
-import type { CaseStudies2Blok, DataFieldsEntry } from "./case-studies-2.types";
-import { deepEqual } from "./deepEqual";
+import type { CaseStudies2Blok } from "./case-studies-2.types";
 import { caseStudies2SectionBuilderRaw } from "./sectionBuilderRaw";
-import { generateElements } from "./structure";
 
 /**
- * Need to do this programmatically
- * 1. build the sections
- * 2. pass the sectionBlok
- * 3. update _uid to section uid with -[number dep] pattern
- * 4. attach field to content
+ * Generates the component structure by taking the raw builder template
+ * and populating it with CMS data from the premade blok.
+ *
+ * The raw template has marker fields:
+ * - `data_section_name` on containers: marks section boundaries / cloning points
+ * - `premade_field`, `premade_section`, `builder_field` on leaf components:
+ *     maps CMS data → builder fields
+ *
+ * Processing:
+ * 1. Walk the template tree
+ * 2. Clone template nodes for sections with multiple data entries (studies, statistics)
+ * 3. Connect CMS data fields to builder component fields
+ * 4. Clean up builder-only metadata (_editable, premade_field, etc.)
  */
-const raw = caseStudies2SectionBuilderRaw();
+
+type SectionContext = Record<string, any>;
+type WrapperInfo = { sectionName: string; dataArray: any[] };
+
+const rawTemplate = caseStudies2SectionBuilderRaw();
+
 export function generateStructure(blok: CaseStudies2Blok) {
-  const formatedRaw = formatRaw(raw, blok);
-  return formatedRaw;
-}
+  const rootSectionName = rawTemplate.data_section_name; // e.g. "studies"
 
-function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
-  // console.log("formatRaw");
-  const intialStructure = structuredClone(baseStructure);
-  // console.log("cmsData", cmsData);
-  const { premadeSectionData, sectionsLength } = organizeSectionsData(cmsData);
-  // console.log("sectionData", sectionData);
-  runNestedObject(baseStructure, premadeSectionData, sectionsLength);
-
-  // raw needs to be formated has the generateElements function does
-  //   console.error("raw not formated", baseStructure);
-  //   const formatedRaw = generateElements(cmsData);
-  //   return formatedRaw;
-
-  console.log("intial structure", intialStructure);
-  console.log("final structure", baseStructure);
-  console.log(
-    "is the same structure?",
-    deepEqual(baseStructure, intialStructure),
-  );
-  // throw new Error("test");
-  return baseStructure;
-}
-
-const SECTION_DATA_KEY = "data_entry_section";
-const DATA_FIELDS_KEY = "data_fields";
-function organizeSectionsData(premadeData: CaseStudies2Blok) {
-  const dataSectionsNames = premadeData.data_sections;
-  const premadeSectionData: Record<string, any> = {};
-  dataSectionsNames.forEach((sectionName) => {
-    premadeSectionData[sectionName] = [];
-  });
-  populateSectionsData(premadeData, premadeSectionData);
-
-  const sectionsLength = getSectionLengths(premadeSectionData);
-  return { premadeSectionData, sectionsLength };
-}
-
-function getSectionLengths(premadeData: Record<string, any>) {
-  const sectionLengths: Record<string, number> = {};
-  for (const [key, value] of Object.entries(premadeData)) {
-    sectionLengths[key] = 0;
+  // Initialise context: root section maps to the entire blok
+  const context: SectionContext = {};
+  if (rootSectionName) {
+    context[rootSectionName] = blok;
   }
-  return sectionLengths;
+
+  const result = processNode(rawTemplate, context);
+
+  // Root node gets sectionBlok and _uid from the blok
+  result.sectionBlok = blok;
+  result._uid = blok._uid;
+
+  return result;
 }
-function populateSectionsData(
-  premadeData: Record<string, any>,
-  structurePremadeData: Record<string, any>,
-) {
-  for (const [key, value] of Object.entries(premadeData)) {
-    if (SECTION_DATA_KEY === key) {
-      if (value in structurePremadeData) {
-        structurePremadeData[value].push(premadeData);
-      }
+
+// ── Core tree processing ──────────────────────────────────────────────
+
+function processNode(
+  node: any,
+  context: SectionContext,
+  wrapperInfo?: WrapperInfo,
+): Record<string, any> {
+  const result: Record<string, any> = {};
+
+  for (const [key, value] of Object.entries(node)) {
+    // Skip builder-only editable markers
+    if (key === "_editable") continue;
+
+    // Generate fresh UIDs (section instances get overwritten later)
+    if (key === "_uid") {
+      result[key] = crypto.randomUUID();
+      continue;
     }
 
+    // Process the items array (the component tree children)
+    if (key === "items" && Array.isArray(value)) {
+      result[key] = wrapperInfo
+        ? expandWrapperChildren(value, context, wrapperInfo)
+        : processItems(value, context);
+      continue;
+    }
+
+    // Recurse into nested objects (color_dark, color_light, image, etc.)
+    if (isObject(value)) {
+      result[key] = processNode(value, context);
+      continue;
+    }
+
+    // Recurse into non-items arrays (styles, border, padding, etc.)
     if (Array.isArray(value)) {
-      if (key === DATA_FIELDS_KEY) {
+      result[key] = value.map((item: any) =>
+        isObject(item) ? processNode(item, context) : item,
+      );
+      continue;
+    }
+
+    // Copy primitive values as-is
+    result[key] = value;
+  }
+
+  // Map CMS data values to builder fields
+  connectDataFields(result, context);
+
+  // Remove builder-only metadata from output
+  cleanupMetadata(result);
+
+  return result;
+}
+
+/**
+ * Processes an items array, detecting section templates and cloning them
+ * for each data entry. Two patterns:
+ *
+ * 1. **Self-clone** – the item IS the section instance (e.g. case-study `<li>`)
+ *    → clone the item per data entry, attach sectionBlok to each clone.
+ *
+ * 2. **Wrapper** – the item WRAPS a single child template (e.g. statistics container)
+ *    → keep the wrapper, clone its children per data entry.
+ */
+function processItems(items: any[], context: SectionContext): any[] {
+  const result: any[] = [];
+
+  for (const item of items) {
+    if (!isObject(item)) {
+      result.push(item);
+      continue;
+    }
+
+    const sectionName: string | undefined = item.data_section_name;
+
+    if (sectionName) {
+      const dataArray = findDataArray(sectionName, context);
+
+      if (dataArray && dataArray.length > 0) {
+        if (isSectionWrapper(item)) {
+          // Wrapper pattern: keep node, clone its children
+          result.push(
+            processNode(item, context, { sectionName, dataArray }),
+          );
+        } else {
+          // Self-clone pattern: clone this node per data entry
+          for (const dataEntry of dataArray) {
+            const entryContext = { ...context, [sectionName]: dataEntry };
+            const processed = processNode(item, entryContext);
+            processed.sectionBlok = dataEntry;
+            processed._uid = dataEntry._uid ?? processed._uid;
+            result.push(processed);
+          }
+        }
         continue;
       }
-      value.forEach((item) => {
-        if (isObject(item)) {
-          populateSectionsData(item, structurePremadeData);
-        }
-      });
+    }
+
+    // No section handling needed – process normally
+    result.push(processNode(item, context));
+  }
+
+  return result;
+}
+
+// ── Wrapper handling ──────────────────────────────────────────────────
+
+/**
+ * A node is a "wrapper" if its `items` contains exactly one child
+ * that does NOT have its own `data_section_name`. In that case the
+ * wrapper stays put and its single child is the template to clone.
+ */
+function isSectionWrapper(node: any): boolean {
+  if (!Array.isArray(node.items) || node.items.length !== 1) return false;
+  const child = node.items[0];
+  return isObject(child) && !child.data_section_name;
+}
+
+/**
+ * Clones the wrapper's children (template items) once per data entry,
+ * attaching sectionBlok and _uid to each clone.
+ */
+function expandWrapperChildren(
+  templateItems: any[],
+  context: SectionContext,
+  { sectionName, dataArray }: WrapperInfo,
+): any[] {
+  const result: any[] = [];
+
+  for (const dataEntry of dataArray) {
+    const entryContext = { ...context, [sectionName]: dataEntry };
+    for (const child of templateItems) {
+      if (isObject(child)) {
+        const processed = processNode(child, entryContext);
+        processed.sectionBlok = dataEntry;
+        processed._uid = dataEntry._uid ?? processed._uid;
+        result.push(processed);
+      } else {
+        result.push(child);
+      }
     }
   }
-}
-function runNestedObject(
-  builderObject: unknown,
-  premadeData: Record<string, any>,
-  sectionsLength: Record<string, number>,
-) {
-  if (!isObject(builderObject)) {
-    return;
-  }
 
-  for (const [
-    nestedIndex,
-    [nestedBuilderKey, nestedBuilderValue],
-  ] of Object.entries(builderObject).entries()) {
-    takeActionOnStructure(
-      nestedBuilderKey,
-      nestedBuilderValue,
-      premadeData,
-      builderObject,
-      sectionsLength,
-    );
-    runNestedObject(nestedBuilderValue, premadeData, sectionsLength);
-    runNestedArray(nestedBuilderValue, premadeData, sectionsLength);
-  }
+  return result;
 }
 
-function runNestedArray(
-  builderValue: unknown,
-  premadeData: Record<string, any>,
-  sectionsLength: Record<string, number>,
-) {
-  if (!Array.isArray(builderValue)) {
-    return;
-  }
-  builderValue.forEach((nestedStructureObject: unknown) => {
-    runNestedObject(nestedStructureObject, premadeData, sectionsLength);
-  });
-}
+// ── Data connection ───────────────────────────────────────────────────
 
-function takeActionOnStructure(
-  builderLoopKey: string,
-  builderValue: unknown,
-  premadeData: Record<string, any>,
-  builderObject: Record<string, any>,
-  sectionsLength: Record<string, number>,
-) {
-  if (Array.isArray(builderValue)) {
-    return;
-  }
-  if (isObject(builderValue)) {
-    connnectDataFieldToCmsField(
-      builderLoopKey,
-      premadeData,
-      builderObject,
-      sectionsLength,
-    );
-    return;
-  }
-
-  addSectionBlok(builderLoopKey, premadeData, builderObject, sectionsLength);
-  updateUid(builderLoopKey, builderObject);
-  deleteEditableField(builderLoopKey, builderObject);
-  connnectDataFieldToCmsField(
-    builderLoopKey,
-    premadeData,
-    builderObject,
-    sectionsLength,
-  );
-}
-
-const SECTION_BLOK_KEY = "sectionBlok";
-const DATA_SECTION_NAME_KEY = "data_section_name";
-function addSectionBlok(
-  structureKey: string,
-  sectionData: Record<string, any>,
-  stuctureObject: Record<string, any>,
-  sectionsLength: Record<string, number>,
+/**
+ * Reads `premade_field`, `premade_section`, and `builder_field` from
+ * the node, looks up the value from the section context, and writes
+ * it to the node's `builder_field` key.
+ */
+function connectDataFields(
+  node: Record<string, any>,
+  context: SectionContext,
 ): void {
-  if (structureKey !== DATA_SECTION_NAME_KEY) {
-    return;
+  const { premade_field, premade_section, builder_field } = node;
+  if (!premade_field || !premade_section || !builder_field) return;
+
+  const sectionData = context[premade_section];
+  if (!sectionData) return;
+
+  const value = sectionData[premade_field];
+  if (value !== undefined) {
+    node[builder_field] = value;
   }
-  const builderSection = stuctureObject[structureKey];
-  if (!(builderSection in sectionData)) {
-    return;
-  }
-  const builderSectionList = sectionData[builderSection];
-  if (!builderSectionList) {
-    debugger;
-    return;
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────
+
+/**
+ * Finds the data array for a section name by looking for a pluralised
+ * field on any object currently in context.
+ *
+ * E.g. "study" → looks for `studies` field, "statistic" → `statistics`.
+ */
+function findDataArray(
+  sectionName: string,
+  context: SectionContext,
+): any[] | null {
+  const candidates = pluralize(sectionName);
+
+  for (const contextValue of Object.values(context)) {
+    if (!isObject(contextValue)) continue;
+    for (const fieldName of candidates) {
+      const arr = contextValue[fieldName];
+      if (Array.isArray(arr) && arr.length > 0) return arr;
+    }
   }
 
-  const currentSectionNumber = sectionsLength[builderSection];
-  if (currentSectionNumber === undefined) {
-    debugger;
-    return;
+  return null;
+}
+
+/** Generates common English plural forms for simple nouns. */
+function pluralize(word: string): string[] {
+  const forms: string[] = [];
+  if (word.endsWith("y")) {
+    forms.push(word.slice(0, -1) + "ies"); // study → studies
   }
-  const currentBuilderSectionObject = builderSectionList[currentSectionNumber];
-  if (!currentBuilderSectionObject) {
-    debugger;
-    return;
+  forms.push(word + "s"); // statistic → statistics
+  if (
+    word.endsWith("s") ||
+    word.endsWith("x") ||
+    word.endsWith("ch") ||
+    word.endsWith("sh")
+  ) {
+    forms.push(word + "es");
   }
-  stuctureObject._uid = currentBuilderSectionObject._uid;
-  stuctureObject[SECTION_BLOK_KEY] = currentBuilderSectionObject;
-  sectionsLength[builderSection] = currentSectionNumber + 1;
+  return forms;
+}
+
+/** Removes builder-only metadata keys from the output node. */
+function cleanupMetadata(node: Record<string, any>): void {
+  delete node.builder_field;
+  delete node.premade_field;
+  delete node.premade_section;
+  delete node.data_section_name;
 }
 
 function isObject(value: unknown): value is Record<string, any> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-function updateUid(
-  structureKey: string,
-  stuctureObject: Record<string, any>,
-): void {
-  if ("_uid" !== structureKey && !stuctureObject[DATA_SECTION_NAME_KEY]) {
-    return;
-  }
-  stuctureObject._uid = crypto.randomUUID();
-  return;
-}
-
-function deleteEditableField(
-  structureKey: string,
-  structureValue: Record<string, any>,
-): void {
-  if ("_editable" !== structureKey) {
-    return;
-  }
-  delete structureValue["_editable"];
-}
-
-const PREMADE_FIELD: keyof Pick<DataFieldsEntry, "premade_field"> =
-  "premade_field";
-const PREMADE_SECTION: keyof Pick<DataFieldsEntry, "premade_section"> =
-  "premade_section";
-const BUILDER_FIELD: keyof Pick<DataFieldsEntry, "builder_field"> =
-  "builder_field";
-function connnectDataFieldToCmsField(
-  builderLoopKey: string,
-  premadeData: Record<string, any>,
-  builderObject: Record<string, any>,
-  sectionsLength: Record<string, number>,
-): void {
-  if (builderLoopKey !== PREMADE_FIELD) {
-    return;
-  }
-  const builderKey = builderObject[BUILDER_FIELD];
-  if (!builderKey) {
-    return;
-  }
-  const dataEntryFieldName = builderObject[PREMADE_FIELD];
-  if (!dataEntryFieldName) {
-    return;
-  }
-  const dataEntrySectionName = builderObject[PREMADE_SECTION];
-  if (!dataEntrySectionName) {
-    return;
-  }
-  const sectionDataList = premadeData[dataEntrySectionName];
-  if (!sectionDataList) {
-    debugger;
-    return;
-  }
-  const currentSectionNumber = sectionsLength[dataEntrySectionName];
-  if (currentSectionNumber === undefined) {
-    debugger;
-    return;
-  }
-  const sectionDataItem = sectionDataList[currentSectionNumber];
-  if (!sectionDataItem) {
-    debugger;
-    return;
-  }
-  const dataValue = sectionDataItem[dataEntryFieldName];
-  builderObject[builderKey] = dataValue;
 }
