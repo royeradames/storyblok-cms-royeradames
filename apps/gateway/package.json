@@ -20,6 +20,7 @@
     "storyblok:seed:generate": "bun scripts/storyblok/generate-seed.ts",
     "storyblok:seed:push": "bun scripts/storyblok/push-seed.ts",
     "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push",
+    "storyblok:seed:templates": "bun run scripts/storyblok/seed-templates.ts",
     "storyblok:migrate-flex-options-to-styles": "bun scripts/storyblok/migrate-flex-options-to-styles.ts",
     "storyblok:migrate-flex-breakpoint-to-styles-breakpoint": "bun scripts/storyblok/migrate-flex-breakpoint-to-styles-breakpoint.ts",
     "storyblok:migrate-flex-to-container": "bun scripts/storyblok/migrate-flex-to-container.ts",

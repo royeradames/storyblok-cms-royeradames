@@ -1,29 +1,32 @@
-import type { CaseStudies2Blok } from "./case-studies-2.types";
-import { caseStudies2SectionBuilderRaw } from "./sectionBuilderRaw";
-
 /**
- * Generates the component structure by taking the raw builder template
- * and populating it with CMS data from the premade blok.
+ * Generic structure generator for premade sections.
  *
- * The raw template has marker fields:
+ * Takes a raw builder template (from Storyblok section-builder) and a CMS blok
+ * (premade data), walks the template tree, clones repeatable sections, connects
+ * CMS data fields to builder component fields, and cleans up builder-only metadata.
+ *
+ * Template marker fields:
  * - `data_section_name` on containers: marks section boundaries / cloning points
- * - `premade_field`, `premade_section`, `builder_field` on leaf components:
- *     maps CMS data → builder fields
- *
- * Processing:
- * 1. Walk the template tree
- * 2. Clone template nodes for sections with multiple data entries (studies, statistics)
- * 3. Connect CMS data fields to builder component fields
- * 4. Clean up builder-only metadata (_editable, premade_field, etc.)
+ * - `builder_section` (or legacy `premade_section`): which section context to look up
+ * - `premade_field`: which field from the premade data to read
+ * - `builder_field`: which field on the component to write the value to
  */
 
 type SectionContext = Record<string, any>;
 type WrapperInfo = { sectionName: string; dataArray: any[] };
 
-const rawTemplate = caseStudies2SectionBuilderRaw();
-
-export function generateStructure(blok: CaseStudies2Blok) {
-  const rootSectionName = rawTemplate.data_section_name; // e.g. "studies"
+/**
+ * Main entry point. Processes the raw builder template with the given blok data.
+ *
+ * @param rawTemplate - The raw builder template JSON (from Storyblok section-builder story)
+ * @param blok - The premade CMS blok data
+ * @returns The fully populated component structure ready for rendering
+ */
+export function buildStructureFromTemplate(
+  rawTemplate: any,
+  blok: any,
+): Record<string, any> {
+  const rootSectionName = rawTemplate.data_section_name;
 
   // Initialise context: root section maps to the entire blok
   const context: SectionContext = {};
@@ -189,23 +192,27 @@ function expandWrapperChildren(
 // ── Data connection ───────────────────────────────────────────────────
 
 /**
- * Reads `premade_field`, `premade_section`, and `builder_field` from
- * the node, looks up the value from the section context, and writes
- * it to the node's `builder_field` key.
+ * Reads the section/field mapping from the node and connects CMS data.
+ *
+ * Supports both:
+ * - `builder_section` (new convention)
+ * - `premade_section` (legacy, backward compat with case-studies-2)
  */
 function connectDataFields(
   node: Record<string, any>,
   context: SectionContext,
 ): void {
-  const { premade_field, premade_section, builder_field } = node;
-  if (!premade_field || !premade_section || !builder_field) return;
+  const sectionName = node.builder_section ?? node.premade_section;
+  const fieldName = node.premade_field;
+  const targetField = node.builder_field;
+  if (!sectionName || !fieldName || !targetField) return;
 
-  const sectionData = context[premade_section];
+  const sectionData = context[sectionName];
   if (!sectionData) return;
 
-  const value = sectionData[premade_field];
+  const value = sectionData[fieldName];
   if (value !== undefined) {
-    node[builder_field] = value;
+    node[targetField] = value;
   }
 }
 
@@ -256,6 +263,7 @@ function pluralize(word: string): string[] {
 function cleanupMetadata(node: Record<string, any>): void {
   delete node.builder_field;
   delete node.premade_field;
+  delete node.builder_section;
   delete node.premade_section;
   delete node.data_section_name;
 }

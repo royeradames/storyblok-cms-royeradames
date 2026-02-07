@@ -7,3 +7,4 @@
 
 export * from "./user_preferences";
 export * from "./saved_items";
+export * from "./section-templates";

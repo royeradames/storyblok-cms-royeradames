@@ -13,6 +13,9 @@ export * from "./presets";
 // Sections (predetermined section components)
 export * from "./sections";
 
+// Structure generator (generic template → component tree processor)
+export * from "./structure-generator";
+
 // Dev scenario system
 export * from "./dev";
 
@@ -65,7 +68,7 @@ import { ShadcnSelect } from "./shadcn/Select";
 import { ShadcnSlider } from "./shadcn/Slider";
 import { ShadcnTable } from "./shadcn/Table";
 import { PresetHeroDefault } from "./presets/HeroDefault";
-import { CaseStudies2Section } from "./sections";
+// CaseStudies2Section removed – now handled by generic PremadeSectionWrapper in gateway
 import { DevScenarioPicker } from "./dev/ScenarioPicker";
 
 /**
@@ -145,9 +148,6 @@ export const components = {
 
   // === Presets ===
   preset_hero_default: PresetHeroDefault,
-
-  // === Sections ===
-  case_studies_2_section: CaseStudies2Section,
 
   // === Dev Components ===
   dev_scenario_picker: DevScenarioPicker,

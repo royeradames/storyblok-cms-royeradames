@@ -1,0 +1,1 @@
+export { buildStructureFromTemplate } from "./buildStructureFromTemplate";

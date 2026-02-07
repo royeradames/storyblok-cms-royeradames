@@ -646,6 +646,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
       },
+      data_section_name: {
+        type: "text",
+        pos: 100,
+        description:
+          "Section builder: marks this container as a section boundary for cloning repeatable items (e.g. 'study', 'statistic', 'article')",
+      },
     },
   },
 
@@ -754,6 +760,24 @@ export const componentDefinitions: StoryblokComponent[] = [
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl). Gap, padding, margin, and sizing options show pixel values.",
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
+      },
+      builder_section: {
+        type: "text",
+        pos: 100,
+        description:
+          "Section builder: which section context to read from (e.g. 'study')",
+      },
+      premade_field: {
+        type: "text",
+        pos: 101,
+        description:
+          "Section builder: which field from the premade data to read (e.g. 'quote', 'name')",
+      },
+      builder_field: {
+        type: "text",
+        pos: 102,
+        description:
+          "Section builder: which field on this component receives the value (default: 'content')",
       },
     },
   },
@@ -874,6 +898,24 @@ export const componentDefinitions: StoryblokComponent[] = [
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
+      },
+      builder_section: {
+        type: "text",
+        pos: 100,
+        description:
+          "Section builder: which section context to read from (e.g. 'study')",
+      },
+      premade_field: {
+        type: "text",
+        pos: 101,
+        description:
+          "Section builder: which field from the premade data to read (e.g. 'category')",
+      },
+      builder_field: {
+        type: "text",
+        pos: 102,
+        description:
+          "Section builder: which field on this component receives the value (default: 'text')",
       },
     },
   },
@@ -1338,6 +1380,24 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
       },
+      builder_section: {
+        type: "text",
+        pos: 100,
+        description:
+          "Section builder: which section context to read from (e.g. 'study')",
+      },
+      premade_field: {
+        type: "text",
+        pos: 101,
+        description:
+          "Section builder: which field from the premade data to read (e.g. 'image', 'company_logo')",
+      },
+      builder_field: {
+        type: "text",
+        pos: 102,
+        description:
+          "Section builder: which field on this component receives the value (default: 'image')",
+      },
     },
   },
 
@@ -1548,6 +1608,24 @@ export const componentDefinitions: StoryblokComponent[] = [
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
+      },
+      builder_section: {
+        type: "text",
+        pos: 100,
+        description:
+          "Section builder: which section context to read from (e.g. 'study')",
+      },
+      premade_field: {
+        type: "text",
+        pos: 101,
+        description:
+          "Section builder: which field from the premade data to read (e.g. 'cta_link')",
+      },
+      builder_field: {
+        type: "text",
+        pos: 102,
+        description:
+          "Section builder: which field on this component receives the value (default: 'link')",
       },
     },
   },
