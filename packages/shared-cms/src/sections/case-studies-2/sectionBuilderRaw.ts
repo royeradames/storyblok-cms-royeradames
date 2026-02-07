@@ -361,7 +361,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 component: "shared_shadcn_image",
                                 object_fit: "cover",
                                 aspect_ratio: "auto",
-                                builder_field: "iamge",
+                                builder_field: "image",
                                 premade_field: "company_logo",
                                 premade_section: "study",
                                 _editable:
