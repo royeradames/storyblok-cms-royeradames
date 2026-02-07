@@ -9,8 +9,9 @@
  * - `data_section_name` on containers: marks section boundaries / cloning points.
  *    Uses premade blok component names (e.g. "case_studies_2_study").
  *    Array matching is done by `component` field on data items, not by field name.
- * - `data_mapping` (nested blok): array with one `builder_data_mapping` entry containing
- *    `builder_section`, `premade_field`, `builder_field`
+ * - `data_mapping` (nested blok): array of `builder_data_mapping` entries, each containing
+ *    `builder_section`, `premade_field`, `builder_field`. Multiple entries allow
+ *    mapping several premade fields to a single component (e.g. light + dark image).
  */
 
 type SectionContext = Record<string, any>;
@@ -193,33 +194,38 @@ function expandWrapperChildren(
 // ── Data connection ───────────────────────────────────────────────────
 
 /**
- * Reads the section/field mapping from the node's `data_mapping` blok and
- * connects CMS data to the appropriate builder field.
+ * Reads ALL section/field mappings from the node's `data_mapping` blok array
+ * and connects CMS data to the appropriate builder fields.
  *
- * The `data_mapping` blok contains a single entry with:
+ * Each `data_mapping` entry contains:
  * - `builder_section`: which section in context to look up (premade blok component name)
  * - `premade_field`: which field on the premade data to read
  * - `builder_field`: which field on this node to write the value to
+ *
+ * Multiple entries allow a single component to receive data from multiple premade
+ * fields (e.g. an image component that needs both light_theme_image and dark_theme_image).
  */
 function connectDataFields(
   node: Record<string, any>,
   context: SectionContext,
 ): void {
-  const mapping = node.data_mapping?.[0];
-  if (!mapping) return;
+  const mappings = node.data_mapping;
+  if (!Array.isArray(mappings) || mappings.length === 0) return;
 
-  const sectionName: string | undefined = mapping.builder_section;
-  const fieldName: string | undefined = mapping.premade_field;
-  const targetField: string | undefined = mapping.builder_field;
+  for (const mapping of mappings) {
+    const sectionName: string | undefined = mapping.builder_section;
+    const fieldName: string | undefined = mapping.premade_field;
+    const targetField: string | undefined = mapping.builder_field;
 
-  if (!sectionName || !fieldName || !targetField) return;
+    if (!sectionName || !fieldName || !targetField) continue;
 
-  const sectionData = context[sectionName];
-  if (!sectionData) return;
+    const sectionData = context[sectionName];
+    if (!sectionData) continue;
 
-  const value = sectionData[fieldName];
-  if (value !== undefined) {
-    node[targetField] = value;
+    const value = sectionData[fieldName];
+    if (value !== undefined) {
+      node[targetField] = value;
+    }
   }
 }
 

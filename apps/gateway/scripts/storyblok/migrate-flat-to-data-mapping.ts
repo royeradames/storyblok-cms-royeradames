@@ -101,9 +101,23 @@ async function fetchSectionBuilderStories(): Promise<any[]> {
 // ── Template migration ────────────────────────────────────────────────
 
 /**
+ * Fix double-prefixed names that may have been introduced by a previous run.
+ * "case_studies_2_case_studies_2_study" → "case_studies_2_study"
+ */
+function fixDoublePrefix(name: string, prefix: string): string {
+  const double = `${prefix}_${prefix}_`;
+  if (name.startsWith(double)) {
+    return name.replace(double, `${prefix}_`);
+  }
+  return name;
+}
+
+/**
  * First pass: collect all data_section_name values and build an old→new name map.
  * The root section gets renamed to {prefix}_section.
  * Other sections get prefixed: "study" → "{prefix}_study".
+ * Already-prefixed names (from a previous migration run) are left as-is.
+ * Double-prefixed names (from buggy runs) are corrected.
  */
 function buildSectionNameMap(
   node: any,
@@ -114,9 +128,20 @@ function buildSectionNameMap(
   if (!isObject(node)) return;
 
   if (typeof node.data_section_name === "string" && node.data_section_name) {
-    const oldName = node.data_section_name;
+    let oldName = node.data_section_name;
+
+    // Fix double prefix from previous buggy runs
+    const fixed = fixDoublePrefix(oldName, prefix);
+    if (fixed !== oldName) {
+      nameMap.set(oldName, fixed);
+      oldName = fixed;
+    }
+
     if (!nameMap.has(oldName)) {
-      if (isRoot) {
+      // Already correctly prefixed → identity mapping (leave as-is)
+      if (oldName.startsWith(prefix + "_")) {
+        nameMap.set(oldName, oldName);
+      } else if (isRoot) {
         nameMap.set(oldName, `${prefix}_section`);
       } else {
         nameMap.set(oldName, `${prefix}_${oldName}`);
@@ -139,13 +164,19 @@ function buildSectionNameMap(
 
 /**
  * Remap a section name using the name map.
- * Falls back to prefixing if not in the map.
+ * Falls back to prefixing if not already prefixed.
+ * Also fixes double-prefixed names.
  */
 function remapSectionName(
   oldName: string,
   prefix: string,
   nameMap: Map<string, string>,
 ): string {
+  // Fix double prefix first
+  const fixed = fixDoublePrefix(oldName, prefix);
+  if (fixed !== oldName && nameMap.has(fixed)) return nameMap.get(fixed)!;
+  if (fixed !== oldName) return fixed;
+
   if (nameMap.has(oldName)) return nameMap.get(oldName)!;
   if (oldName.startsWith(prefix + "_")) return oldName; // already prefixed
   return `${prefix}_${oldName}`;
@@ -371,7 +402,7 @@ async function main() {
             Authorization: TOKEN!,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ story: { content: story.content } }),
+          body: JSON.stringify({ story: { content: story.content }, publish: 1 }),
         },
       );
       if (!putRes.ok) {

@@ -648,9 +648,9 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       data_section_name: {
         type: "text",
-        pos: 100,
+        pos: 0,
         description:
-          "Section builder: marks this container as a section boundary for cloning repeatable items (e.g. 'study', 'statistic', 'article')",
+          "Section builder: marks this container as a section boundary for cloning repeatable items (e.g. 'case_studies_2_study')",
       },
     },
   },
@@ -763,11 +763,11 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       data_mapping: {
         type: "bloks",
-        pos: 100,
+        pos: 0,
         restrict_components: true,
         component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: maps premade data to this component's field (max 1)",
+          "Section builder: maps premade data fields to this component (e.g. image + dark_image)",
       },
     },
   },
@@ -891,11 +891,11 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       data_mapping: {
         type: "bloks",
-        pos: 100,
+        pos: 0,
         restrict_components: true,
         component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: maps premade data to this component's field (max 1)",
+          "Section builder: maps premade data fields to this component (e.g. image + dark_image)",
       },
     },
   },
@@ -1362,11 +1362,11 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       data_mapping: {
         type: "bloks",
-        pos: 100,
+        pos: 0,
         restrict_components: true,
         component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: maps premade data to this component's field (max 1)",
+          "Section builder: maps premade data fields to this component (e.g. image + dark_image)",
       },
     },
   },
@@ -1581,11 +1581,11 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       data_mapping: {
         type: "bloks",
-        pos: 100,
+        pos: 0,
         restrict_components: true,
         component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: maps premade data to this component's field (max 1)",
+          "Section builder: maps premade data fields to this component (e.g. image + dark_image)",
       },
     },
   },

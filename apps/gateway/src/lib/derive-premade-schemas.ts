@@ -165,39 +165,26 @@ function collectSections(
     currentSection = sectionName;
   }
 
-  // Check for data_mapping entries
-  const mapping = node.data_mapping?.[0];
-  if (mapping && currentSection) {
-    const builderSection: string = mapping.builder_section ?? currentSection;
-    const premadeField: string = mapping.premade_field;
-    const builderField: string = mapping.builder_field;
+  // Check for data_mapping entries (supports multiple entries per node)
+  const mappings = node.data_mapping;
+  if (Array.isArray(mappings) && mappings.length > 0 && currentSection) {
     const hostComponent: string = node.component ?? "";
 
-    if (premadeField && builderField) {
-      const section = sections.get(builderSection);
-      if (section && !section.fields.has(premadeField)) {
-        const fieldType = inferFieldType(hostComponent, builderField);
-        section.fields.set(premadeField, {
-          premadeField,
-          ...fieldType,
-        });
-      }
-    }
-  }
+    for (const mapping of mappings) {
+      const builderSection: string = mapping.builder_section ?? currentSection;
+      const premadeField: string = mapping.premade_field;
+      const builderField: string = mapping.builder_field;
 
-  // Also check legacy flat fields
-  const legacySection = node.builder_section ?? node.premade_section;
-  const legacyField = node.premade_field;
-  const legacyTarget = node.builder_field;
-  if (legacySection && legacyField && legacyTarget && !mapping) {
-    const section = sections.get(legacySection);
-    if (section && !section.fields.has(legacyField)) {
-      const hostComponent: string = node.component ?? "";
-      const fieldType = inferFieldType(hostComponent, legacyTarget);
-      section.fields.set(legacyField, {
-        premadeField: legacyField,
-        ...fieldType,
-      });
+      if (premadeField && builderField) {
+        const section = sections.get(builderSection);
+        if (section && !section.fields.has(premadeField)) {
+          const fieldType = inferFieldType(hostComponent, builderField);
+          section.fields.set(premadeField, {
+            premadeField,
+            ...fieldType,
+          });
+        }
+      }
     }
   }
 
