@@ -6,12 +6,16 @@ import { useEffect, useState, useCallback, useRef } from "react";
  * Floating banner that shows real-time section-builder webhook progress
  * in the Storyblok Visual Editor preview.
  *
- * How it works:
- * 1. Listens for the Storyblok bridge `published` event
+ * How it works (localhost bypass):
+ * 1. Listens for Storyblok editor postMessage events (the raw transport
+ *    behind the bridge) -- works on localhost without a tunnel
  * 2. When a section-builder page is published, POSTs to the local
- *    /api/storyblok-webhook endpoint (so it works in dev without a tunnel)
+ *    /api/storyblok-webhook endpoint to trigger processing
  * 3. Polls GET /api/build-status every 2s to show progress
  * 4. Auto-reloads when the build is done
+ *
+ * In production the external webhook also fires (from Storyblok servers),
+ * but the change-detection in the webhook makes duplicate processing a no-op.
  */
 
 interface BuildStatus {
@@ -23,8 +27,6 @@ interface BuildStatus {
   updatedAt: string;
 }
 
-// StoryblokBridge is already declared by @storyblok/react; we just use it.
-
 const POLL_INTERVAL = 2000;
 const RELOAD_DELAY = 1500;
 
@@ -33,7 +35,6 @@ export function BuildStatusBanner() {
   const [dismissed, setDismissed] = useState(false);
   const reloadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousStatusRef = useRef<string | null>(null);
-  const pollingRef = useRef(false);
 
   // ── Fetch build status ──
 
@@ -59,44 +60,52 @@ export function BuildStatusBanner() {
     }
   }, []);
 
-  // ── Start/stop polling ──
-
-  const startPolling = useCallback(() => {
-    if (pollingRef.current) return;
-    pollingRef.current = true;
-    fetchStatus();
-  }, [fetchStatus]);
+  // ── Poll build status ──
 
   useEffect(() => {
-    if (!pollingRef.current) return;
-
-    const interval = setInterval(fetchStatus, POLL_INTERVAL);
-    return () => clearInterval(interval);
-  }, [fetchStatus, status]); // re-subscribe when status changes
-
-  // Always poll (the banner is only in the preview layout)
-  useEffect(() => {
-    pollingRef.current = true;
     fetchStatus();
     const interval = setInterval(fetchStatus, POLL_INTERVAL);
     return () => clearInterval(interval);
   }, [fetchStatus]);
 
-  // ── Listen for Storyblok bridge publish events ──
+  // ── Listen for Storyblok publish via postMessage ──
 
   useEffect(() => {
-    // Extract the section-builder slug from the current preview URL
-    const getSectionBuilderSlug = (): string | null => {
-      // URL pattern: /preview/section-builder/case-studies-2
+    /**
+     * Extract the section-builder slug from the current preview URL.
+     * Works when the preview iframe is showing a section-builder page.
+     */
+    const getSlugFromUrl = (): string | null => {
       const match = window.location.pathname.match(
         /\/preview\/(section-builder\/[^/]+)/,
       );
       return match?.[1] ?? null;
     };
 
+    /**
+     * Try to extract a section-builder slug from the postMessage payload.
+     * Storyblok sends various formats; we check common fields.
+     */
+    const getSlugFromEvent = (data: any): string | null => {
+      const slug: string | undefined =
+        data.full_slug ??
+        data.slug ??
+        data.story?.full_slug ??
+        data.story?.slug ??
+        data.storySlug;
+
+      if (slug && slug.startsWith("section-builder/")) {
+        return slug;
+      }
+
+      // If the event has a slugId or storyId, we can't derive the slug
+      // Fall back to the current URL
+      return null;
+    };
+
     const triggerLocalWebhook = async (slug: string) => {
+      console.log(`[BuildStatusBanner] Triggering local webhook for: ${slug}`);
       try {
-        // POST to our own webhook endpoint to trigger local processing
         await fetch("/api/storyblok-webhook", {
           method: "POST",
           headers: {
@@ -113,47 +122,42 @@ export function BuildStatusBanner() {
       }
     };
 
-    const handlePublished = () => {
-      const slug = getSectionBuilderSlug();
+    const handleMessage = (event: MessageEvent) => {
+      // Only process messages from the Storyblok editor
+      const data = event.data;
+      if (!data) return;
+
+      // Storyblok sends events as objects or JSON strings
+      let parsed: any = data;
+      if (typeof data === "string") {
+        try {
+          parsed = JSON.parse(data);
+        } catch {
+          return;
+        }
+      }
+      if (typeof parsed !== "object" || parsed === null) return;
+
+      // Check for published event
+      // The bridge uses `action` or `event` depending on the version
+      const action: string | undefined =
+        parsed.action ?? parsed.event ?? parsed.type;
+      if (action !== "published") return;
+
+      console.log("[BuildStatusBanner] Published event received:", parsed);
+
+      // Try to get slug from the event payload, fall back to current URL
+      const slug = getSlugFromEvent(parsed) ?? getSlugFromUrl();
+
       if (slug) {
-        console.log(`[BuildStatusBanner] Published detected for: ${slug}`);
         setDismissed(false);
-        startPolling();
         triggerLocalWebhook(slug);
       }
     };
 
-    // Try to listen via the global storyblok bridge
-    const tryListen = () => {
-      const win = window as any;
-      if (win.storyblok?.on) {
-        win.storyblok.on("published", handlePublished);
-        return true;
-      }
-      // Try StoryblokBridge constructor
-      if (win.StoryblokBridge) {
-        const bridge = new win.StoryblokBridge();
-        bridge.on("published", handlePublished);
-        return true;
-      }
-      return false;
-    };
-
-    // The bridge might not be loaded yet, retry a few times
-    if (!tryListen()) {
-      const retryInterval = setInterval(() => {
-        if (tryListen()) clearInterval(retryInterval);
-      }, 1000);
-
-      // Stop retrying after 10s
-      const timeout = setTimeout(() => clearInterval(retryInterval), 10_000);
-
-      return () => {
-        clearInterval(retryInterval);
-        clearTimeout(timeout);
-      };
-    }
-  }, [startPolling]);
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   // ── Auto-reload when build completes ──
 

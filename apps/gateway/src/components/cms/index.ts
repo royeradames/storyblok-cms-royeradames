@@ -4,8 +4,10 @@
  * Shared components are registered with "shared_" prefix (e.g. shared_shadcn_container).
  * App-specific components have no prefix (e.g. page).
  *
- * Premade sections are mapped to PremadeSectionWrapper, which fetches the
- * builder template from the DB and renders generically.
+ * Premade section root bloks (e.g. shared_case_studies_2_section, shared_blog7_section)
+ * are auto-mapped to PremadeSectionWrapper via a Proxy. No manual registration needed --
+ * any component matching `shared_*_section` that isn't already a shared UI component
+ * is automatically handled by PremadeSectionWrapper.
  */
 import { components as sharedComponents } from "@repo/shared-cms";
 import { Page } from "./Page";
@@ -15,11 +17,29 @@ const sharedWithPrefix = Object.fromEntries(
   Object.entries(sharedComponents).map(([k, v]) => [`shared_${k}`, v]),
 );
 
-export const components = {
+const baseComponents: Record<string, any> = {
   ...sharedWithPrefix,
   page: Page,
-
-  // === Premade Sections (one line per section, all use generic wrapper) ===
-  shared_case_studies_2_section: PremadeSectionWrapper,
-  shared_blog7_section: PremadeSectionWrapper,
 };
+
+/**
+ * Proxy that auto-maps unknown `shared_*_section` components to PremadeSectionWrapper.
+ * This means premade section roots created by the webhook are automatically renderable
+ * without touching this file.
+ */
+export const components = new Proxy(baseComponents, {
+  get(target, prop) {
+    if (typeof prop === "string" && prop in target) {
+      return target[prop];
+    }
+    // Auto-map premade section root bloks
+    if (
+      typeof prop === "string" &&
+      prop.startsWith("shared_") &&
+      prop.endsWith("_section")
+    ) {
+      return PremadeSectionWrapper;
+    }
+    return undefined;
+  },
+});
