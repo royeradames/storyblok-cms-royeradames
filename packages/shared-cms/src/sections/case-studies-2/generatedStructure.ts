@@ -172,7 +172,20 @@ function addSectionBlok(
   if (structureKey !== DATA_SECTION_NAME_KEY) {
     return;
   }
-  const selectedSectionData = sectionData[stuctureObject[structureKey]][0];
+  const sectionDataName = stuctureObject[structureKey];
+  if (!(sectionDataName in sectionData)) {
+    return;
+  }
+  const sectionDataList = sectionData[sectionDataName];
+  if (!sectionDataList) {
+    debugger;
+    return;
+  }
+  const selectedSectionData = sectionDataList[0];
+  if (!selectedSectionData) {
+    debugger;
+    return;
+  }
   stuctureObject._uid = selectedSectionData._uid;
   stuctureObject[SECTION_BLOK_KEY] = selectedSectionData;
 }
@@ -213,38 +226,11 @@ function connnectDataFieldToCmsField(
   if (structureKey !== CMS_DATA_FIELD_NAME) {
     return;
   }
-  const dataField = dataFieldsNames.find((dataField) => {
-    // console.log("dataField", dataField, structureValue, structureObject);
-    // console.log(
-    //   "dataField.data_field_name \n",
-    //   dataField.data_field_name + "\n",
-    //   "structureValue",
-    //   structureValue + "\n",
-    //   "dataField.data_field_name === structureValue \n",
-    //   dataField.data_field_name === structureValue,
-    //   "\n",
-    // );
-    // console.log(
-    //   "dataField.data_entry_section \n",
-    //   dataField.data_entry_section + "\n",
-    //   "structureObject.data_entry_section \n",
-    //   structureObject.data_entry_section + "\n",
-    //   "dataField.data_entry_section === structureObject.data_entry_section \n",
-    //   dataField.data_entry_section === structureObject.data_entry_section,
-    //   "\n",
-    // );
-    return dataField.data_field_name === structureValue;
-  });
+  const dataField = getDataField(dataFieldsNames, structureValue);
   if (!dataField) {
-    console.error(
-      "dataField not found",
-      structureValue,
-      dataFieldsNames,
-      structureObject,
-    );
+    debugger;
     return;
   }
-
   // console.log(
   //   "-------------------------------- \n",
   //   "dataField.cms_field_key:",
@@ -268,6 +254,50 @@ function connnectDataFieldToCmsField(
   // ); // an array
 
   // picking a cms data to connect to the structure
-  structureObject[dataField.cms_field_key] =
-    sectionData[dataField.data_entry_section][0][structureObject[structureKey]];
+  const sectionDataList = sectionData[dataField.data_entry_section];
+  if (!sectionDataList) {
+    debugger;
+    return;
+  }
+  const sectionDataItem = sectionDataList[0];
+  if (!sectionDataItem) {
+    debugger;
+    return;
+  }
+  const dataValue = sectionDataItem[dataField.data_field_name];
+  structureObject[dataField.cms_field_key] = dataValue;
+}
+
+function getDataField(
+  dataFieldsNames: DataFieldsEntry[],
+  structureValue: unknown,
+): DataFieldsEntry | undefined {
+  const dataField = dataFieldsNames.find((dataField) => {
+    // console.log("dataField", dataField, structureValue, structureObject);
+    // console.log(
+    //   "dataField.data_field_name \n",
+    //   dataField.data_field_name + "\n",
+    //   "structureValue",
+    //   structureValue + "\n",
+    //   "dataField.data_field_name === structureValue \n",
+    //   dataField.data_field_name === structureValue,
+    //   "\n",
+    // );
+    // console.log(
+    //   "dataField.data_entry_section \n",
+    //   dataField.data_entry_section + "\n",
+    //   "structureObject.data_entry_section \n",
+    //   structureObject.data_entry_section + "\n",
+    //   "dataField.data_entry_section === structureObject.data_entry_section \n",
+    //   dataField.data_entry_section === structureObject.data_entry_section,
+    //   "\n",
+    // );
+    return dataField.data_field_name === structureValue;
+  });
+  if (!dataField) {
+    console.error("dataField not found", structureValue, dataFieldsNames);
+    debugger;
+    return;
+  }
+  return dataField;
 }
