@@ -6,11 +6,11 @@
  * CMS data fields to builder component fields, and cleans up builder-only metadata.
  *
  * Template marker fields:
- * - `data_section_name` on containers: marks section boundaries / cloning points
+ * - `data_section_name` on containers: marks section boundaries / cloning points.
+ *    Uses premade blok component names (e.g. "case_studies_2_study").
+ *    Array matching is done by `component` field on data items, not by field name.
  * - `data_mapping` (nested blok): array with one `builder_data_mapping` entry containing
  *    `builder_section`, `premade_field`, `builder_field`
- * - Legacy flat fields (backward compat): `builder_section` / `premade_section`,
- *   `premade_field`, `builder_field`
  */
 
 type SectionContext = Record<string, any>;
@@ -193,32 +193,24 @@ function expandWrapperChildren(
 // ── Data connection ───────────────────────────────────────────────────
 
 /**
- * Reads the section/field mapping from the node and connects CMS data.
+ * Reads the section/field mapping from the node's `data_mapping` blok and
+ * connects CMS data to the appropriate builder field.
  *
- * Supports both:
- * - New: nested `data_mapping` blok (array with 1 entry of `builder_data_mapping`)
- * - Legacy: flat `builder_section`/`premade_section`, `premade_field`, `builder_field` fields
+ * The `data_mapping` blok contains a single entry with:
+ * - `builder_section`: which section in context to look up (premade blok component name)
+ * - `premade_field`: which field on the premade data to read
+ * - `builder_field`: which field on this node to write the value to
  */
 function connectDataFields(
   node: Record<string, any>,
   context: SectionContext,
 ): void {
-  let sectionName: string | undefined;
-  let fieldName: string | undefined;
-  let targetField: string | undefined;
-
-  // New: nested blok pattern (data_mapping array with 1 entry)
   const mapping = node.data_mapping?.[0];
-  if (mapping) {
-    sectionName = mapping.builder_section;
-    fieldName = mapping.premade_field;
-    targetField = mapping.builder_field;
-  } else {
-    // Legacy: flat fields (backward compat with existing templates)
-    sectionName = node.builder_section ?? node.premade_section;
-    fieldName = node.premade_field;
-    targetField = node.builder_field;
-  }
+  if (!mapping) return;
+
+  const sectionName: string | undefined = mapping.builder_section;
+  const fieldName: string | undefined = mapping.premade_field;
+  const targetField: string | undefined = mapping.builder_field;
 
   if (!sectionName || !fieldName || !targetField) return;
 
@@ -234,55 +226,38 @@ function connectDataFields(
 // ── Utilities ─────────────────────────────────────────────────────────
 
 /**
- * Finds the data array for a section name by looking for a pluralised
- * field on any object currently in context.
+ * Finds the data array for a section name by scanning all arrays in context
+ * and matching on the `component` field of their items.
  *
- * E.g. "study" → looks for `studies` field, "statistic" → `statistics`.
+ * Handles the shared_ prefix automatically:
+ *   data_section_name: "case_studies_2_study"
+ *   array item component: "case_studies_2_study" or "shared_case_studies_2_study"
  */
 function findDataArray(
   sectionName: string,
   context: SectionContext,
 ): any[] | null {
-  const candidates = pluralize(sectionName);
-
   for (const contextValue of Object.values(context)) {
     if (!isObject(contextValue)) continue;
-    for (const fieldName of candidates) {
-      const arr = contextValue[fieldName];
-      if (Array.isArray(arr) && arr.length > 0) return arr;
+    for (const value of Object.values(contextValue)) {
+      if (!Array.isArray(value) || value.length === 0) continue;
+      const first = value[0];
+      if (!isObject(first)) continue;
+      const comp: string = first.component ?? "";
+      if (
+        comp === sectionName ||
+        comp.replace(/^shared_/, "") === sectionName
+      ) {
+        return value;
+      }
     }
   }
-
   return null;
-}
-
-/** Generates common English plural forms for simple nouns. */
-function pluralize(word: string): string[] {
-  const forms: string[] = [];
-  if (word.endsWith("y")) {
-    forms.push(word.slice(0, -1) + "ies"); // study → studies
-  }
-  forms.push(word + "s"); // statistic → statistics
-  if (
-    word.endsWith("s") ||
-    word.endsWith("x") ||
-    word.endsWith("ch") ||
-    word.endsWith("sh")
-  ) {
-    forms.push(word + "es");
-  }
-  return forms;
 }
 
 /** Removes builder-only metadata keys from the output node. */
 function cleanupMetadata(node: Record<string, any>): void {
-  // New nested blok
   delete node.data_mapping;
-  // Legacy flat fields
-  delete node.builder_field;
-  delete node.premade_field;
-  delete node.builder_section;
-  delete node.premade_section;
   delete node.data_section_name;
 }
 
