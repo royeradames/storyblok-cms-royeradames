@@ -35,8 +35,7 @@ export function generateStructure(blok: CaseStudies2Blok) {
 function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
   // console.log("formatRaw");
   const dataFieldsNames = cmsData.data_fields;
-  // const intialStructure = structuredClone(baseStructure);
-  // console.log("intial structure", intialStructure);
+  const intialStructure = structuredClone(baseStructure);
   // console.log("cmsData", cmsData);
   const sectionData = organizeSectionsData(cmsData);
   // console.log("sectionData", sectionData);
@@ -47,11 +46,13 @@ function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
   //   const formatedRaw = generateElements(cmsData);
   //   return formatedRaw;
 
-  // console.log("final structure", baseStructure);
-  // console.log(
-  //   "is the same structure?",
-  //   deepEqual(baseStructure, intialStructure),
-  // );
+  console.log("intial structure", intialStructure);
+  console.log("final structure", baseStructure);
+  console.log(
+    "is the same structure?",
+    deepEqual(baseStructure, intialStructure),
+  );
+  // throw new Error("test");
   return baseStructure;
 }
 
@@ -171,7 +172,9 @@ function addSectionBlok(
   if (structureKey !== DATA_SECTION_NAME_KEY) {
     return;
   }
-  stuctureObject[SECTION_BLOK_KEY] = sectionData;
+  const selectedSectionData = sectionData[stuctureObject[structureKey]][0];
+  stuctureObject._uid = selectedSectionData._uid;
+  stuctureObject[SECTION_BLOK_KEY] = selectedSectionData;
 }
 
 function isObject(value: unknown): value is Record<string, any> {
@@ -181,7 +184,7 @@ function updateUid(
   structureKey: string,
   stuctureObject: Record<string, any>,
 ): void {
-  if ("_uid" !== structureKey) {
+  if ("_uid" !== structureKey && !stuctureObject[DATA_SECTION_NAME_KEY]) {
     return;
   }
   stuctureObject._uid = crypto.randomUUID();
@@ -242,28 +245,29 @@ function connnectDataFieldToCmsField(
     return;
   }
 
-  console.log(
-    "-------------------------------- \n",
-    "dataField.cms_field_key:",
-    dataField.cms_field_key,
-    "\n",
-    "structureObject[dataField.cms_field_key]:",
-    structureObject[dataField.cms_field_key],
-    "\n",
-    "structureObject:",
-    structureObject,
-  ); // an object json that takes in a array item
-  console.log(
-    "sectionData[dataField.data_entry_section]:",
-    dataField.data_entry_section,
-    "\n",
-    sectionData[dataField.data_entry_section],
-    "\n",
-    "sectionData:",
-    sectionData,
-    "-------------------------------- \n",
-  ); // an array
+  // console.log(
+  //   "-------------------------------- \n",
+  //   "dataField.cms_field_key:",
+  //   dataField.cms_field_key,
+  //   "\n",
+  //   "structureObject[dataField.cms_field_key]:",
+  //   structureObject[dataField.cms_field_key],
+  //   "\n",
+  //   "structureObject:",
+  //   structureObject,
+  // ); // an object json that takes in a array item
+  // console.log(
+  //   "sectionData[dataField.data_entry_section]:",
+  //   dataField.data_entry_section,
+  //   "\n",
+  //   sectionData[dataField.data_entry_section],
+  //   "\n",
+  //   "sectionData:",
+  //   sectionData,
+  //   "-------------------------------- \n",
+  // ); // an array
 
+  // picking a cms data to connect to the structure
   structureObject[dataField.cms_field_key] =
     sectionData[dataField.data_entry_section][0][structureObject[structureKey]];
 }

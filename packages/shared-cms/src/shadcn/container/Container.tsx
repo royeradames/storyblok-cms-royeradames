@@ -61,6 +61,9 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
   const isFlexContainer = !isListElement;
   const hasNoCustomStyles = !hasStyles;
   const useDefaultFlexLayout = isFlexContainer && hasNoCustomStyles;
+  if (blok.sectionBlok) {
+    console.log("container blok.sectionBlok", blok.sectionBlok);
+  }
   return (
     <Component
       {...storyblokEditable(blok.sectionBlok ? blok.sectionBlok : blok)}

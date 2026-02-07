@@ -225,6 +225,7 @@ export function caseStudies2SectionBuilderRaw() {
                         display: "",
                         justify: "",
                         padding: [],
+                        variant: "",
                         component: "shared_styles_breakpoint_options",
                         direction: "",
                         max_width: "",
@@ -346,7 +347,7 @@ export function caseStudies2SectionBuilderRaw() {
                                 component: "shared_shadcn_image",
                                 object_fit: "cover",
                                 aspect_ratio: "auto",
-                                data_field_name: "company-logo",
+                                data_field_name: "company_logo",
                                 _editable:
                                   '<!--#storyblok#{"name": "shared_shadcn_image", "space": "290156609668258", "uid": "071be5a7-d36f-4a73-b0be-338eb80eb8cf", "id": "141503480340431"}-->',
                               },
@@ -705,6 +706,7 @@ export function caseStudies2SectionBuilderRaw() {
                         ],
                         component: "shared_shadcn_container",
                         container_as: "div",
+                        data_section_name: "statistic",
                         _editable:
                           '<!--#storyblok#{"name": "shared_shadcn_container", "space": "290156609668258", "uid": "c50cea3f-3aa6-4162-86db-2768413a0698", "id": "141503480340431"}-->',
                       },
@@ -914,6 +916,7 @@ export function caseStudies2SectionBuilderRaw() {
             ],
             component: "shared_shadcn_container",
             container_as: "li",
+            data_section_name: "study",
             _editable:
               '<!--#storyblok#{"name": "shared_shadcn_container", "space": "290156609668258", "uid": "1d90fca7-67e1-4bed-83a5-9210e2d42516", "id": "141503480340431"}-->',
           },
@@ -984,6 +987,7 @@ export function caseStudies2SectionBuilderRaw() {
     ],
     component: "shared_shadcn_container",
     container_as: "section",
+    data_section_name: "studies",
     _editable:
       '<!--#storyblok#{"name": "shared_shadcn_container", "space": "290156609668258", "uid": "05289be4-5693-482a-8441-ece56a48fe84", "id": "141503480340431"}-->',
   };
