@@ -11,12 +11,18 @@ import {
   migrateStoryData,
   slugToPrefix,
 } from "@/lib/derive-premade-schemas";
+import {
+  startBuild,
+  updateBuild,
+  completeBuild,
+  failBuild,
+} from "@/lib/webhook-status";
 
 /**
  * Storyblok webhook handler.
  *
  * Receives `story.published` events for section-builder stories and:
- * 1. Extracts the template and compares with DB — skips if unchanged
+ * 1. Extracts the template and compares with DB -- skips if unchanged
  * 2. Derives premade blok schemas from the new template
  * 3. Diffs against previous schemas to detect field renames/deletions/additions
  * 4. Pushes changed component definitions to Storyblok (create/update/delete)
@@ -24,11 +30,11 @@ import {
  * 6. Upserts the template into the section_templates table
  * 7. Invalidates the Vercel data cache
  *
- * Configure in Storyblok: Settings → Webhooks → Story published
- * URL: https://<your-domain>/api/storyblok-webhook
- * Secret: STORYBLOK_WEBHOOK_SECRET env var
+ * Progress is tracked in the webhook_jobs table and displayed by BuildStatusBanner.
  */
 export async function POST(request: NextRequest) {
+  let jobId: number | undefined;
+
   try {
     // Validate webhook secret
     const webhookSecret = process.env.STORYBLOK_WEBHOOK_SECRET;
@@ -52,9 +58,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, skipped: true });
     }
 
+    // ── Start tracking build progress ──
+    jobId = await startBuild(slug, "Fetching story content...");
+
     // Fetch the full story content from Storyblok
     const story = await fetchStory(slug, false);
     if (!story?.content) {
+      await failBuild(jobId, `Story not found: ${slug}`);
       return NextResponse.json(
         { error: `Story not found: ${slug}` },
         { status: 404 },
@@ -66,6 +76,8 @@ export async function POST(request: NextRequest) {
 
     // Extract the actual section template from the page wrapper (body[0])
     const template = story.content?.body?.[0] ?? story.content;
+
+    await updateBuild(jobId, "Comparing with existing template...");
 
     // Load existing template from DB for comparison
     const existing = await db
@@ -82,6 +94,7 @@ export async function POST(request: NextRequest) {
       JSON.stringify(existingTemplate) === JSON.stringify(template)
     ) {
       console.log(`[webhook] No changes for ${slug}, skipping`);
+      await completeBuild(jobId, "No changes detected");
       return NextResponse.json({ ok: true, unchanged: true });
     }
 
@@ -91,6 +104,8 @@ export async function POST(request: NextRequest) {
     const token = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
 
     if (spaceId && token) {
+      await updateBuild(jobId, "Deriving blok schemas...");
+
       const newSchemas = derivePremadeBlokSchemas(template, prefix);
 
       let oldSchemas: typeof newSchemas = [];
@@ -98,7 +113,7 @@ export async function POST(request: NextRequest) {
         try {
           oldSchemas = derivePremadeBlokSchemas(existingTemplate as any, prefix);
         } catch {
-          // Could not derive old schemas — treat as fresh
+          // Could not derive old schemas -- treat as fresh
         }
       }
 
@@ -111,6 +126,15 @@ export async function POST(request: NextRequest) {
         diff.removedComponents.length > 0;
 
       if (hasChanges) {
+        const total =
+          diff.newComponents.length +
+          diff.changedComponents.length +
+          diff.removedComponents.length;
+        await updateBuild(
+          jobId,
+          `Pushing ${total} component definition${total !== 1 ? "s" : ""}...`,
+        );
+
         console.log(
           `[webhook] Pushing blok definitions for ${slug}: ` +
             `${diff.newComponents.length} new, ` +
@@ -122,6 +146,12 @@ export async function POST(request: NextRequest) {
 
       // Migrate story data if field renames or deletions detected
       if (diff.fieldRenames.length > 0 || diff.fieldDeletions.length > 0) {
+        const changes = diff.fieldRenames.length + diff.fieldDeletions.length;
+        await updateBuild(
+          jobId,
+          `Migrating story data (${changes} field change${changes !== 1 ? "s" : ""})...`,
+        );
+
         console.log(
           `[webhook] Migrating story data: ` +
             `${diff.fieldRenames.length} renames, ` +
@@ -137,6 +167,8 @@ export async function POST(request: NextRequest) {
     }
 
     // ── Upsert template into DB ──
+
+    await updateBuild(jobId, "Saving template...");
 
     if (existing.length > 0) {
       await db
@@ -162,6 +194,8 @@ export async function POST(request: NextRequest) {
       `[webhook] Upserted template: ${slug} → ${componentName}`,
     );
 
+    await completeBuild(jobId, "Section builder updated");
+
     return NextResponse.json({
       ok: true,
       slug,
@@ -169,6 +203,12 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("[webhook] Error processing Storyblok webhook:", error);
+    if (jobId) {
+      await failBuild(
+        jobId,
+        error instanceof Error ? error.message : "Internal server error",
+      ).catch(() => {}); // Don't let status update failure mask the original error
+    }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

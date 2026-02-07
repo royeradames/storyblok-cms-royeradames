@@ -283,52 +283,85 @@ function migrateTemplate(
 
 // ── Main ──────────────────────────────────────────────────────────────
 
+interface StorySummary {
+  slug: string;
+  schemas: number;
+  created: number;
+  updated: number;
+  deleted: number;
+  migrated: number;
+  published: boolean;
+}
+
 async function main() {
-  console.log("Fetching section-builder stories from Storyblok...\n");
+  console.log("[1/7] Fetching section-builder stories from Storyblok...");
   const stories = await fetchSectionBuilderStories();
 
   if (stories.length === 0) {
-    console.log("No section-builder stories found.");
+    console.log("  No section-builder stories found.");
     await client.end();
     return;
   }
 
-  console.log(`Found ${stories.length} section-builder stories.\n`);
+  console.log(`  Found ${stories.length} section-builder stories.\n`);
 
-  for (const story of stories) {
+  const summaries: StorySummary[] = [];
+
+  for (let si = 0; si < stories.length; si++) {
+    const story = stories[si]!;
     const slug = story.full_slug as string;
     const prefix = slugToPrefix(slug);
     const componentName = `${prefix}_section`;
+    const label = slug.replace("section-builder/", "");
 
-    console.log(`── ${slug} (prefix: ${prefix}) ──`);
+    console.log(`── ${label} (${si + 1}/${stories.length}) ──`);
+
+    const summary: StorySummary = {
+      slug: label,
+      schemas: 0,
+      created: 0,
+      updated: 0,
+      deleted: 0,
+      migrated: 0,
+      published: false,
+    };
 
     // Extract template from page wrapper
     const template = story.content?.body?.[0] ?? story.content;
     if (!template) {
-      console.warn(`  Skipping: no content\n`);
+      console.warn("  Skipping: no content\n");
+      summaries.push(summary);
       continue;
     }
 
-    // Step 1: Build section name map, then migrate
-    console.log("  Building section name map...");
+    // Step 2: Build section name map
+    console.log("[2/7] Building section name map...");
     const nameMap = new Map<string, string>();
     buildSectionNameMap(template, prefix, true, nameMap);
+    let mappingCount = 0;
     for (const [oldName, newName] of nameMap) {
-      console.log(`    "${oldName}" → "${newName}"`);
+      if (oldName !== newName) {
+        console.log(`    "${oldName}" -> "${newName}"`);
+        mappingCount++;
+      }
     }
+    if (mappingCount === 0) console.log("    All names already correct.");
 
-    console.log("  Migrating template...");
+    // Step 3: Migrate template
+    console.log("[3/7] Migrating template...");
     migrateTemplate(template, prefix, nameMap);
 
-    // Step 2: Derive premade blok schemas from the migrated template
-    console.log("\n  Deriving premade blok schemas...");
+    // Step 4: Derive premade blok schemas
+    console.log("[4/7] Deriving premade blok schemas...");
     const newSchemas = derivePremadeBlokSchemas(template, prefix);
+    summary.schemas = newSchemas.length;
     for (const comp of newSchemas) {
       const fields = Object.keys(comp.schema).join(", ");
       console.log(`    ${comp.name}: ${fields}`);
     }
+    console.log(`  ${newSchemas.length} component(s) derived.`);
 
-    // Step 3: Try to derive old schemas from DB template for diffing
+    // Derive old schemas from DB template for diffing
     let oldSchemas: DerivedComponent[] = [];
     const existing = await db
       .select()
@@ -344,52 +377,45 @@ async function main() {
       }
     }
 
-    // Step 4: Diff and push component changes
-    console.log("\n  Diffing schemas...");
+    // Step 5: Diff and push component changes
+    console.log("[5/7] Pushing component definitions...");
     const diff = diffSchemas(oldSchemas, newSchemas);
 
     if (diff.fieldRenames.length > 0) {
-      console.log("    Renames:");
       for (const r of diff.fieldRenames) {
-        console.log(`      ${r.component}.${r.oldField} → ${r.newField}`);
+        console.log(`    Rename: ${r.component}.${r.oldField} -> ${r.newField}`);
       }
     }
     if (diff.fieldDeletions.length > 0) {
-      console.log("    Deletions:");
       for (const d of diff.fieldDeletions) {
-        console.log(`      ${d.component}.${d.field}`);
+        console.log(`    Delete: ${d.component}.${d.field}`);
       }
     }
     if (diff.removedComponents.length > 0) {
-      console.log("    Removed components:", diff.removedComponents.join(", "));
-    }
-    if (
-      diff.changedComponents.length === 0 &&
-      diff.newComponents.length === 0 &&
-      diff.removedComponents.length === 0
-    ) {
-      console.log("    No schema changes detected.");
+      console.log("    Remove:", diff.removedComponents.join(", "));
     }
 
-    console.log("\n  Pushing component definitions...");
     const pushResult = await pushDerivedComponents(diff, SPACE_ID!, TOKEN!, dryRun);
+    summary.created = pushResult.created;
+    summary.updated = pushResult.updated;
+    summary.deleted = pushResult.deleted;
     console.log(
-      `    Created: ${pushResult.created}, Updated: ${pushResult.updated}, Deleted: ${pushResult.deleted}`,
+      `  ${pushResult.created} new, ${pushResult.updated} updated, ${pushResult.deleted} deleted`,
     );
 
-    // Step 5: Migrate story data if needed
+    // Migrate story data if needed
     if (diff.fieldRenames.length > 0 || diff.fieldDeletions.length > 0) {
-      console.log("\n  Migrating story data...");
+      console.log("  Migrating story data...");
       const migrated = await migrateStoryData(diff, SPACE_ID!, TOKEN!, dryRun);
-      console.log(`    Stories migrated: ${migrated}`);
+      summary.migrated = migrated;
+      console.log(`  ${migrated} stories migrated.`);
     }
 
-    // Step 6: PUT updated template back to Storyblok
+    // Step 6: Save to Storyblok
+    console.log("[6/7] Saving story to Storyblok...");
     if (dryRun) {
-      console.log(`\n  [dry-run] Would PUT updated story content for ${slug}`);
+      console.log("  [dry-run] Would PUT + publish");
     } else {
-      console.log(`\n  Saving updated story content...`);
-      // Update the body[0] in the original story content
       if (story.content.body?.[0]) {
         story.content.body[0] = template;
       }
@@ -407,17 +433,18 @@ async function main() {
       );
       if (!putRes.ok) {
         const err = await putRes.text();
-        console.error(`  Failed to save story: ${putRes.status} ${err}`);
+        console.error(`  Failed: ${putRes.status} ${err}`);
       } else {
-        console.log(`  Saved: ${slug}`);
+        summary.published = true;
+        console.log("  Published.");
       }
     }
 
     // Step 7: Update DB template
+    console.log("[7/7] Updating DB template...");
     if (dryRun) {
-      console.log(`  [dry-run] Would update DB template for ${slug}`);
+      console.log("  [dry-run] Would update");
     } else {
-      console.log("  Updating DB template...");
       if (existing.length > 0) {
         await db
           .update(sectionTemplates)
@@ -428,12 +455,36 @@ async function main() {
           .insert(sectionTemplates)
           .values({ slug, component: componentName, template });
       }
-      console.log(`  DB updated: ${slug} → ${componentName}`);
+      console.log(`  Saved: ${componentName}`);
     }
 
+    summaries.push(summary);
     console.log();
   }
 
+  // ── Summary ──
+  console.log("=".repeat(60));
+  console.log("Summary:");
+  console.log("-".repeat(60));
+  const nameCol = Math.max(...summaries.map((s) => s.slug.length), 10);
+  console.log(
+    "  " +
+      "Section".padEnd(nameCol + 2) +
+      "Schemas  New  Upd  Del  Migrated  Published",
+  );
+  for (const s of summaries) {
+    console.log(
+      "  " +
+        s.slug.padEnd(nameCol + 2) +
+        String(s.schemas).padStart(7) +
+        String(s.created).padStart(5) +
+        String(s.updated).padStart(5) +
+        String(s.deleted).padStart(5) +
+        String(s.migrated).padStart(10) +
+        (s.published ? "        yes" : dryRun ? "    dry-run" : "         no"),
+    );
+  }
+  console.log("=".repeat(60));
   console.log("Done!");
   await client.end();
 }
