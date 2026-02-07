@@ -17,10 +17,7 @@ import {
   componentDefinitions as sharedDefinitions,
   componentCount as sharedCount,
 } from "@repo/shared-cms/storyblok-seed";
-import {
-  gatewayComponentDefinitions,
-  SHARED_WHITELIST_PLACEHOLDER,
-} from "../../storyblok-seed/definitions";
+import { gatewayComponentDefinitions } from "../../storyblok-seed/definitions";
 
 // Load app .env (apps/gateway/.env)
 config({ path: path.join(process.cwd(), ".env") });
@@ -135,31 +132,12 @@ function main() {
 
   // 1. Transform shared definitions with "shared_" prefix
   const sharedDefs = sharedDefinitions as unknown as ComponentDef[];
-  const { components: sharedComponents, prefixedNames: sharedPrefixedNames } =
+  const { components: sharedComponents } =
     transformToStoryblokFormat(sharedDefs, SHARED_PREFIX, SHARED_PREFIX);
 
-  // 2. Gateway definitions: replace placeholder with shared_* whitelist
-  const gatewayDefsWithWhitelist = gatewayComponentDefinitions.map((comp) => {
-    const schema = { ...comp.schema };
-    for (const key of Object.keys(schema)) {
-      const field = schema[key];
-      if (!field) continue;
-      if (
-        field.type === "bloks" &&
-        field.component_whitelist?.includes(SHARED_WHITELIST_PLACEHOLDER)
-      ) {
-        schema[key] = {
-          ...field,
-          type: field.type,
-          component_whitelist: [...sharedPrefixedNames],
-        };
-      }
-    }
-    return { ...comp, schema };
-  });
-
+  // 2. Gateway definitions (page body whitelist is managed dynamically by the webhook)
   const { components: appComponents } = transformToStoryblokFormat(
-    gatewayDefsWithWhitelist as unknown as ComponentDef[],
+    gatewayComponentDefinitions as unknown as ComponentDef[],
     "",
     "",
   );

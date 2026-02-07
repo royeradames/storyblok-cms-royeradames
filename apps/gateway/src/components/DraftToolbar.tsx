@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button, Badge } from "@repo/ui";
@@ -10,8 +10,11 @@ export function DraftToolbar() {
   const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
   const [isLogging, setIsLogging] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const isDark = resolvedTheme === "dark";
+  useEffect(() => setMounted(true), []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   function toggleTheme() {
     setTheme(isDark ? "light" : "dark");

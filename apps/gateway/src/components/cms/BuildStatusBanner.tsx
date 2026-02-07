@@ -6,11 +6,12 @@ import { useEffect, useState, useCallback, useRef } from "react";
  * Floating banner that shows real-time section-builder webhook progress
  * in the Storyblok Visual Editor preview.
  *
- * Polls GET /api/build-status every 2 seconds. Shows:
- * - Building: amber bar with spinner + step message
- * - Done: green bar + auto-reloads after 1.5s
- * - Error: red bar with message + dismiss button
- * - Idle: renders nothing
+ * How it works:
+ * 1. Listens for the Storyblok bridge `published` event
+ * 2. When a section-builder page is published, POSTs to the local
+ *    /api/storyblok-webhook endpoint (so it works in dev without a tunnel)
+ * 3. Polls GET /api/build-status every 2s to show progress
+ * 4. Auto-reloads when the build is done
  */
 
 interface BuildStatus {
@@ -22,6 +23,8 @@ interface BuildStatus {
   updatedAt: string;
 }
 
+// StoryblokBridge is already declared by @storyblok/react; we just use it.
+
 const POLL_INTERVAL = 2000;
 const RELOAD_DELAY = 1500;
 
@@ -30,6 +33,9 @@ export function BuildStatusBanner() {
   const [dismissed, setDismissed] = useState(false);
   const reloadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousStatusRef = useRef<string | null>(null);
+  const pollingRef = useRef(false);
+
+  // ── Fetch build status ──
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -53,22 +59,104 @@ export function BuildStatusBanner() {
     }
   }, []);
 
-  // Poll on an interval
+  // ── Start/stop polling ──
+
+  const startPolling = useCallback(() => {
+    if (pollingRef.current) return;
+    pollingRef.current = true;
+    fetchStatus();
+  }, [fetchStatus]);
+
   useEffect(() => {
-    // Only poll if we're inside Storyblok's Visual Editor (bridge is active)
-    const isInEditor =
-      typeof window !== "undefined" &&
-      (window.location !== window.parent?.location || // inside iframe
-        window.location.search.includes("_storyblok"));
+    if (!pollingRef.current) return;
 
-    if (!isInEditor) return;
+    const interval = setInterval(fetchStatus, POLL_INTERVAL);
+    return () => clearInterval(interval);
+  }, [fetchStatus, status]); // re-subscribe when status changes
 
+  // Always poll (the banner is only in the preview layout)
+  useEffect(() => {
+    pollingRef.current = true;
     fetchStatus();
     const interval = setInterval(fetchStatus, POLL_INTERVAL);
     return () => clearInterval(interval);
   }, [fetchStatus]);
 
-  // Auto-reload when build completes
+  // ── Listen for Storyblok bridge publish events ──
+
+  useEffect(() => {
+    // Extract the section-builder slug from the current preview URL
+    const getSectionBuilderSlug = (): string | null => {
+      // URL pattern: /preview/section-builder/case-studies-2
+      const match = window.location.pathname.match(
+        /\/preview\/(section-builder\/[^/]+)/,
+      );
+      return match?.[1] ?? null;
+    };
+
+    const triggerLocalWebhook = async (slug: string) => {
+      try {
+        // POST to our own webhook endpoint to trigger local processing
+        await fetch("/api/storyblok-webhook", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-bridge-trigger": "1",
+          },
+          body: JSON.stringify({
+            action: "published",
+            full_slug: slug,
+          }),
+        });
+      } catch (e) {
+        console.error("[BuildStatusBanner] Failed to trigger local webhook:", e);
+      }
+    };
+
+    const handlePublished = () => {
+      const slug = getSectionBuilderSlug();
+      if (slug) {
+        console.log(`[BuildStatusBanner] Published detected for: ${slug}`);
+        setDismissed(false);
+        startPolling();
+        triggerLocalWebhook(slug);
+      }
+    };
+
+    // Try to listen via the global storyblok bridge
+    const tryListen = () => {
+      const win = window as any;
+      if (win.storyblok?.on) {
+        win.storyblok.on("published", handlePublished);
+        return true;
+      }
+      // Try StoryblokBridge constructor
+      if (win.StoryblokBridge) {
+        const bridge = new win.StoryblokBridge();
+        bridge.on("published", handlePublished);
+        return true;
+      }
+      return false;
+    };
+
+    // The bridge might not be loaded yet, retry a few times
+    if (!tryListen()) {
+      const retryInterval = setInterval(() => {
+        if (tryListen()) clearInterval(retryInterval);
+      }, 1000);
+
+      // Stop retrying after 10s
+      const timeout = setTimeout(() => clearInterval(retryInterval), 10_000);
+
+      return () => {
+        clearInterval(retryInterval);
+        clearTimeout(timeout);
+      };
+    }
+  }, [startPolling]);
+
+  // ── Auto-reload when build completes ──
+
   useEffect(() => {
     if (status?.status === "done" && !dismissed) {
       reloadTimerRef.current = setTimeout(() => {
@@ -84,7 +172,8 @@ export function BuildStatusBanner() {
     };
   }, [status?.status, dismissed]);
 
-  // Nothing to show
+  // ── Render ──
+
   if (!status || dismissed) return null;
 
   const sectionName = status.slug?.replace("section-builder/", "") ?? "";
@@ -117,17 +206,10 @@ export function BuildStatusBanner() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          {/* Status icon */}
           {status.status === "building" && <Spinner />}
           {status.status === "done" && (
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M13.5 4.5L6 12L2.5 8.5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}
           {status.status === "error" && (
@@ -137,18 +219,14 @@ export function BuildStatusBanner() {
             </svg>
           )}
 
-          {/* Message */}
           <span>
-            <strong style={{ fontWeight: 600 }}>
-              {sectionName}
-            </strong>
+            <strong style={{ fontWeight: 600 }}>{sectionName}</strong>
             {": "}
             {status.message}
             {status.status === "done" && " Reloading..."}
           </span>
         </div>
 
-        {/* Dismiss button (only for error or done) */}
         {(status.status === "error" || status.status === "done") && (
           <button
             onClick={() => {
@@ -178,27 +256,11 @@ export function BuildStatusBanner() {
   );
 }
 
-/** Small CSS spinner for the building state. */
 function Spinner() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ animation: "spin 1s linear infinite", flexShrink: 0 }}>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-      <circle
-        cx="8"
-        cy="8"
-        r="6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeDasharray="28"
-        strokeDashoffset="8"
-        strokeLinecap="round"
-      />
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" strokeDasharray="28" strokeDashoffset="8" strokeLinecap="round" />
     </svg>
   );
 }

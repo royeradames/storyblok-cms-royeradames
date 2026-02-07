@@ -31,10 +31,12 @@ export interface StoryblokComponentDef {
 }
 
 /**
- * Placeholder replaced at generate time with the list of shared_* component names.
- * Used so page body can allow all shared components.
+ * Initial whitelist for the page body field.
+ * Only `shared_shadcn_container` is included by default.
+ * Premade section root bloks (e.g. `shared_case_studies_2_section`) are
+ * added dynamically by the webhook when a section builder page is published.
  */
-export const SHARED_WHITELIST_PLACEHOLDER = "__SHARED_COMPONENT_NAMES__";
+export const PAGE_BODY_INITIAL_WHITELIST = ["shared_shadcn_container"];
 
 export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
   {
@@ -47,9 +49,10 @@ export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
       body: {
         type: "bloks",
         pos: 0,
-        description: "Page content blocks",
+        description:
+          "Page content blocks (containers + premade section roots)",
         restrict_components: true,
-        component_whitelist: [SHARED_WHITELIST_PLACEHOLDER],
+        component_whitelist: PAGE_BODY_INITIAL_WHITELIST,
       },
       styles: {
         type: "bloks",

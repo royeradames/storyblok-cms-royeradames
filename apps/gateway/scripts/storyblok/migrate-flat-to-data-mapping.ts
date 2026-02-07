@@ -29,6 +29,7 @@ import {
   diffSchemas,
   pushDerivedComponents,
   migrateStoryData,
+  updatePageBodyWhitelist,
   slugToPrefix,
   type DerivedComponent,
 } from "../../src/lib/derive-premade-schemas";
@@ -402,6 +403,27 @@ async function main() {
     console.log(
       `  ${pushResult.created} new, ${pushResult.updated} updated, ${pushResult.deleted} deleted`,
     );
+
+    // Update page body whitelist
+    const rootBlokName = `${prefix}_section`;
+    if (newSchemas.some((c) => c.name === rootBlokName)) {
+      console.log(`  Ensuring page body whitelist includes ${rootBlokName}...`);
+      if (!dryRun) {
+        await updatePageBodyWhitelist(rootBlokName, "add", SPACE_ID!, TOKEN!);
+      } else {
+        console.log(`  [dry-run] Would add shared_${rootBlokName} to page body whitelist`);
+      }
+    }
+
+    // Remove deleted root bloks from page body whitelist
+    for (const removedName of diff.removedComponents) {
+      if (removedName.endsWith("_section")) {
+        console.log(`  Removing ${removedName} from page body whitelist...`);
+        if (!dryRun) {
+          await updatePageBodyWhitelist(removedName, "remove", SPACE_ID!, TOKEN!);
+        }
+      }
+    }
 
     // Migrate story data if needed
     if (diff.fieldRenames.length > 0 || diff.fieldDeletions.length > 0) {

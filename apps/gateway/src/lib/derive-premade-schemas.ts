@@ -766,6 +766,101 @@ async function fetchAllStories(
   return stories;
 }
 
+// ── Page body whitelist management ────────────────────────────────────
+
+/**
+ * Updates the `page` component's body whitelist in Storyblok.
+ *
+ * Ensures the page body only accepts:
+ * - `shared_shadcn_container` (always present)
+ * - Premade section root bloks (e.g. `shared_case_studies_2_section`)
+ *
+ * When a section builder publishes a new root blok, it gets added.
+ * When a section builder removes a root blok, it gets removed.
+ *
+ * @param rootBlokName - The premade section root blok name (without shared_ prefix)
+ * @param action - "add" to add the root blok, "remove" to remove it
+ * @param spaceId - Storyblok space ID
+ * @param token - Storyblok Management API token
+ */
+export async function updatePageBodyWhitelist(
+  rootBlokName: string,
+  action: "add" | "remove",
+  spaceId: string,
+  token: string,
+): Promise<void> {
+  const prefixedName = rootBlokName.startsWith(SHARED_PREFIX)
+    ? rootBlokName
+    : `${SHARED_PREFIX}${rootBlokName}`;
+
+  // Fetch all components to find the page component
+  const existing = await fetchExistingComponents(spaceId, token);
+  const pageComp = existing.get("page");
+
+  if (!pageComp) {
+    console.warn("[updatePageBodyWhitelist] 'page' component not found in Storyblok");
+    return;
+  }
+
+  // Get current whitelist
+  const bodyField = pageComp.schema?.body;
+  const currentWhitelist: string[] = bodyField?.component_whitelist ?? [];
+
+  let newWhitelist: string[];
+
+  if (action === "add") {
+    if (currentWhitelist.includes(prefixedName)) {
+      console.log(`[updatePageBodyWhitelist] ${prefixedName} already in whitelist`);
+      return;
+    }
+    newWhitelist = [...currentWhitelist, prefixedName];
+  } else {
+    if (!currentWhitelist.includes(prefixedName)) {
+      console.log(`[updatePageBodyWhitelist] ${prefixedName} not in whitelist, nothing to remove`);
+      return;
+    }
+    newWhitelist = currentWhitelist.filter((n) => n !== prefixedName);
+  }
+
+  // Ensure shared_shadcn_container is always present
+  if (!newWhitelist.includes("shared_shadcn_container")) {
+    newWhitelist.unshift("shared_shadcn_container");
+  }
+
+  // Update the page component
+  const updatedSchema = {
+    ...pageComp.schema,
+    body: {
+      ...bodyField,
+      component_whitelist: newWhitelist,
+    },
+  };
+
+  await sleep(DELAY_MS);
+  const res = await fetch(
+    `${MAPI_BASE}/spaces/${spaceId}/components/${pageComp.id}`,
+    {
+      method: "PUT",
+      headers: { Authorization: token, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        component: {
+          name: "page",
+          schema: updatedSchema,
+        },
+      }),
+    },
+  );
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error(`[updatePageBodyWhitelist] Failed to update page: ${res.status} ${err}`);
+  } else {
+    console.log(
+      `[updatePageBodyWhitelist] ${action === "add" ? "Added" : "Removed"} ${prefixedName} → whitelist now: [${newWhitelist.join(", ")}]`,
+    );
+  }
+}
+
 // ── Slug prefix helper ────────────────────────────────────────────────
 
 /**

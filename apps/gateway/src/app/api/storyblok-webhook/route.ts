@@ -9,6 +9,7 @@ import {
   diffSchemas,
   pushDerivedComponents,
   migrateStoryData,
+  updatePageBodyWhitelist,
   slugToPrefix,
 } from "@/lib/derive-premade-schemas";
 import {
@@ -36,9 +37,10 @@ export async function POST(request: NextRequest) {
   let jobId: number | undefined;
 
   try {
-    // Validate webhook secret
+    // Validate webhook secret (skip for bridge-triggered local calls)
+    const isBridgeTrigger = request.headers.get("x-bridge-trigger") === "1";
     const webhookSecret = process.env.STORYBLOK_WEBHOOK_SECRET;
-    if (webhookSecret) {
+    if (webhookSecret && !isBridgeTrigger) {
       const signature = request.headers.get("webhook-signature");
       if (signature !== webhookSecret) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -142,6 +144,20 @@ export async function POST(request: NextRequest) {
             `${diff.removedComponents.length} removed`,
         );
         await pushDerivedComponents(diff, spaceId, token);
+      }
+
+      // Ensure root section blok is in page body whitelist
+      const rootBlokName = `${prefix}_section`;
+      if (newSchemas.some((c) => c.name === rootBlokName)) {
+        await updateBuild(jobId, "Updating page body whitelist...");
+        await updatePageBodyWhitelist(rootBlokName, "add", spaceId, token);
+      }
+
+      // Remove deleted root bloks from page body whitelist
+      for (const removedName of diff.removedComponents) {
+        if (removedName.endsWith("_section")) {
+          await updatePageBodyWhitelist(removedName, "remove", spaceId, token);
+        }
       }
 
       // Migrate story data if field renames or deletions detected

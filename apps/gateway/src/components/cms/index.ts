@@ -21,5 +21,5 @@ export const components = {
 
   // === Premade Sections (one line per section, all use generic wrapper) ===
   shared_case_studies_2_section: PremadeSectionWrapper,
-  shared_blog_7_section: PremadeSectionWrapper,
+  shared_blog7_section: PremadeSectionWrapper,
 };
