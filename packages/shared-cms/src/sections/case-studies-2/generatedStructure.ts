@@ -20,9 +20,9 @@ function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
   // console.log("formatRaw");
   const intialStructure = structuredClone(baseStructure);
   // console.log("cmsData", cmsData);
-  const sectionData = organizeSectionsData(cmsData);
+  const { premadeSectionData, sectionsLength } = organizeSectionsData(cmsData);
   // console.log("sectionData", sectionData);
-  runNestedObject(baseStructure, sectionData);
+  runNestedObject(baseStructure, premadeSectionData, sectionsLength);
 
   // raw needs to be formated has the generateElements function does
   //   console.error("raw not formated", baseStructure);
@@ -41,18 +41,25 @@ function formatRaw(baseStructure: typeof raw, cmsData: CaseStudies2Blok) {
 
 const SECTION_DATA_KEY = "data_entry_section";
 const DATA_FIELDS_KEY = "data_fields";
-function organizeSectionsData(
-  premadeData: CaseStudies2Blok,
-): Record<string, any> {
+function organizeSectionsData(premadeData: CaseStudies2Blok) {
   const dataSectionsNames = premadeData.data_sections;
-  const structurePremadeData: Record<string, any> = {};
+  const premadeSectionData: Record<string, any> = {};
   dataSectionsNames.forEach((sectionName) => {
-    structurePremadeData[sectionName] = [];
+    premadeSectionData[sectionName] = [];
   });
-  populateSectionsData(premadeData, structurePremadeData);
-  return structurePremadeData;
+  populateSectionsData(premadeData, premadeSectionData);
+
+  const sectionsLength = getSectionLengths(premadeSectionData);
+  return { premadeSectionData, sectionsLength };
 }
 
+function getSectionLengths(premadeData: Record<string, any>) {
+  const sectionLengths: Record<string, number> = {};
+  for (const [key, value] of Object.entries(premadeData)) {
+    sectionLengths[key] = 0;
+  }
+  return sectionLengths;
+}
 function populateSectionsData(
   premadeData: Record<string, any>,
   structurePremadeData: Record<string, any>,
@@ -79,6 +86,7 @@ function populateSectionsData(
 function runNestedObject(
   builderObject: unknown,
   premadeData: Record<string, any>,
+  sectionsLength: Record<string, number>,
 ) {
   if (!isObject(builderObject)) {
     return;
@@ -93,21 +101,23 @@ function runNestedObject(
       nestedBuilderValue,
       premadeData,
       builderObject,
+      sectionsLength,
     );
-    runNestedObject(nestedBuilderValue, premadeData);
-    runNestedArray(nestedBuilderValue, premadeData);
+    runNestedObject(nestedBuilderValue, premadeData, sectionsLength);
+    runNestedArray(nestedBuilderValue, premadeData, sectionsLength);
   }
 }
 
 function runNestedArray(
   builderValue: unknown,
   premadeData: Record<string, any>,
+  sectionsLength: Record<string, number>,
 ) {
   if (!Array.isArray(builderValue)) {
     return;
   }
   builderValue.forEach((nestedStructureObject: unknown) => {
-    runNestedObject(nestedStructureObject, premadeData);
+    runNestedObject(nestedStructureObject, premadeData, sectionsLength);
   });
 }
 
@@ -116,19 +126,30 @@ function takeActionOnStructure(
   builderValue: unknown,
   premadeData: Record<string, any>,
   builderObject: Record<string, any>,
+  sectionsLength: Record<string, number>,
 ) {
   if (Array.isArray(builderValue)) {
     return;
   }
   if (isObject(builderValue)) {
-    connnectDataFieldToCmsField(builderLoopKey, premadeData, builderObject);
+    connnectDataFieldToCmsField(
+      builderLoopKey,
+      premadeData,
+      builderObject,
+      sectionsLength,
+    );
     return;
   }
 
-  addSectionBlok(builderLoopKey, premadeData, builderObject);
+  addSectionBlok(builderLoopKey, premadeData, builderObject, sectionsLength);
   updateUid(builderLoopKey, builderObject);
   deleteEditableField(builderLoopKey, builderObject);
-  connnectDataFieldToCmsField(builderLoopKey, premadeData, builderObject);
+  connnectDataFieldToCmsField(
+    builderLoopKey,
+    premadeData,
+    builderObject,
+    sectionsLength,
+  );
 }
 
 const SECTION_BLOK_KEY = "sectionBlok";
@@ -137,6 +158,7 @@ function addSectionBlok(
   structureKey: string,
   sectionData: Record<string, any>,
   stuctureObject: Record<string, any>,
+  sectionsLength: Record<string, number>,
 ): void {
   if (structureKey !== DATA_SECTION_NAME_KEY) {
     return;
@@ -150,13 +172,20 @@ function addSectionBlok(
     debugger;
     return;
   }
-  const currentBuilderSectionObject = builderSectionList[0];
+
+  const currentSectionNumber = sectionsLength[builderSection];
+  if (currentSectionNumber === undefined) {
+    debugger;
+    return;
+  }
+  const currentBuilderSectionObject = builderSectionList[currentSectionNumber];
   if (!currentBuilderSectionObject) {
     debugger;
     return;
   }
   stuctureObject._uid = currentBuilderSectionObject._uid;
   stuctureObject[SECTION_BLOK_KEY] = currentBuilderSectionObject;
+  sectionsLength[builderSection] = currentSectionNumber + 1;
 }
 
 function isObject(value: unknown): value is Record<string, any> {
@@ -193,6 +222,7 @@ function connnectDataFieldToCmsField(
   builderLoopKey: string,
   premadeData: Record<string, any>,
   builderObject: Record<string, any>,
+  sectionsLength: Record<string, number>,
 ): void {
   if (builderLoopKey !== PREMADE_FIELD) {
     return;
@@ -214,7 +244,12 @@ function connnectDataFieldToCmsField(
     debugger;
     return;
   }
-  const sectionDataItem = sectionDataList[0];
+  const currentSectionNumber = sectionsLength[dataEntrySectionName];
+  if (currentSectionNumber === undefined) {
+    debugger;
+    return;
+  }
+  const sectionDataItem = sectionDataList[currentSectionNumber];
   if (!sectionDataItem) {
     debugger;
     return;
