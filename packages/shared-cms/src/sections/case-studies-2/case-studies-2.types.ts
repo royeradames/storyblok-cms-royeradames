@@ -45,9 +45,9 @@ export type CaseStudies2SectionInput = {
   studies: StudyInput[];
 };
 export type DataFieldsEntry = {
-  data_field_name: string;
-  cms_field_key: string;
-  data_entry_section: string;
+  premade_field: string;
+  premade_section: string;
+  builder_field: string;
 };
 
 export type CaseStudies2Blok = CaseStudies2SectionInput & {

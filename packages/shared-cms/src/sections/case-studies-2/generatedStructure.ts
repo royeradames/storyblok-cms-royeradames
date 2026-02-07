@@ -130,36 +130,24 @@ function runNestedArray(
 }
 
 function takeActionOnStructure(
-  structureKey: string,
+  builderLoopKey: string,
   structureValue: unknown,
-  sectionData: Record<string, any>,
-  structure: Record<string, any>,
+  premadeData: Record<string, any>,
+  builderObject: Record<string, any>,
   dataFieldsNames: DataFieldsEntry[],
 ) {
   if (Array.isArray(structureValue)) {
     return;
   }
   if (isObject(structureValue)) {
-    connnectDataFieldToCmsField(
-      structureKey,
-      structureValue,
-      dataFieldsNames,
-      sectionData,
-      structure,
-    );
+    connnectDataFieldToCmsField(builderLoopKey, premadeData, builderObject);
     return;
   }
 
-  addSectionBlok(structureKey, sectionData, structure);
-  updateUid(structureKey, structure);
-  deleteEditableField(structureKey, structure);
-  connnectDataFieldToCmsField(
-    structureKey,
-    structureValue,
-    dataFieldsNames,
-    sectionData,
-    structure,
-  );
+  addSectionBlok(builderLoopKey, premadeData, builderObject);
+  updateUid(builderLoopKey, builderObject);
+  deleteEditableField(builderLoopKey, builderObject);
+  connnectDataFieldToCmsField(builderLoopKey, premadeData, builderObject);
 }
 
 const SECTION_BLOK_KEY = "sectionBlok";
@@ -214,47 +202,33 @@ function deleteEditableField(
   delete structureValue["_editable"];
 }
 
-const CMS_DATA_FIELD_NAME = "data_field_name";
-
+const PREMADE_FIELD: keyof Pick<DataFieldsEntry, "premade_field"> =
+  "premade_field";
+const PREMADE_SECTION: keyof Pick<DataFieldsEntry, "premade_section"> =
+  "premade_section";
+const BUILDER_FIELD: keyof Pick<DataFieldsEntry, "builder_field"> =
+  "builder_field";
 function connnectDataFieldToCmsField(
-  structureKey: string,
-  structureValue: unknown,
-  dataFieldsNames: DataFieldsEntry[],
-  sectionData: Record<string, any>,
-  structureObject: Record<string, any>,
+  builderLoopKey: string,
+  premadeData: Record<string, any>,
+  builderObject: Record<string, any>,
 ): void {
-  if (structureKey !== CMS_DATA_FIELD_NAME) {
+  if (builderLoopKey !== PREMADE_FIELD) {
     return;
   }
-  const dataField = getDataField(dataFieldsNames, structureValue);
-  if (!dataField) {
-    debugger;
+  const builderKey = builderObject[BUILDER_FIELD];
+  if (!builderKey) {
     return;
   }
-  // console.log(
-  //   "-------------------------------- \n",
-  //   "dataField.cms_field_key:",
-  //   dataField.cms_field_key,
-  //   "\n",
-  //   "structureObject[dataField.cms_field_key]:",
-  //   structureObject[dataField.cms_field_key],
-  //   "\n",
-  //   "structureObject:",
-  //   structureObject,
-  // ); // an object json that takes in a array item
-  // console.log(
-  //   "sectionData[dataField.data_entry_section]:",
-  //   dataField.data_entry_section,
-  //   "\n",
-  //   sectionData[dataField.data_entry_section],
-  //   "\n",
-  //   "sectionData:",
-  //   sectionData,
-  //   "-------------------------------- \n",
-  // ); // an array
-
-  // picking a cms data to connect to the structure
-  const sectionDataList = sectionData[dataField.data_entry_section];
+  const dataEntryFieldName = builderObject[PREMADE_FIELD];
+  if (!dataEntryFieldName) {
+    return;
+  }
+  const dataEntrySectionName = builderObject[PREMADE_SECTION];
+  if (!dataEntrySectionName) {
+    return;
+  }
+  const sectionDataList = premadeData[dataEntrySectionName];
   if (!sectionDataList) {
     debugger;
     return;
@@ -264,40 +238,6 @@ function connnectDataFieldToCmsField(
     debugger;
     return;
   }
-  const dataValue = sectionDataItem[dataField.data_field_name];
-  structureObject[dataField.cms_field_key] = dataValue;
-}
-
-function getDataField(
-  dataFieldsNames: DataFieldsEntry[],
-  structureValue: unknown,
-): DataFieldsEntry | undefined {
-  const dataField = dataFieldsNames.find((dataField) => {
-    // console.log("dataField", dataField, structureValue, structureObject);
-    // console.log(
-    //   "dataField.data_field_name \n",
-    //   dataField.data_field_name + "\n",
-    //   "structureValue",
-    //   structureValue + "\n",
-    //   "dataField.data_field_name === structureValue \n",
-    //   dataField.data_field_name === structureValue,
-    //   "\n",
-    // );
-    // console.log(
-    //   "dataField.data_entry_section \n",
-    //   dataField.data_entry_section + "\n",
-    //   "structureObject.data_entry_section \n",
-    //   structureObject.data_entry_section + "\n",
-    //   "dataField.data_entry_section === structureObject.data_entry_section \n",
-    //   dataField.data_entry_section === structureObject.data_entry_section,
-    //   "\n",
-    // );
-    return dataField.data_field_name === structureValue;
-  });
-  if (!dataField) {
-    console.error("dataField not found", structureValue, dataFieldsNames);
-    debugger;
-    return;
-  }
-  return dataField;
+  const dataValue = sectionDataItem[dataEntryFieldName];
+  builderObject[builderKey] = dataValue;
 }

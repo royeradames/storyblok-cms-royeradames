@@ -16,6 +16,9 @@ export interface ShadcnImageBlok extends SbBlokData {
   rounded?: "none" | "sm" | "md" | "lg" | "full";
   caption?: string;
   styles?: StylesBreakpointOptionsBlok[];
+  premade_field: string;
+  premade_section: string;
+  builder_key: string;
 }
 
 const ratioMap = {

@@ -26,6 +26,9 @@ export interface ShadcnContainerBlok extends SbBlokData {
   items?: SbBlokData[];
   styles?: StylesBreakpointOptionsBlok[];
   sectionBlok?: SbBlokData;
+  premade_field: string;
+  premade_section: string;
+  builder_key: string;
 }
 
 const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
