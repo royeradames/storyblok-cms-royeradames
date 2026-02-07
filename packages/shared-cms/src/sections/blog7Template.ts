@@ -17,10 +17,15 @@ export function blog7Template() {
                 styles: [],
                 variant: "secondary",
                 component: "shared_shadcn_badge",
-                builder_field: "text",
-                premade_field: "badge_text",
-                premade_section: "blog",
-                data_entry_field: "badgeText",
+                data_mapping: [
+                  {
+                    _uid: "dm-badge-blog-badge_text",
+                    component: "shared_builder_data_mapping",
+                    builder_section: "blog",
+                    premade_field: "badge_text",
+                    builder_field: "text",
+                  },
+                ],
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_badge", "space": "290156609668258", "uid": "53bc3135-b580-4372-b2e7-ce5d7ffad08d", "id": "139645479539719"}-->',
               },
@@ -67,10 +72,16 @@ export function blog7Template() {
                   plugin: "native-color-picker",
                 },
                 line_height: "",
-                builder_field: "title",
-                premade_field: "content",
                 letter_spacing: "",
-                premade_section: "blog",
+                data_mapping: [
+                  {
+                    _uid: "dm-text-blog-content-title",
+                    component: "shared_builder_data_mapping",
+                    builder_section: "blog",
+                    premade_field: "content",
+                    builder_field: "title",
+                  },
+                ],
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "03240877-e000-4fab-a67b-7c22d8dbc410", "id": "139645479539719"}-->',
               },
@@ -95,10 +106,16 @@ export function blog7Template() {
                   plugin: "native-color-picker",
                 },
                 line_height: "normal",
-                builder_field: "content",
-                premade_field: "description",
                 letter_spacing: "wide",
-                premade_section: "blog",
+                data_mapping: [
+                  {
+                    _uid: "dm-text-blog-description",
+                    component: "shared_builder_data_mapping",
+                    builder_section: "blog",
+                    premade_field: "description",
+                    builder_field: "content",
+                  },
+                ],
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "fa50f563-7c78-4f59-bba7-92d23a668db2", "id": "139645479539719"}-->',
               },
@@ -134,10 +151,16 @@ export function blog7Template() {
                       plugin: "native-color-picker",
                     },
                     line_height: "",
-                    builder_field: "content",
-                    premade_field: "action_text",
                     letter_spacing: "",
-                    premade_section: "blog",
+                    data_mapping: [
+                      {
+                        _uid: "dm-text-blog-action_text",
+                        component: "shared_builder_data_mapping",
+                        builder_section: "blog",
+                        premade_field: "action_text",
+                        builder_field: "content",
+                      },
+                    ],
                     _editable:
                       '<!--#storyblok#{"name": "shared_shadcn_text", "space": "290156609668258", "uid": "f8e53d48-752e-49bd-850b-3205d649f1b2", "id": "139645479539719"}-->',
                   },
@@ -266,7 +289,6 @@ export function blog7Template() {
                 component: "shared_shadcn_image",
                 object_fit: "cover",
                 aspect_ratio: "video",
-                premade_field: "image",
                 _editable:
                   '<!--#storyblok#{"name": "shared_shadcn_image", "space": "290156609668258", "uid": "812661ba-824d-4dcd-b429-231108f3443c", "id": "139645479539719"}-->',
               },
