@@ -55,6 +55,9 @@ export async function POST(request: NextRequest) {
     const componentName =
       sectionSlug.replace(/-/g, "_") + "_section";
 
+    // Extract the actual section template from the page wrapper (body[0])
+    const template = story.content?.body?.[0] ?? story.content;
+
     // Upsert into section_templates
     const existing = await db
       .select()
@@ -67,7 +70,7 @@ export async function POST(request: NextRequest) {
         .update(sectionTemplates)
         .set({
           component: componentName,
-          template: story.content,
+          template,
           updatedAt: new Date(),
         })
         .where(eq(sectionTemplates.slug, slug));
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
       await db.insert(sectionTemplates).values({
         slug,
         component: componentName,
-        template: story.content,
+        template,
       });
     }
 

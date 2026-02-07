@@ -112,7 +112,8 @@ async function main() {
   for (const story of stories) {
     const slug = story.full_slug as string;
     const componentName = slugToComponent(slug);
-    const template = story.content;
+    // Extract the actual section template from the page wrapper (body[0])
+    const template = story.content?.body?.[0] ?? story.content;
 
     if (!template) {
       console.warn(`  Skipping ${slug}: no content`);
