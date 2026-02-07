@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import { components } from "@/components/cms";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TemplateProvider } from "@/components/cms/TemplateProvider";
 import "./globals.css";
 
 // Initialize Storyblok for server-side (using NEXT_PUBLIC_ so same token works client + server)
@@ -24,7 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <TemplateProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </TemplateProvider>
       </body>
     </html>
   );

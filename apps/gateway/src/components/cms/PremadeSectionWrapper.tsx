@@ -1,17 +1,24 @@
-import { getTemplate } from "@/lib/templates";
+"use client";
+
 import { PremadeSection } from "@repo/shared-cms";
+import { useTemplates } from "./TemplateContext";
 
 /**
- * Server-side wrapper that fetches the template from DB (via Vercel data cache)
- * and passes it to the client-side PremadeSection renderer.
+ * Client-side wrapper for premade sections.
  *
- * Registered in the components map for each premade section type.
- * The component name is derived by stripping the "shared_" prefix.
+ * Reads the template from TemplateContext (provided by the server-side
+ * TemplateProvider), then delegates to PremadeSection for structure
+ * generation and rendering.
+ *
+ * This is a client component so it can live in the Storyblok component map
+ * without pulling Node.js-only modules (postgres) into the client bundle.
  */
-export async function PremadeSectionWrapper({ blok }: { blok: any }) {
+export function PremadeSectionWrapper({ blok }: { blok: any }) {
+  const templates = useTemplates();
+
   // Strip "shared_" prefix added by the gateway component map
   const componentName = blok.component.replace(/^shared_/, "");
-  const template = await getTemplate(componentName);
+  const template = templates[componentName];
 
   if (!template) {
     console.error(
