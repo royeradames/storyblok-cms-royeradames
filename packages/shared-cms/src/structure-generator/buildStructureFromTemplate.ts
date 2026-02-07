@@ -7,9 +7,10 @@
  *
  * Template marker fields:
  * - `data_section_name` on containers: marks section boundaries / cloning points
- * - `builder_section` (or legacy `premade_section`): which section context to look up
- * - `premade_field`: which field from the premade data to read
- * - `builder_field`: which field on the component to write the value to
+ * - `data_mapping` (nested blok): array with one `builder_data_mapping` entry containing
+ *    `builder_section`, `premade_field`, `builder_field`
+ * - Legacy flat fields (backward compat): `builder_section` / `premade_section`,
+ *   `premade_field`, `builder_field`
  */
 
 type SectionContext = Record<string, any>;
@@ -195,16 +196,30 @@ function expandWrapperChildren(
  * Reads the section/field mapping from the node and connects CMS data.
  *
  * Supports both:
- * - `builder_section` (new convention)
- * - `premade_section` (legacy, backward compat with case-studies-2)
+ * - New: nested `data_mapping` blok (array with 1 entry of `builder_data_mapping`)
+ * - Legacy: flat `builder_section`/`premade_section`, `premade_field`, `builder_field` fields
  */
 function connectDataFields(
   node: Record<string, any>,
   context: SectionContext,
 ): void {
-  const sectionName = node.builder_section ?? node.premade_section;
-  const fieldName = node.premade_field;
-  const targetField = node.builder_field;
+  let sectionName: string | undefined;
+  let fieldName: string | undefined;
+  let targetField: string | undefined;
+
+  // New: nested blok pattern (data_mapping array with 1 entry)
+  const mapping = node.data_mapping?.[0];
+  if (mapping) {
+    sectionName = mapping.builder_section;
+    fieldName = mapping.premade_field;
+    targetField = mapping.builder_field;
+  } else {
+    // Legacy: flat fields (backward compat with existing templates)
+    sectionName = node.builder_section ?? node.premade_section;
+    fieldName = node.premade_field;
+    targetField = node.builder_field;
+  }
+
   if (!sectionName || !fieldName || !targetField) return;
 
   const sectionData = context[sectionName];
@@ -261,6 +276,9 @@ function pluralize(word: string): string[] {
 
 /** Removes builder-only metadata keys from the output node. */
 function cleanupMetadata(node: Record<string, any>): void {
+  // New nested blok
+  delete node.data_mapping;
+  // Legacy flat fields
   delete node.builder_field;
   delete node.premade_field;
   delete node.builder_section;

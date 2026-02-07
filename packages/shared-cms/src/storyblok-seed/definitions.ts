@@ -761,23 +761,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
       },
-      builder_section: {
-        type: "text",
+      data_mapping: {
+        type: "bloks",
         pos: 100,
+        restrict_components: true,
+        component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: which section context to read from (e.g. 'study')",
-      },
-      premade_field: {
-        type: "text",
-        pos: 101,
-        description:
-          "Section builder: which field from the premade data to read (e.g. 'quote', 'name')",
-      },
-      builder_field: {
-        type: "text",
-        pos: 102,
-        description:
-          "Section builder: which field on this component receives the value (default: 'content')",
+          "Section builder: maps premade data to this component's field (max 1)",
       },
     },
   },
@@ -899,23 +889,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
       },
-      builder_section: {
-        type: "text",
+      data_mapping: {
+        type: "bloks",
         pos: 100,
+        restrict_components: true,
+        component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: which section context to read from (e.g. 'study')",
-      },
-      premade_field: {
-        type: "text",
-        pos: 101,
-        description:
-          "Section builder: which field from the premade data to read (e.g. 'category')",
-      },
-      builder_field: {
-        type: "text",
-        pos: 102,
-        description:
-          "Section builder: which field on this component receives the value (default: 'text')",
+          "Section builder: maps premade data to this component's field (max 1)",
       },
     },
   },
@@ -1380,23 +1360,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
       },
-      builder_section: {
-        type: "text",
+      data_mapping: {
+        type: "bloks",
         pos: 100,
+        restrict_components: true,
+        component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: which section context to read from (e.g. 'study')",
-      },
-      premade_field: {
-        type: "text",
-        pos: 101,
-        description:
-          "Section builder: which field from the premade data to read (e.g. 'image', 'company_logo')",
-      },
-      builder_field: {
-        type: "text",
-        pos: 102,
-        description:
-          "Section builder: which field on this component receives the value (default: 'image')",
+          "Section builder: maps premade data to this component's field (max 1)",
       },
     },
   },
@@ -1609,23 +1579,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
       },
-      builder_section: {
-        type: "text",
+      data_mapping: {
+        type: "bloks",
         pos: 100,
+        restrict_components: true,
+        component_whitelist: ["builder_data_mapping"],
         description:
-          "Section builder: which section context to read from (e.g. 'study')",
-      },
-      premade_field: {
-        type: "text",
-        pos: 101,
-        description:
-          "Section builder: which field from the premade data to read (e.g. 'cta_link')",
-      },
-      builder_field: {
-        type: "text",
-        pos: 102,
-        description:
-          "Section builder: which field on this component receives the value (default: 'link')",
+          "Section builder: maps premade data to this component's field (max 1)",
       },
     },
   },
@@ -2776,6 +2736,40 @@ export const componentDefinitions: StoryblokComponent[] = [
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
         component_whitelist: ["styles_breakpoint_options"],
+      },
+    },
+  },
+
+  // ============================================
+  // BUILDER METADATA
+  // ============================================
+  {
+    name: "builder_data_mapping",
+    display_name: "Builder Data Mapping",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-link",
+    schema: {
+      builder_section: {
+        type: "text",
+        pos: 0,
+        required: true,
+        description:
+          "Section context to read from (e.g. 'study', 'statistic')",
+      },
+      premade_field: {
+        type: "text",
+        pos: 1,
+        required: true,
+        description:
+          "Field from the premade data to read (e.g. 'quote', 'name')",
+      },
+      builder_field: {
+        type: "text",
+        pos: 2,
+        required: true,
+        description:
+          "Component field to write the value to (e.g. 'content', 'image')",
       },
     },
   },
