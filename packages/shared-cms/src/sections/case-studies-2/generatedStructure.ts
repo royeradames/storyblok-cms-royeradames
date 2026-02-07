@@ -1,24 +1,8 @@
 import type { CaseStudies2Blok, DataFieldsEntry } from "./case-studies-2.types";
+import { deepEqual } from "./deepEqual";
 import { caseStudies2SectionBuilderRaw } from "./sectionBuilderRaw";
 import { generateElements } from "./structure";
 
-function deepEqual(a: unknown, b: unknown): boolean {
-  if (a === b) return true;
-  if (a == null || b == null || typeof a !== "object" || typeof b !== "object")
-    return false;
-  if (Array.isArray(a) !== Array.isArray(b)) return false;
-  const keysA = Object.keys(a as object);
-  const keysB = Object.keys(b as object);
-  if (keysA.length !== keysB.length) return false;
-  return keysA.every(
-    (key) =>
-      keysB.includes(key) &&
-      deepEqual(
-        (a as Record<string, unknown>)[key],
-        (b as Record<string, unknown>)[key],
-      ),
-  );
-}
 /**
  * Need to do this programmatically
  * 1. build the sections
@@ -157,22 +141,22 @@ function addSectionBlok(
   if (structureKey !== DATA_SECTION_NAME_KEY) {
     return;
   }
-  const sectionDataName = stuctureObject[structureKey];
-  if (!(sectionDataName in sectionData)) {
+  const builderSection = stuctureObject[structureKey];
+  if (!(builderSection in sectionData)) {
     return;
   }
-  const sectionDataList = sectionData[sectionDataName];
-  if (!sectionDataList) {
+  const builderSectionList = sectionData[builderSection];
+  if (!builderSectionList) {
     debugger;
     return;
   }
-  const selectedSectionData = sectionDataList[0];
-  if (!selectedSectionData) {
+  const currentBuilderSectionObject = builderSectionList[0];
+  if (!currentBuilderSectionObject) {
     debugger;
     return;
   }
-  stuctureObject._uid = selectedSectionData._uid;
-  stuctureObject[SECTION_BLOK_KEY] = selectedSectionData;
+  stuctureObject._uid = currentBuilderSectionObject._uid;
+  stuctureObject[SECTION_BLOK_KEY] = currentBuilderSectionObject;
 }
 
 function isObject(value: unknown): value is Record<string, any> {
