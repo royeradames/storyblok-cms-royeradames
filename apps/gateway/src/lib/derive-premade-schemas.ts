@@ -51,7 +51,7 @@ export interface SchemaDiff {
  */
 const FIELD_TYPE_MAP: Record<string, { type: string; filetypes?: string[] }> = {
   // Text component
-  "shared_shadcn_text:content": { type: "text" },
+  "shared_shadcn_text:content": { type: "textarea" },
   // Image component
   "shared_shadcn_image:image": { type: "asset", filetypes: ["images"] },
   // Badge component
@@ -595,6 +595,83 @@ export async function pushDerivedComponents(
   }
 
   return { created, updated, deleted };
+}
+
+/**
+ * Safety-net sync: compares derived schemas against the ACTUAL Storyblok
+ * component definitions and updates any that are out of sync.
+ *
+ * This catches the case where the DB template already matches the latest
+ * content (so diffSchemas reports 0 changes) but the Storyblok component
+ * definitions are stale (e.g. created with empty schemas before data_mapping
+ * entries existed).
+ */
+export async function ensureDerivedComponents(
+  schemas: DerivedComponent[],
+  spaceId: string,
+  token: string,
+): Promise<number> {
+  const existing = await fetchExistingComponents(spaceId, token);
+  let synced = 0;
+
+  for (const comp of schemas) {
+    const prefixedName = `${SHARED_PREFIX}${comp.name}`;
+    const existingComp = existing.get(prefixedName);
+    if (!existingComp) continue; // handled by pushDerivedComponents
+
+    const desiredSchema = derivedToStoryblokSchema(comp);
+    const currentSchema = existingComp.schema ?? {};
+    const currentSchemaKeys = Object.keys(currentSchema).filter(
+      (k) => !k.startsWith("_"),
+    );
+    const desiredKeys = Object.keys(desiredSchema);
+
+    // Check if field names differ
+    let needsUpdate =
+      currentSchemaKeys.length !== desiredKeys.length ||
+      desiredKeys.some((k) => !currentSchemaKeys.includes(k)) ||
+      currentSchemaKeys.some((k) => !desiredKeys.includes(k));
+
+    // Also check if field types differ for matching keys
+    if (!needsUpdate) {
+      for (const key of desiredKeys) {
+        if (currentSchema[key]?.type !== desiredSchema[key]?.type) {
+          needsUpdate = true;
+          break;
+        }
+      }
+    }
+
+    if (!needsUpdate) continue;
+
+    await sleep(DELAY_MS);
+    const res = await fetch(
+      `${MAPI_BASE}/spaces/${spaceId}/components/${existingComp.id}`,
+      {
+        method: "PUT",
+        headers: { Authorization: token, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          component: {
+            name: prefixedName,
+            display_name: comp.display_name,
+            is_root: comp.is_root,
+            is_nestable: comp.is_nestable,
+            schema: desiredSchema,
+          },
+        }),
+      },
+    );
+    if (!res.ok) {
+      console.error(
+        `  [ensureSync] Failed to update ${prefixedName}: ${res.status}`,
+      );
+    } else {
+      console.log(`  [ensureSync] Synced: ${prefixedName}`);
+      synced++;
+    }
+  }
+
+  return synced;
 }
 
 // ── Story data migration ──────────────────────────────────────────────

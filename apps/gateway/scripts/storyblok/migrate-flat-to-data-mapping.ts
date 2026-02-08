@@ -28,6 +28,7 @@ import {
   derivePremadeBlokSchemas,
   diffSchemas,
   pushDerivedComponents,
+  ensureDerivedComponents,
   migrateStoryData,
   updatePageBodyWhitelist,
   slugToPrefix,
@@ -403,6 +404,14 @@ async function main() {
     console.log(
       `  ${pushResult.created} new, ${pushResult.updated} updated, ${pushResult.deleted} deleted`,
     );
+
+    // Ensure all derived schemas are in sync with Storyblok (safety net)
+    if (!dryRun) {
+      const synced = await ensureDerivedComponents(newSchemas, SPACE_ID!, TOKEN!);
+      if (synced > 0) {
+        console.log(`  [ensureSync] Synced ${synced} stale component(s)`);
+      }
+    }
 
     // Update page body whitelist
     const rootBlokName = `${prefix}_section`;

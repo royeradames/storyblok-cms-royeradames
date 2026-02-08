@@ -8,6 +8,7 @@ import {
   derivePremadeBlokSchemas,
   diffSchemas,
   pushDerivedComponents,
+  ensureDerivedComponents,
   migrateStoryData,
   updatePageBodyWhitelist,
   slugToPrefix,
@@ -144,6 +145,12 @@ export async function POST(request: NextRequest) {
             `${diff.removedComponents.length} removed`,
         );
         await pushDerivedComponents(diff, spaceId, token);
+      }
+
+      // Ensure all derived schemas are in sync with Storyblok (safety net)
+      const synced = await ensureDerivedComponents(newSchemas, spaceId, token);
+      if (synced > 0) {
+        console.log(`[webhook] Ensured ${synced} stale component(s) synced`);
       }
 
       // Ensure root section blok is in page body whitelist
