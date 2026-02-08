@@ -27,15 +27,31 @@ import {
   borderStyleMap,
   boxShadowMap,
   spacingTokenToPx,
+  namedSizeToPx,
   textSizeToPx,
   variantMap,
 } from "../shadcn/flex/maps";
 
-/** Option name with px suffix when key uses a spacing token (e.g. "gap-2" -> "gap-2 (8px)"). */
+/**
+ * Option name with px suffix for Storyblok dropdown labels.
+ * Resolves spacing tokens first (e.g. "gap-2" → "gap-2 (8px)"),
+ * then named sizes (e.g. "max-w-lg" → "max-w-lg (512px)").
+ */
 function optionNameWithSpacingPx(key: string): string {
+  // 1. Try spacing token (last segment after -)
   const token = String(key).split("-").pop() ?? "";
   const px = spacingTokenToPx[token];
-  return px ? `${key} (${px})` : key;
+  if (px) return `${key} (${px})`;
+
+  // 2. Try named size suffix (everything after property prefix)
+  // Handles: max-w-lg → lg, max-w-screen-sm → screen-sm, etc.
+  const suffixMatch = key.match(/^(?:max-w|min-w|max-h|min-h|w|h)-(.+)$/);
+  if (suffixMatch) {
+    const namedPx = namedSizeToPx[suffixMatch[1]!];
+    if (namedPx) return `${key} (${namedPx})`;
+  }
+
+  return key;
 }
 
 // Helper types for Storyblok field definitions
@@ -550,14 +566,20 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 10,
         options: flexMaxWidthOptions,
       },
+      custom_max_width: {
+        type: "text",
+        pos: 11,
+        description:
+          "Arbitrary max-width (e.g. 524px, 33rem). Overrides the Max Width dropdown. Only applies at the base breakpoint — responsive breakpoints are ignored for this field.",
+      },
       min_height: {
         type: "option",
-        pos: 11,
+        pos: 12,
         options: flexMinHeightOptions,
       },
       max_height: {
         type: "option",
-        pos: 12,
+        pos: 13,
         options: flexMaxHeightOptions,
       },
       margin: {

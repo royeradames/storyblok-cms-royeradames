@@ -1,4 +1,4 @@
-export { buildStyleClasses } from "./build-style-classes";
+export { buildStyleClasses, buildInlineStyles } from "./build-style-classes";
 export {
   BREAKPOINT_ORDER,
   type BreakpointKey,

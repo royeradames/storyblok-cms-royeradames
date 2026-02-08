@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { storyblokEditable } from "@storyblok/react";
 import {
   Breadcrumb,
@@ -33,18 +34,19 @@ export function ShadcnBreadcrumb({ blok }: { blok: ShadcnBreadcrumbBlok }) {
     >
       <BreadcrumbList>
         {blok.items?.map((item, index) => (
-          <BreadcrumbItem
-            key={item._uid}
-            className={cn(...buildStyleClasses(item.styles))}
-            {...storyblokEditable(item)}
-          >
-            {item.is_current || !item.href ? (
-              <BreadcrumbPage>{item.label}</BreadcrumbPage>
-            ) : (
-              <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
-            )}
+          <React.Fragment key={item._uid}>
+            <BreadcrumbItem
+              className={cn(...buildStyleClasses(item.styles))}
+              {...storyblokEditable(item)}
+            >
+              {item.is_current || !item.href ? (
+                <BreadcrumbPage>{item.label}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
             {index < (blok.items?.length || 0) - 1 && <BreadcrumbSeparator />}
-          </BreadcrumbItem>
+          </React.Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

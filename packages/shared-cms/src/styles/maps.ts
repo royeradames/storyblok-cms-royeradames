@@ -42,6 +42,31 @@ export const spacingTokenToPx: Record<string, string> = {
   "96": "384px",
 };
 
+/**
+ * Named size → px for option labels (e.g. "max-w-lg (512px)").
+ * Covers max-w-xs…7xl, screen breakpoints, and prose.
+ * Keyed by the suffix AFTER the property prefix (e.g. "lg", "screen-sm").
+ */
+export const namedSizeToPx: Record<string, string> = {
+  xs: "320px", // 20rem
+  sm: "384px", // 24rem
+  md: "448px", // 28rem
+  lg: "512px", // 32rem
+  xl: "576px", // 36rem
+  "2xl": "672px", // 42rem
+  "3xl": "768px", // 48rem
+  "4xl": "896px", // 56rem
+  "5xl": "1024px", // 64rem
+  "6xl": "1152px", // 72rem
+  "7xl": "1280px", // 80rem
+  prose: "65ch",
+  "screen-sm": "640px",
+  "screen-md": "768px",
+  "screen-lg": "1024px",
+  "screen-xl": "1280px",
+  "screen-2xl": "1536px",
+};
+
 /** Text size font-size in px for option labels (e.g. "XS (12px)"). Tailwind default text-* scale. */
 export const textSizeToPx: Record<string, string> = {
   xs: "12px",

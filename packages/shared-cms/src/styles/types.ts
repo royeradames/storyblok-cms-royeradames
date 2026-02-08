@@ -54,6 +54,8 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   height?: keyof typeof heightMap;
   min_width?: keyof typeof minWidthMap;
   max_width?: keyof typeof maxWidthMap;
+  /** Arbitrary max-width (e.g. "524px", "33rem"). Base breakpoint only. Overrides max_width dropdown. */
+  custom_max_width?: string;
   min_height?: keyof typeof minHeightMap;
   max_height?: keyof typeof maxHeightMap;
   /** 0–4 padding directions (multi-options) or legacy single key */

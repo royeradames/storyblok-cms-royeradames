@@ -1,3 +1,4 @@
+import type React from "react";
 import {
   BREAKPOINT_ORDER,
   type BreakpointKey,
@@ -136,4 +137,29 @@ export function buildStyleClasses(
   }
 
   return classes;
+}
+
+/**
+ * Extract arbitrary/custom inline styles from breakpoint style options.
+ * Only base-breakpoint custom values are supported (responsive breakpoints are ignored).
+ * Returns a CSSProperties object to spread onto the element's `style` prop.
+ */
+export function buildInlineStyles(
+  styles: StylesBreakpointOptionsBlok[] | null | undefined,
+): React.CSSProperties {
+  const list = styles ?? [];
+  if (!Array.isArray(list) || list.length === 0) return {};
+
+  const inlineStyles: React.CSSProperties = {};
+
+  for (const opt of list) {
+    // Only base breakpoint supports inline custom values
+    if (opt.breakpoint && opt.breakpoint !== "base") continue;
+
+    if (opt.custom_max_width) {
+      inlineStyles.maxWidth = opt.custom_max_width;
+    }
+  }
+
+  return inlineStyles;
 }

@@ -5,6 +5,7 @@ import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
+  buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "../../styles";
 
@@ -53,6 +54,7 @@ function renderItems(items: SbBlokData[] | undefined) {
 
 export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
   const styleClasses = buildStyleClasses(blok.styles);
+  const inlineStyles = buildInlineStyles(blok.styles);
   const hasStyles = styleClasses.length > 0;
   const as =
     blok.container_as && ELEMENT_MAP[blok.container_as]
@@ -78,6 +80,7 @@ export function ShadcnContainer({ blok }: { blok: ShadcnContainerBlok }) {
         },
         ...styleClasses,
       )}
+      style={Object.keys(inlineStyles).length > 0 ? inlineStyles : undefined}
     >
       {renderItems(blok.items)}
     </Component>
