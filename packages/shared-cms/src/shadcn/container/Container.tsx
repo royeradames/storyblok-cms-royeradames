@@ -15,6 +15,7 @@ export type ContainerElement =
   | "div"
   | "section"
   | "article"
+  | "aside"
   | "header"
   | "hgroup"
   | "ul"
@@ -36,6 +37,7 @@ const ELEMENT_MAP: Record<ContainerElement, ContainerElement> = {
   div: "div",
   section: "section",
   article: "article",
+  aside: "aside",
   header: "header",
   hgroup: "hgroup",
   ul: "ul",
