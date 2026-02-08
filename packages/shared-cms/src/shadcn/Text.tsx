@@ -33,6 +33,7 @@ export interface ShadcnTextBlok extends SbBlokData {
   align?: "left" | "center" | "right";
   line_height?: "none" | "tight" | "snug" | "normal" | "relaxed" | "loose";
   letter_spacing?: "tighter" | "tight" | "normal" | "wide" | "wider" | "widest";
+  sr_only?: boolean;
   styles?: StylesBreakpointOptionsBlok[];
 }
 
@@ -101,13 +102,13 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
     <Element
       {...storyblokEditable(blok)}
       className={cn(
-        "text-wrap",
-        sizeMap[blok.size || "base"],
-        weightMap[blok.weight || "normal"],
-        useThemeColorStyle ? undefined : colorMap[blok.color || "default"],
-        alignMap[blok.align || "left"],
-        lineHeightMap[blok.line_height ?? "normal"],
-        letterSpacingMap[blok.letter_spacing ?? "normal"],
+        blok.sr_only ? "sr-only" : "text-wrap",
+        !blok.sr_only && sizeMap[blok.size || "base"],
+        !blok.sr_only && weightMap[blok.weight || "normal"],
+        !blok.sr_only && (useThemeColorStyle ? undefined : colorMap[blok.color || "default"]),
+        !blok.sr_only && alignMap[blok.align || "left"],
+        !blok.sr_only && lineHeightMap[blok.line_height ?? "normal"],
+        !blok.sr_only && letterSpacingMap[blok.letter_spacing ?? "normal"],
         ...buildStyleClasses(blok.styles)
       )}
       style={{ ...buildInlineStyles(blok.styles), ...(useThemeColorStyle ? { color: themeColor } : undefined) }}

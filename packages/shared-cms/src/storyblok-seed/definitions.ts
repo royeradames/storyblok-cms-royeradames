@@ -791,6 +791,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: letterSpacingOptions,
         description: "Letter spacing",
       },
+      sr_only: {
+        type: "boolean",
+        pos: 9.5,
+        default_value: false,
+        description:
+          "Screen-reader only. Visually hides the text but keeps it accessible (e.g. descriptive link text for icon-only buttons).",
+      },
       styles: {
         type: "bloks",
         pos: 10,
