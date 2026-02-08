@@ -663,6 +663,7 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "section", name: "Section" },
           { value: "article", name: "Article" },
           { value: "aside", name: "Aside" },
+          { value: "nav", name: "Nav" },
           { value: "header", name: "Header" },
           { value: "hgroup", name: "Heading group" },
           { value: "ul", name: "Unordered list" },
