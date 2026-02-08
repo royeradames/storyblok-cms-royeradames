@@ -31,6 +31,7 @@ import {
   textSizeToPx,
   variantMap,
 } from "../shadcn/flex/maps";
+import { icons as lucideIcons } from "lucide-react";
 
 /**
  * Option name with px suffix for Storyblok dropdown labels.
@@ -148,6 +149,20 @@ const iconSizeOptions: StoryblokOption[] = [
   { value: "3xl", name: "3XL" },
   { value: "4xl", name: "4XL" },
 ];
+
+/** Convert PascalCase icon name to kebab-case (e.g. "AlarmClock" → "alarm-clock"). */
+function toKebabCase(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
+}
+
+/** All Lucide icon names as kebab-case Storyblok options (auto-generated). */
+const lucideIconNameOptions: StoryblokOption[] = Object.keys(lucideIcons)
+  .map(toKebabCase)
+  .sort()
+  .map((name) => ({ value: name, name }));
 
 const gapOptions: StoryblokOption[] = [
   { value: "none", name: "None" },
@@ -932,10 +947,11 @@ export const componentDefinitions: StoryblokComponent[] = [
     preview_field: "name",
     schema: {
       name: {
-        type: "text",
+        type: "option",
         pos: 0,
         required: true,
-        description: "Lucide icon name (e.g. camera, alert-circle, info)",
+        options: lucideIconNameOptions,
+        description: "Lucide icon name. Use search to filter.",
       },
       size: {
         type: "option",
