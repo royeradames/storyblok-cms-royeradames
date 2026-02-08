@@ -53,7 +53,8 @@ const FIELD_TYPE_MAP: Record<string, { type: string; filetypes?: string[] }> = {
   // Text component
   "shared_shadcn_text:content": { type: "textarea" },
   // Image component
-  "shared_shadcn_image:image": { type: "asset", filetypes: ["images"] },
+  "shared_shadcn_image:image_light": { type: "asset", filetypes: ["images"] },
+  "shared_shadcn_image:image_dark": { type: "asset", filetypes: ["images"] },
   // Badge component
   "shared_shadcn_badge:text": { type: "text" },
   // Button component

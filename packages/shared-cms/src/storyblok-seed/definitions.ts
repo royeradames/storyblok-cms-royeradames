@@ -1344,12 +1344,18 @@ export const componentDefinitions: StoryblokComponent[] = [
     is_nestable: true,
     icon: "block-image",
     schema: {
-      image: {
+      image_light: {
         type: "asset",
         pos: 0,
         required: true,
         filetypes: ["images"],
-        description: "Image file",
+        description: "Light theme image (also used as fallback when no dark image is set)",
+      },
+      image_dark: {
+        type: "asset",
+        pos: 0.5,
+        filetypes: ["images"],
+        description: "Dark theme image. Falls back to the light image when empty.",
       },
       aspect_ratio: {
         type: "option",
