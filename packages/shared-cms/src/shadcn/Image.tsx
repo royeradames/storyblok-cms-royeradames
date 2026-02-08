@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { AspectRatio, Skeleton, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnImageBlok extends SbBlokData {
   image: {
@@ -67,6 +67,7 @@ export function ShadcnImage({ blok }: { blok: ShadcnImageBlok }) {
     <figure
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {content}
       {blok.caption && (

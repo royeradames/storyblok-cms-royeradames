@@ -11,7 +11,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCardBlok extends SbBlokData {
   image?: SbBlokData[];
@@ -27,6 +27,7 @@ export function ShadcnCard({ blok }: { blok: ShadcnCardBlok }) {
     <Card
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {/* Image before header (shadcn: add image before the card header) */}
       {blok.image?.[0] != null && (

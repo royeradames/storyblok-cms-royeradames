@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Skeleton, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSkeletonBlok extends SbBlokData {
   variant?: "text" | "circular" | "rectangular" | "card";
@@ -21,6 +21,7 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
       <div
         {...storyblokEditable(blok)}
         className={cn("space-y-2", ...buildStyleClasses(blok.styles))}
+        style={buildInlineStyles(blok.styles)}
       >
         {Array.from({ length: lines }).map((_, i) => (
           <Skeleton
@@ -38,7 +39,7 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
       <Skeleton
         {...storyblokEditable(blok)}
         className={cn("rounded-full", ...buildStyleClasses(blok.styles))}
-        style={{ width: width || "40px", height: height || "40px" }}
+        style={{ width: width || "40px", height: height || "40px", ...buildInlineStyles(blok.styles) }}
       />
     );
   }
@@ -48,6 +49,7 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
       <div
         {...storyblokEditable(blok)}
         className={cn("space-y-4", ...buildStyleClasses(blok.styles))}
+        style={buildInlineStyles(blok.styles)}
       >
         <Skeleton className="h-48 w-full rounded-lg" />
         <div className="space-y-2">
@@ -62,7 +64,7 @@ export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {
     <Skeleton
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
-      style={{ width: width || "100%", height: height || "20px" }}
+      style={{ width: width || "100%", height: height || "20px", ...buildInlineStyles(blok.styles) }}
     />
   );
 }

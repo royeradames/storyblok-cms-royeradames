@@ -14,7 +14,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnDialogBlok extends SbBlokData {
   trigger_text: string;
@@ -49,6 +49,7 @@ export function ShadcnDialog({ blok }: { blok: ShadcnDialogBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

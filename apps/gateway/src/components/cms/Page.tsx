@@ -5,6 +5,7 @@ import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
+  buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "@repo/shared-cms/styles";
 import type { SeoMetatagsValue } from "@/types/seo";
@@ -27,6 +28,7 @@ export function Page({ blok }: { blok: PageBlok }) {
     <main
       {...storyblokEditable(blok)}
       className={cn("container mx-auto", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.body?.map((nestedBlok) => (
         <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />

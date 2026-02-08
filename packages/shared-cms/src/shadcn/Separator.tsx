@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Separator, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSeparatorBlok extends SbBlokData {
   orientation?: "horizontal" | "vertical";
@@ -21,6 +21,7 @@ export function ShadcnSeparator({ blok }: { blok: ShadcnSeparatorBlok }) {
         blok.orientation === "vertical" ? "h-full" : "my-4",
         ...buildStyleClasses(blok.styles),
       )}
+      style={buildInlineStyles(blok.styles)}
     />
   );
 }

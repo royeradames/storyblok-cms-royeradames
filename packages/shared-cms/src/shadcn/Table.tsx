@@ -12,7 +12,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTableCellBlok extends SbBlokData {
   content: string;
@@ -39,6 +39,7 @@ export function ShadcnTable({ blok }: { blok: ShadcnTableBlok }) {
     <Table
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.caption && <TableCaption>{blok.caption}</TableCaption>}
       {blok.headers && blok.headers.length > 0 && (

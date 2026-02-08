@@ -4,7 +4,7 @@ import { storyblokEditable } from "@storyblok/react";
 import { Alert, AlertTitle, AlertDescription, cn } from "@repo/ui";
 import { AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAlertBlok extends SbBlokData {
   title?: string;
@@ -30,6 +30,7 @@ export function ShadcnAlert({ blok }: { blok: ShadcnAlertBlok }) {
       {...storyblokEditable(blok)}
       variant={blok.variant || "default"}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {Icon && <Icon className="h-4 w-4" />}
       {blok.title && <AlertTitle>{blok.title}</AlertTitle>}

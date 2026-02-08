@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { AspectRatio, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAspectRatioBlok extends SbBlokData {
   ratio?: "square" | "video" | "portrait" | "wide" | "custom";
@@ -31,6 +31,7 @@ export function ShadcnAspectRatio({ blok }: { blok: ShadcnAspectRatioBlok }) {
       {...storyblokEditable(blok)}
       ratio={ratio}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.content?.map((nestedBlok) => (
         <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />

@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSectionBlok extends SbBlokData {
   content?: SbBlokData[];
@@ -47,6 +47,7 @@ export function ShadcnSection({ blok }: { blok: ShadcnSectionBlok }) {
       {...storyblokEditable(blok)}
       id={blok.id}
       className={cn(padding, background, "w-full", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <div className={cn(maxWidth, "mx-auto px-4")}>
         {blok.content?.map((nestedBlok) => (

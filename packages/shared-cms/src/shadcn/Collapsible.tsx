@@ -11,7 +11,7 @@ import {
 } from "@repo/ui";
 import { ChevronsUpDown } from "lucide-react";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCollapsibleBlok extends SbBlokData {
   trigger_text: string;
@@ -29,6 +29,7 @@ export function ShadcnCollapsible({ blok }: { blok: ShadcnCollapsibleBlok }) {
       open={isOpen}
       onOpenChange={setIsOpen}
       className={cn("w-full space-y-2", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <div className="flex items-center justify-between space-x-4">
         <h4 className="text-sm font-semibold">{blok.trigger_text}</h4>

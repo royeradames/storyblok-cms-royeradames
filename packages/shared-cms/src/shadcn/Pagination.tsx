@@ -12,7 +12,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnPaginationBlok extends SbBlokData {
   total_pages: number;
@@ -40,6 +40,7 @@ export function ShadcnPagination({ blok }: { blok: ShadcnPaginationBlok }) {
     <Pagination
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <PaginationContent>
         {current_page > 1 && (

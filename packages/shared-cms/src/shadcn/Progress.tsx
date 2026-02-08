@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Progress, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnProgressBlok extends SbBlokData {
   value: number;
@@ -29,6 +29,7 @@ export function ShadcnProgress({ blok }: { blok: ShadcnProgressBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn("w-full", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.show_label && blok.label_position === "top" && (
         <div className="flex justify-between mb-1 text-sm">

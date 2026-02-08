@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { RadioGroup, RadioGroupItem, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnRadioOptionBlok extends SbBlokData {
   value: string;
@@ -27,6 +27,7 @@ export function ShadcnRadioGroup({ blok }: { blok: ShadcnRadioGroupBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn("space-y-3", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.label && <Label className="text-base">{blok.label}</Label>}
       <RadioGroup

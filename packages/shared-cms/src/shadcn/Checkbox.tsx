@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Checkbox, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCheckboxBlok extends SbBlokData {
   name: string;
@@ -19,6 +19,7 @@ export function ShadcnCheckbox({ blok }: { blok: ShadcnCheckboxBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn("flex items-start space-x-3", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <Checkbox
         id={blok.name}

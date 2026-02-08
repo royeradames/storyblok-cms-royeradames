@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Input, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnInputBlok extends SbBlokData {
   name: string;
@@ -21,6 +21,7 @@ export function ShadcnInput({ blok }: { blok: ShadcnInputBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn("space-y-2", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.label && (
         <Label htmlFor={blok.name}>

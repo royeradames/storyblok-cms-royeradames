@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Badge, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnBadgeBlok extends SbBlokData {
   text: string;
@@ -17,6 +17,7 @@ export function ShadcnBadge({ blok }: { blok: ShadcnBadgeBlok }) {
     {...storyblokEditable(blok)}
     variant={blok.variant || "default"}
     className={cn(...buildStyleClasses(blok.styles))}
+    style={buildInlineStyles(blok.styles)}
   >
       {blok.text}
     </Badge>

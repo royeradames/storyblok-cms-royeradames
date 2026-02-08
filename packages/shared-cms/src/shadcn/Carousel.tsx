@@ -10,7 +10,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnCarouselBlok extends SbBlokData {
   items?: SbBlokData[];
@@ -42,6 +42,7 @@ export function ShadcnCarousel({ blok }: { blok: ShadcnCarouselBlok }) {
       }}
       orientation={blok.orientation || "horizontal"}
       className={cn("w-full", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <CarouselContent>
         {blok.items?.map((item) => (

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnButtonBlok extends SbBlokData {
   label?: SbBlokData[];
@@ -90,6 +90,7 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
       variant={variant}
       size={size}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {labelContent}
     </Button>

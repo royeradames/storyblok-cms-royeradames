@@ -9,7 +9,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTooltipBlok extends SbBlokData {
   content: string;
@@ -24,6 +24,7 @@ export function ShadcnTooltip({ blok }: { blok: ShadcnTooltipBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
     <TooltipProvider delayDuration={blok.delay ?? 200}>
       <Tooltip>

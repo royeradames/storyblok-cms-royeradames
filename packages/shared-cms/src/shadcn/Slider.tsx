@@ -4,7 +4,7 @@ import { useState } from "react";
 import { storyblokEditable } from "@storyblok/react";
 import { Slider, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSliderBlok extends SbBlokData {
   name: string;
@@ -25,6 +25,7 @@ export function ShadcnSlider({ blok }: { blok: ShadcnSliderBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn("space-y-4", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {(blok.label || blok.show_value) && (
         <div className="flex justify-between">

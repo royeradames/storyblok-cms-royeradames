@@ -12,7 +12,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnBreadcrumbItemBlok extends SbBlokData {
   label: string;
@@ -31,6 +31,7 @@ export function ShadcnBreadcrumb({ blok }: { blok: ShadcnBreadcrumbBlok }) {
     <Breadcrumb
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <BreadcrumbList>
         {blok.items?.map((item, index) => (

@@ -11,7 +11,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSelectOptionBlok extends SbBlokData {
   value: string;
@@ -36,6 +36,7 @@ export function ShadcnSelect({ blok }: { blok: ShadcnSelectBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn("space-y-2", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.label && <Label htmlFor={blok.name}>{blok.label}</Label>}
       <Select

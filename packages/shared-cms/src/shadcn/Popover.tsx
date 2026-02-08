@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Popover, PopoverContent, PopoverTrigger, Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnPopoverBlok extends SbBlokData {
   trigger_text: string;
@@ -25,6 +25,7 @@ export function ShadcnPopover({ blok }: { blok: ShadcnPopoverBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
     <Popover>
       <PopoverTrigger asChild>

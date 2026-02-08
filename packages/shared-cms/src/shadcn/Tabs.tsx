@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnTabItemBlok extends SbBlokData {
   label: string;
@@ -31,6 +31,7 @@ export function ShadcnTabs({ blok }: { blok: ShadcnTabsBlok }) {
         blok.orientation === "vertical" ? "flex gap-4" : "",
         ...buildStyleClasses(blok.styles),
       )}
+      style={buildInlineStyles(blok.styles)}
     >
       <TabsList
         className={blok.orientation === "vertical" ? "flex-col h-auto" : ""}

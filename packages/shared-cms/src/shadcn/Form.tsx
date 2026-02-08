@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Button, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnFormBlok extends SbBlokData {
   action?: string;
@@ -33,6 +33,7 @@ export function ShadcnForm({ blok }: { blok: ShadcnFormBlok }) {
       action={blok.action}
       method={blok.method || "post"}
       className={cn("space-y-6", ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       <div className={cn(layoutMap[blok.layout || "vertical"])}>
         {blok.fields?.map((field) => (

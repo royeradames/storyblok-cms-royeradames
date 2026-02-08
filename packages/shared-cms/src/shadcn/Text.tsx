@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 import {
   type NativeColorPickerValue,
   useThemeColor,
@@ -110,7 +110,7 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         letterSpacingMap[blok.letter_spacing ?? "normal"],
         ...buildStyleClasses(blok.styles)
       )}
-      style={useThemeColorStyle ? { color: themeColor } : undefined}
+      style={{ ...buildInlineStyles(blok.styles), ...(useThemeColorStyle ? { color: themeColor } : undefined) }}
     >
       {blok.content}
     </Element>

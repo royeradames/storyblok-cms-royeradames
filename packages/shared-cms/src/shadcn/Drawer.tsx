@@ -14,7 +14,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnDrawerBlok extends SbBlokData {
   trigger_text: string;
@@ -39,6 +39,7 @@ export function ShadcnDrawer({ blok }: { blok: ShadcnDrawerBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>

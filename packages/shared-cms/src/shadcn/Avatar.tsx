@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Avatar, AvatarFallback, AvatarImage, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAvatarBlok extends SbBlokData {
   image?: {
@@ -33,6 +33,7 @@ export function ShadcnAvatar({ blok }: { blok: ShadcnAvatarBlok }) {
     <Avatar
       {...storyblokEditable(blok)}
       className={cn(size, ...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.image?.filename && (
         <AvatarImage src={blok.image.filename} alt={blok.image.alt || ""} />

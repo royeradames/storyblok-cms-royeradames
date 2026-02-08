@@ -3,7 +3,7 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnHeroBlok extends SbBlokData {
   headline: string;
@@ -33,15 +33,16 @@ export function ShadcnHero({ blok }: { blok: ShadcnHeroBlok }) {
         "relative min-h-[60vh] flex flex-col justify-center py-20 px-4",
         ...buildStyleClasses(blok.styles),
       )}
-      style={
-        blok.background_image?.filename
+      style={{
+        ...buildInlineStyles(blok.styles),
+        ...(blok.background_image?.filename
           ? {
               backgroundImage: `url(${blok.background_image.filename})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }
-          : undefined
-      }
+          : undefined),
+      }}
     >
       {blok.background_image?.filename && (
         <div className="absolute inset-0 bg-black/50" />

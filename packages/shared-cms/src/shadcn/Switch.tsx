@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Switch, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSwitchBlok extends SbBlokData {
   name: string;
@@ -22,6 +22,7 @@ export function ShadcnSwitch({ blok }: { blok: ShadcnSwitchBlok }) {
         "flex items-center justify-between",
         ...buildStyleClasses(blok.styles),
       )}
+      style={buildInlineStyles(blok.styles)}
     >
       <div className="space-y-0.5">
         <Label htmlFor={blok.name}>{blok.label}</Label>

@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnAccordionItemBlok extends SbBlokData {
   title: string;
@@ -36,6 +36,7 @@ export function ShadcnAccordion({ blok }: { blok: ShadcnAccordionBlok }) {
         type="multiple"
         defaultValue={blok.default_value ? [blok.default_value] : undefined}
         className={cn(...buildStyleClasses(blok.styles))}
+        style={buildInlineStyles(blok.styles)}
       >
         {blok.items?.map((item, index) => (
           <AccordionItem
@@ -59,6 +60,7 @@ export function ShadcnAccordion({ blok }: { blok: ShadcnAccordionBlok }) {
       collapsible={blok.collapsible ?? true}
       defaultValue={blok.default_value}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
       {blok.items?.map((item, index) => (
         <AccordionItem

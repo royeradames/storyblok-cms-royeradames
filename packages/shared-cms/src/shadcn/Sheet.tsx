@@ -14,7 +14,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
 
 export interface ShadcnSheetBlok extends SbBlokData {
   trigger_text: string;
@@ -40,6 +40,7 @@ export function ShadcnSheet({ blok }: { blok: ShadcnSheetBlok }) {
     <div
       {...storyblokEditable(blok)}
       className={cn(...buildStyleClasses(blok.styles))}
+      style={buildInlineStyles(blok.styles)}
     >
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
