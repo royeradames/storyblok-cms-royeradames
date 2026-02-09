@@ -36,7 +36,10 @@ export interface StoryblokComponentDef {
  * Premade section root bloks (e.g. `shared_case_studies_2_section`) are
  * added dynamically by the webhook when a section builder page is published.
  */
-export const PAGE_BODY_INITIAL_WHITELIST = ["shared_shadcn_container"];
+export const PAGE_BODY_INITIAL_WHITELIST = [
+  "shared_shadcn_container",
+  "shared_shadcn_article",
+];
 
 export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
   {

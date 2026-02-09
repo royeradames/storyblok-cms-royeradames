@@ -34,6 +34,7 @@ import { ShadcnGrid } from "./shadcn/Grid";
 import { ShadcnContainer } from "./shadcn/container/Container";
 import { ShadcnText } from "./shadcn/Text";
 import { ShadcnRichText } from "./shadcn/RichText";
+import { ShadcnArticle } from "./shadcn/Article";
 import { ShadcnAlert } from "./shadcn/Alert";
 import { ShadcnBadge } from "./shadcn/Badge";
 import { ShadcnIcon } from "./shadcn/Icon";
@@ -104,6 +105,7 @@ export const components = {
   // === Typography & Content ===
   shadcn_text: ShadcnText,
   shadcn_rich_text: ShadcnRichText,
+  shadcn_article: ShadcnArticle,
   shadcn_alert: ShadcnAlert,
   shadcn_badge: ShadcnBadge,
   shadcn_icon: ShadcnIcon,

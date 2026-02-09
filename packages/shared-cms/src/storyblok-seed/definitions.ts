@@ -853,6 +853,45 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
+    name: "shadcn_article",
+    display_name: "Article",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-doc",
+    preview_field: "body",
+    schema: {
+      body: {
+        type: "richtext",
+        pos: 0,
+        required: true,
+        description:
+          "Long-form article body (headings, paragraphs, lists, quotes, tables, and embedded bloks such as alerts)",
+      },
+      show_toc: {
+        type: "boolean",
+        pos: 1,
+        default_value: true,
+        description:
+          "Show a right-side table of contents on XL+ screens (generated from headings)",
+      },
+      toc_title: {
+        type: "text",
+        pos: 2,
+        default_value: "On this page",
+        description: "Table of contents label",
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["styles_breakpoint_options"],
+      },
+    },
+  },
+
+  {
     name: "shadcn_alert",
     display_name: "Alert",
     is_root: false,

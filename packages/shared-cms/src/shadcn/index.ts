@@ -10,6 +10,7 @@ export {
 // Typography & Content
 export { ShadcnText, type ShadcnTextBlok } from "./Text";
 export { ShadcnRichText, type ShadcnRichTextBlok } from "./RichText";
+export { ShadcnArticle, type ShadcnArticleBlok } from "./Article";
 export { ShadcnAlert, type ShadcnAlertBlok } from "./Alert";
 export { ShadcnBadge, type ShadcnBadgeBlok } from "./Badge";
 export { ShadcnIcon, type ShadcnIconBlok } from "./Icon";
