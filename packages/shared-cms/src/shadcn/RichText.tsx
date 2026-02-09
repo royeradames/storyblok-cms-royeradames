@@ -105,6 +105,10 @@ export function ShadcnRichTextContent({
 }) {
   let headingIndex = 0;
   const isArticle = variant === "article";
+  let resolverKeyCounter = 0;
+
+  const getNodeKey = (node: ResolverNode | RichTextNode, prefix: string) =>
+    node.attrs?.key ?? `${prefix}-${resolverKeyCounter++}`;
 
   function renderTable(
     node: ResolverNode,
@@ -118,7 +122,7 @@ export function ShadcnRichTextContent({
     const tableChildren = allRows ? <tbody>{childrenArray}</tbody> : node.children;
 
     const table = (
-      <table key={node.attrs?.key} className={className}>
+      <table key={getNodeKey(node, "table")} className={className}>
         {tableChildren}
       </table>
     );
@@ -131,20 +135,21 @@ export function ShadcnRichTextContent({
       const level = Math.min(Math.max(Number(node.attrs?.level || 2), 1), 6);
       const id = headingIds?.[headingIndex++];
       const className = isArticle ? "text-primary font-semibold scroll-mt-24" : undefined;
+      const key = getNodeKey(node, `h${level}`);
 
-      if (level === 1) return <h1 key={node.attrs?.key} id={id} className={className}>{node.children}</h1>;
-      if (level === 2) return <h2 key={node.attrs?.key} id={id} className={className}>{node.children}</h2>;
-      if (level === 3) return <h3 key={node.attrs?.key} id={id} className={className}>{node.children}</h3>;
-      if (level === 4) return <h4 key={node.attrs?.key} id={id} className={className}>{node.children}</h4>;
-      if (level === 5) return <h5 key={node.attrs?.key} id={id} className={className}>{node.children}</h5>;
-      return <h6 key={node.attrs?.key} id={id} className={className}>{node.children}</h6>;
+      if (level === 1) return <h1 key={key} id={id} className={className}>{node.children}</h1>;
+      if (level === 2) return <h2 key={key} id={id} className={className}>{node.children}</h2>;
+      if (level === 3) return <h3 key={key} id={id} className={className}>{node.children}</h3>;
+      if (level === 4) return <h4 key={key} id={id} className={className}>{node.children}</h4>;
+      if (level === 5) return <h5 key={key} id={id} className={className}>{node.children}</h5>;
+      return <h6 key={key} id={id} className={className}>{node.children}</h6>;
     },
     [BlockTypes.PARAGRAPH]: (node: ResolverNode) => (
-      <p key={node.attrs?.key} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</p>
+      <p key={getNodeKey(node, "p")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</p>
     ),
     [BlockTypes.QUOTE]: (node: ResolverNode) => (
       <blockquote
-        key={node.attrs?.key}
+        key={getNodeKey(node, "quote")}
         className={cn(
           isArticle &&
             "border-l-2 border-border pl-4 italic text-muted-foreground",
@@ -154,13 +159,13 @@ export function ShadcnRichTextContent({
       </blockquote>
     ),
     [BlockTypes.UL_LIST]: (node: ResolverNode) => (
-      <ul key={node.attrs?.key} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</ul>
+      <ul key={getNodeKey(node, "ul")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</ul>
     ),
     [BlockTypes.OL_LIST]: (node: ResolverNode) => (
-      <ol key={node.attrs?.key} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</ol>
+      <ol key={getNodeKey(node, "ol")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</ol>
     ),
     [BlockTypes.LIST_ITEM]: (node: ResolverNode) => (
-      <li key={node.attrs?.key} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</li>
+      <li key={getNodeKey(node, "li")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</li>
     ),
     [BlockTypes.TABLE]: (node: ResolverNode) =>
       isArticle ? (
@@ -173,11 +178,11 @@ export function ShadcnRichTextContent({
         renderTable(node)
       ),
     [BlockTypes.TABLE_ROW]: (node: ResolverNode) => (
-      <tr key={node.attrs?.key} className={isArticle ? "border-b border-border/60" : undefined}>{node.children}</tr>
+      <tr key={getNodeKey(node, "tr")} className={isArticle ? "border-b border-border/60" : undefined}>{node.children}</tr>
     ),
     [BlockTypes.TABLE_HEADER]: (node: ResolverNode) => (
       <th
-        key={node.attrs?.key}
+        key={getNodeKey(node, "th")}
         className={cn(
           "text-left",
           isArticle &&
@@ -188,16 +193,16 @@ export function ShadcnRichTextContent({
       </th>
     ),
     [BlockTypes.TABLE_CELL]: (node: ResolverNode) => (
-      <td key={node.attrs?.key} className={isArticle ? "p-3 align-middle text-muted-foreground" : undefined}>
+      <td key={getNodeKey(node, "td")} className={isArticle ? "p-3 align-middle text-muted-foreground" : undefined}>
         {node.children}
       </td>
     ),
     table_row: (node: ResolverNode) => (
-      <tr key={node.attrs?.key} className={isArticle ? "border-b border-border/60" : undefined}>{node.children}</tr>
+      <tr key={getNodeKey(node, "tr")} className={isArticle ? "border-b border-border/60" : undefined}>{node.children}</tr>
     ),
     table_header: (node: ResolverNode) => (
       <th
-        key={node.attrs?.key}
+        key={getNodeKey(node, "th")}
         className={cn(
           "text-left",
           isArticle &&
@@ -208,12 +213,12 @@ export function ShadcnRichTextContent({
       </th>
     ),
     table_cell: (node: ResolverNode) => (
-      <td key={node.attrs?.key} className={isArticle ? "p-3 align-middle text-muted-foreground" : undefined}>
+      <td key={getNodeKey(node, "td")} className={isArticle ? "p-3 align-middle text-muted-foreground" : undefined}>
         {node.children}
       </td>
     ),
     [BlockTypes.COMPONENT]: (node: RichTextNode) => (
-      <React.Fragment key={node.attrs?.key}>
+      <React.Fragment key={getNodeKey(node, "blok")}>
         {(node.attrs?.body || []).map((nestedBlok, index) => (
           <StoryblokComponent
             blok={nestedBlok}
@@ -228,7 +233,11 @@ export function ShadcnRichTextContent({
     keyedResolvers: true,
     // Preserve resolver-provided keys to avoid duplicate-key warnings.
     textFn: (text: string, attrs?: Record<string, any>) =>
-      React.createElement(React.Fragment, { key: attrs?.key }, text),
+      React.createElement(
+        React.Fragment,
+        { key: attrs?.key ?? `txt-${resolverKeyCounter++}` },
+        text,
+      ),
     resolvers: resolvers as any,
   });
   const richTextNode = render(content as any);
