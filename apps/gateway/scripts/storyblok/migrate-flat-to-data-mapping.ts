@@ -34,6 +34,7 @@ import {
   slugToPrefix,
   type DerivedComponent,
 } from "../../src/lib/derive-premade-schemas";
+import { normalizeBuilderTemplate } from "../../src/lib/builder-template";
 
 config({ path: path.join(process.cwd(), ".env") });
 
@@ -78,15 +79,21 @@ async function sleep(ms: number): Promise<void> {
 }
 
 async function fetchSectionBuilderStories(): Promise<any[]> {
-  const listUrl = `${API_BASE}/spaces/${SPACE_ID}/stories?starts_with=section-builder/&per_page=100`;
-  const listRes = await fetch(listUrl, {
-    headers: { Authorization: TOKEN! },
-  });
-  if (!listRes.ok) {
-    throw new Error(`Failed to list stories: ${listRes.status} ${listRes.statusText}`);
+  const prefixes = ["section-builder/", "element-builder/", "form-builder/"];
+  const storyList: any[] = [];
+  for (const prefix of prefixes) {
+    const listUrl = `${API_BASE}/spaces/${SPACE_ID}/stories?starts_with=${prefix}&per_page=100`;
+    const listRes = await fetch(listUrl, {
+      headers: { Authorization: TOKEN! },
+    });
+    if (!listRes.ok) {
+      throw new Error(
+        `Failed to list stories for ${prefix}: ${listRes.status} ${listRes.statusText}`,
+      );
+    }
+    const listData = await listRes.json();
+    storyList.push(...(listData.stories ?? []));
   }
-  const listData = await listRes.json();
-  const storyList: any[] = listData.stories ?? [];
 
   const fullStories: any[] = [];
   for (const stub of storyList) {
@@ -301,16 +308,16 @@ interface StorySummary {
 }
 
 async function main() {
-  console.log("[1/7] Fetching section-builder stories from Storyblok...");
+  console.log("[1/7] Fetching builder stories from Storyblok...");
   const stories = await fetchSectionBuilderStories();
 
   if (stories.length === 0) {
-    console.log("  No section-builder stories found.");
+    console.log("  No builder stories found.");
     await client.end();
     return;
   }
 
-  console.log(`  Found ${stories.length} section-builder stories.\n`);
+  console.log(`  Found ${stories.length} builder stories.\n`);
 
   const summaries: StorySummary[] = [];
 
@@ -319,7 +326,10 @@ async function main() {
     const slug = story.full_slug as string;
     const rootComponent = story.content?.component as string | undefined;
     if (rootComponent && !BUILDER_ROOT_COMPONENTS.has(rootComponent)) {
-      const skipLabel = slug.replace("section-builder/", "");
+      const skipLabel = slug
+        .replace("section-builder/", "")
+        .replace("element-builder/", "")
+        .replace("form-builder/", "");
       console.log(`── ${skipLabel} (${si + 1}/${stories.length}) ──`);
       console.log(
         `Skipping: unsupported root component "${rootComponent}"\n`,
@@ -328,7 +338,10 @@ async function main() {
     }
     const prefix = slugToPrefix(slug);
     const componentName = `${prefix}_section`;
-    const label = slug.replace("section-builder/", "");
+    const label = slug
+      .replace("section-builder/", "")
+      .replace("element-builder/", "")
+      .replace("form-builder/", "");
 
     console.log(`── ${label} (${si + 1}/${stories.length}) ──`);
 
@@ -343,7 +356,7 @@ async function main() {
     };
 
     // Extract template from page wrapper
-    const template = story.content?.body?.[0] ?? story.content;
+    const template = normalizeBuilderTemplate(story.content);
     if (!template) {
       console.warn("  Skipping: no content\n");
       summaries.push(summary);

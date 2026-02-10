@@ -29,6 +29,7 @@ interface BuildStatus {
 
 const POLL_INTERVAL = 2000;
 const RELOAD_DELAY = 1500;
+const BUILDER_SLUG_REGEX = /\/preview\/((section-builder|element-builder|form-builder)\/[^/]+)/;
 
 export function BuildStatusBanner() {
   const [status, setStatus] = useState<BuildStatus | null>(null);
@@ -72,18 +73,16 @@ export function BuildStatusBanner() {
 
   useEffect(() => {
     /**
-     * Extract the section-builder slug from the current preview URL.
-     * Works when the preview iframe is showing a section-builder page.
+     * Extract the builder slug from the current preview URL.
+     * Works when the preview iframe is showing a builder page.
      */
     const getSlugFromUrl = (): string | null => {
-      const match = window.location.pathname.match(
-        /\/preview\/(section-builder\/[^/]+)/,
-      );
+      const match = window.location.pathname.match(BUILDER_SLUG_REGEX);
       return match?.[1] ?? null;
     };
 
     /**
-     * Try to extract a section-builder slug from the postMessage payload.
+     * Try to extract a builder slug from the postMessage payload.
      * Storyblok sends various formats; we check common fields.
      */
     const getSlugFromEvent = (data: any): string | null => {
@@ -94,7 +93,12 @@ export function BuildStatusBanner() {
         data.story?.slug ??
         data.storySlug;
 
-      if (slug && slug.startsWith("section-builder/")) {
+      if (
+        slug &&
+        (slug.startsWith("section-builder/") ||
+          slug.startsWith("element-builder/") ||
+          slug.startsWith("form-builder/"))
+      ) {
         return slug;
       }
 
@@ -180,7 +184,11 @@ export function BuildStatusBanner() {
 
   if (!status || dismissed) return null;
 
-  const sectionName = status.slug?.replace("section-builder/", "") ?? "";
+  const sectionName =
+    status.slug
+      ?.replace("section-builder/", "")
+      .replace("element-builder/", "")
+      .replace("form-builder/", "") ?? "";
 
   return (
     <div

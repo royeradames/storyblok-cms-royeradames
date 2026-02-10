@@ -4,6 +4,7 @@ import { db } from "@/db/client";
 import { sectionTemplates } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchStory } from "@/lib/storyblok";
+import { normalizeBuilderTemplate } from "@/lib/builder-template";
 import {
   derivePremadeBlokSchemas,
   diffSchemas,
@@ -25,6 +26,11 @@ const BUILDER_ROOT_COMPONENTS = new Set([
   "element_builder_page",
   "form_builder_page",
 ]);
+const BUILDER_SLUG_PREFIXES = [
+  "section-builder/",
+  "element-builder/",
+  "form-builder/",
+];
 
 /**
  * Storyblok webhook handler.
@@ -63,7 +69,10 @@ export async function POST(request: NextRequest) {
     }
 
     const slug: string | undefined = body.full_slug ?? body.story?.full_slug;
-    if (!slug || !slug.startsWith("section-builder/")) {
+    if (
+      !slug ||
+      !BUILDER_SLUG_PREFIXES.some((prefix) => slug.startsWith(prefix))
+    ) {
       return NextResponse.json({ ok: true, skipped: true });
     }
 
@@ -94,8 +103,8 @@ export async function POST(request: NextRequest) {
     const prefix = slugToPrefix(slug);
     const componentName = `${prefix}_section`;
 
-    // Extract the actual section template from the page wrapper (body[0])
-    const template = story.content?.body?.[0] ?? story.content;
+    // Extract and normalize template (element-builder page-level fallback supported)
+    const template = normalizeBuilderTemplate(story.content);
 
     await updateBuild(jobId, "Comparing with existing template...");
 

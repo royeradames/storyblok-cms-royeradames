@@ -18,6 +18,8 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { eq } from "drizzle-orm";
 import { sectionTemplates } from "../../src/db/schema/section-templates";
+import { normalizeBuilderTemplate } from "../../src/lib/builder-template";
+import { slugToPrefix } from "../../src/lib/derive-premade-schemas";
 
 // Load app .env
 config({ path: path.join(process.cwd(), ".env") });
@@ -50,25 +52,30 @@ const BUILDER_ROOT_COMPONENTS = new Set([
 ]);
 
 /**
- * Fetches all stories under section-builder/ from Storyblok Management API.
+ * Fetches all stories under builder prefixes from Storyblok Management API.
  * The list endpoint doesn't include `content`, so we fetch each story
  * individually to get the full content.
  */
 async function fetchSectionBuilderStories(): Promise<any[]> {
+  const prefixes = ["section-builder/", "element-builder/", "form-builder/"];
+  const storyList: any[] = [];
+
   // Step 1: List stories to get IDs and slugs
-  const listUrl = `${API_BASE}/spaces/${SPACE_ID}/stories?starts_with=section-builder/&per_page=100`;
-  const listRes = await fetch(listUrl, {
-    headers: { Authorization: TOKEN! },
-  });
+  for (const prefix of prefixes) {
+    const listUrl = `${API_BASE}/spaces/${SPACE_ID}/stories?starts_with=${prefix}&per_page=100`;
+    const listRes = await fetch(listUrl, {
+      headers: { Authorization: TOKEN! },
+    });
 
-  if (!listRes.ok) {
-    throw new Error(
-      `Failed to list stories: ${listRes.status} ${listRes.statusText}`,
-    );
+    if (!listRes.ok) {
+      throw new Error(
+        `Failed to list stories for ${prefix}: ${listRes.status} ${listRes.statusText}`,
+      );
+    }
+
+    const listData = await listRes.json();
+    storyList.push(...(listData.stories ?? []));
   }
-
-  const listData = await listRes.json();
-  const storyList: any[] = listData.stories ?? [];
 
   // Step 2: Fetch each story individually for full content
   const fullStories: any[] = [];
@@ -94,25 +101,24 @@ async function fetchSectionBuilderStories(): Promise<any[]> {
 }
 
 /**
- * Derives the component name from a slug:
- * "section-builders/case-studies-2" → "case_studies_2_section"
+ * Derives the component name from a builder slug:
+ * "section-builder/case-studies-2" → "case_studies_2_section"
  */
 function slugToComponent(fullSlug: string): string {
-  const sectionSlug = fullSlug.replace("section-builder/", "");
-  return sectionSlug.replace(/-/g, "_") + "_section";
+  return `${slugToPrefix(fullSlug)}_section`;
 }
 
 async function main() {
-  console.log("Fetching section-builder stories from Storyblok...");
+  console.log("Fetching builder stories from Storyblok...");
   const stories = await fetchSectionBuilderStories();
 
   if (stories.length === 0) {
-    console.log("No section-builder stories found.");
+    console.log("No builder stories found.");
     await client.end();
     return;
   }
 
-  console.log(`Found ${stories.length} section-builder stories.`);
+  console.log(`Found ${stories.length} builder stories.`);
 
   for (const story of stories) {
     const slug = story.full_slug as string;
@@ -124,8 +130,8 @@ async function main() {
       continue;
     }
     const componentName = slugToComponent(slug);
-    // Extract the actual section template from the page wrapper (body[0])
-    const template = story.content?.body?.[0] ?? story.content;
+    // Extract and normalize template (element-builder page-level fallback supported)
+    const template = normalizeBuilderTemplate(story.content);
 
     if (!template) {
       console.warn(`  Skipping ${slug}: no content`);

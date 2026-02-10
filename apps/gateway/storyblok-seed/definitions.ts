@@ -85,6 +85,12 @@ export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
         pos: 0,
         description: "Unrestricted element builder body (any blok allowed)",
       },
+      data_section_name: {
+        type: "text",
+        pos: 1,
+        description:
+          "Fallback root section name for template derivation (used when body[0] does not define data_section_name)",
+      },
     },
   },
   {

@@ -942,9 +942,12 @@ export async function updatePageBodyWhitelist(
 // ── Slug prefix helper ────────────────────────────────────────────────
 
 /**
- * Derives the slug prefix from a section-builder slug.
+ * Derives the slug prefix from a builder slug.
  * "section-builder/case-studies-2" → "case_studies_2"
+ * "element-builder/article-heading-1" → "article_heading_1"
  */
 export function slugToPrefix(fullSlug: string): string {
-  return fullSlug.replace("section-builder/", "").replace(/-/g, "_");
+  return fullSlug
+    .replace(/^(section-builder|element-builder|form-builder)\//, "")
+    .replace(/-/g, "_");
 }
