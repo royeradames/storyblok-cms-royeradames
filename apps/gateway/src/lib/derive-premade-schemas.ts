@@ -1,3 +1,5 @@
+import { slugToBuilderPrefix } from "./builder-template";
+
 /**
  * Derives premade blok component definitions from a section builder template.
  *
@@ -260,7 +262,7 @@ export function derivePremadeBlokSchemas(
       };
     }
 
-    const isRootSection = section.name === `${slugPrefix}_section`;
+    const isRootSection = section.isRoot;
 
     components.push({
       name: section.name,
@@ -947,7 +949,5 @@ export async function updatePageBodyWhitelist(
  * "element-builder/article-heading-1" → "article_heading_1"
  */
 export function slugToPrefix(fullSlug: string): string {
-  return fullSlug
-    .replace(/^(section-builder|element-builder|form-builder)\//, "")
-    .replace(/-/g, "_");
+  return slugToBuilderPrefix(fullSlug);
 }

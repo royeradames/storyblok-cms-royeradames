@@ -4,7 +4,12 @@ import { db } from "@/db/client";
 import { sectionTemplates } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchStory } from "@/lib/storyblok";
-import { normalizeBuilderTemplate } from "@/lib/builder-template";
+import {
+  normalizeBuilderTemplate,
+  resolveTemplateComponentName,
+  derivePrefixFromComponentName,
+  slugToBuilderPrefix,
+} from "@/lib/builder-template";
 import {
   derivePremadeBlokSchemas,
   diffSchemas,
@@ -12,7 +17,6 @@ import {
   ensureDerivedComponents,
   migrateStoryData,
   updatePageBodyWhitelist,
-  slugToPrefix,
 } from "@/lib/derive-premade-schemas";
 import {
   startBuild,
@@ -100,11 +104,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, skipped: true });
     }
 
-    const prefix = slugToPrefix(slug);
-    const componentName = `${prefix}_section`;
-
     // Extract and normalize template (element-builder page-level fallback supported)
     const template = normalizeBuilderTemplate(story.content);
+    const slugPrefix = slugToBuilderPrefix(slug);
+    const componentName = resolveTemplateComponentName(template, slugPrefix);
+    const derivationPrefix = derivePrefixFromComponentName(componentName);
 
     await updateBuild(jobId, "Comparing with existing template...");
 
@@ -135,12 +139,22 @@ export async function POST(request: NextRequest) {
     if (spaceId && token) {
       await updateBuild(jobId, "Deriving blok schemas...");
 
-      const newSchemas = derivePremadeBlokSchemas(template, prefix);
+      const newSchemas = derivePremadeBlokSchemas(template, derivationPrefix);
 
       let oldSchemas: typeof newSchemas = [];
+      let oldRootComponentName: string | null = existing[0]?.component ?? null;
       if (existingTemplate) {
         try {
-          oldSchemas = derivePremadeBlokSchemas(existingTemplate as any, prefix);
+          const existingComponentName =
+            existing[0]?.component ??
+            resolveTemplateComponentName(existingTemplate as any, slugPrefix);
+          oldRootComponentName = existingComponentName;
+          const oldDerivationPrefix =
+            derivePrefixFromComponentName(existingComponentName);
+          oldSchemas = derivePremadeBlokSchemas(
+            existingTemplate as any,
+            oldDerivationPrefix,
+          );
         } catch {
           // Could not derive old schemas -- treat as fresh
         }
@@ -180,7 +194,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Ensure root section blok is in page body whitelist
-      const rootBlokName = `${prefix}_section`;
+      const rootBlokName = componentName;
       if (newSchemas.some((c) => c.name === rootBlokName)) {
         await updateBuild(jobId, "Updating page body whitelist...");
         await updatePageBodyWhitelist(rootBlokName, "add", spaceId, token);
@@ -188,7 +202,10 @@ export async function POST(request: NextRequest) {
 
       // Remove deleted root bloks from page body whitelist
       for (const removedName of diff.removedComponents) {
-        if (removedName.endsWith("_section")) {
+        if (
+          removedName.endsWith("_section") ||
+          removedName === oldRootComponentName
+        ) {
           await updatePageBodyWhitelist(removedName, "remove", spaceId, token);
         }
       }

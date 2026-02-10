@@ -53,3 +53,40 @@ export function normalizeBuilderTemplate(storyContent: any): any {
 
   return template;
 }
+
+/**
+ * Builds the slug prefix used for derived premade names.
+ * "section-builder/case-studies-2" -> "case_studies_2"
+ */
+export function slugToBuilderPrefix(fullSlug: string): string {
+  return fullSlug
+    .replace(/^(section-builder|element-builder|form-builder)\//, "")
+    .replace(/-/g, "_");
+}
+
+/**
+ * Resolves canonical DB key for a normalized builder template.
+ * Uses root data_section_name when present; otherwise falls back to {slugPrefix}_section.
+ */
+export function resolveTemplateComponentName(
+  template: any,
+  slugPrefix: string,
+): string {
+  if (
+    isObject(template) &&
+    typeof template.data_section_name === "string" &&
+    template.data_section_name.trim().length > 0
+  ) {
+    return template.data_section_name.trim();
+  }
+  return `${slugPrefix}_section`;
+}
+
+/**
+ * Converts a canonical component name to the derivation prefix.
+ * "article_heading_1_section" -> "article_heading_1"
+ * "article_heading_1" -> "article_heading_1"
+ */
+export function derivePrefixFromComponentName(componentName: string): string {
+  return componentName.replace(/_section$/, "");
+}

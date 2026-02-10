@@ -18,8 +18,11 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { eq } from "drizzle-orm";
 import { sectionTemplates } from "../../src/db/schema/section-templates";
-import { normalizeBuilderTemplate } from "../../src/lib/builder-template";
-import { slugToPrefix } from "../../src/lib/derive-premade-schemas";
+import {
+  normalizeBuilderTemplate,
+  resolveTemplateComponentName,
+  slugToBuilderPrefix,
+} from "../../src/lib/builder-template";
 
 // Load app .env
 config({ path: path.join(process.cwd(), ".env") });
@@ -100,14 +103,6 @@ async function fetchSectionBuilderStories(): Promise<any[]> {
   return fullStories;
 }
 
-/**
- * Derives the component name from a builder slug:
- * "section-builder/case-studies-2" → "case_studies_2_section"
- */
-function slugToComponent(fullSlug: string): string {
-  return `${slugToPrefix(fullSlug)}_section`;
-}
-
 async function main() {
   console.log("Fetching builder stories from Storyblok...");
   const stories = await fetchSectionBuilderStories();
@@ -129,9 +124,10 @@ async function main() {
       );
       continue;
     }
-    const componentName = slugToComponent(slug);
     // Extract and normalize template (element-builder page-level fallback supported)
     const template = normalizeBuilderTemplate(story.content);
+    const slugPrefix = slugToBuilderPrefix(slug);
+    const componentName = resolveTemplateComponentName(template, slugPrefix);
 
     if (!template) {
       console.warn(`  Skipping ${slug}: no content`);
