@@ -373,7 +373,7 @@ export function ShadcnRichTextContent({
             key={key}
             className={cn(
               "whitespace-pre-line",
-              isArticle ? "text-muted-foreground" : undefined,
+              isArticle ? "text-primary" : undefined,
             )}
           >
             {node.children}
