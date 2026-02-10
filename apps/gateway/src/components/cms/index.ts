@@ -25,21 +25,17 @@ const baseComponents: Record<string, any> = {
 };
 
 /**
- * Proxy that auto-maps unknown `shared_*_section` components to PremadeSectionWrapper.
- * This means premade section roots created by the webhook are automatically renderable
- * without touching this file.
+ * Proxy that auto-maps unknown `shared_*` components to PremadeSectionWrapper.
+ * This keeps dynamically derived premade components renderable, even when
+ * naming does not follow the *_section suffix convention.
  */
 export const components = new Proxy(baseComponents, {
   get(target, prop) {
     if (typeof prop === "string" && prop in target) {
       return target[prop];
     }
-    // Auto-map premade section root bloks
-    if (
-      typeof prop === "string" &&
-      prop.startsWith("shared_") &&
-      prop.endsWith("_section")
-    ) {
+    // Auto-map unknown shared derived bloks
+    if (typeof prop === "string" && prop.startsWith("shared_")) {
       return PremadeSectionWrapper;
     }
     return undefined;
