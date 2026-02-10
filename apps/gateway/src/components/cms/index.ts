@@ -11,7 +11,7 @@
  */
 import { components as sharedComponents } from "@repo/shared-cms";
 import { Page } from "./Page";
-import { PremadeSectionWrapper } from "./PremadeSectionWrapper";
+import { SharedTemplateResolver } from "./PremadeSectionWrapper";
 
 const sharedWithPrefix = Object.fromEntries(
   Object.entries(sharedComponents).map(([k, v]) => [`shared_${k}`, v]),
@@ -25,18 +25,18 @@ const baseComponents: Record<string, any> = {
 };
 
 /**
- * Proxy that auto-maps unknown `shared_*` components to PremadeSectionWrapper.
- * This keeps dynamically derived premade components renderable, even when
- * naming does not follow the *_section suffix convention.
+ * Proxy that resolves unknown shared_* components through the template map.
+ * This keeps builder-derived components renderable while avoiding hard failures
+ * for shared override components that don't yet have templates.
  */
 export const components = new Proxy(baseComponents, {
   get(target, prop) {
     if (typeof prop === "string" && prop in target) {
       return target[prop];
     }
-    // Auto-map unknown shared derived bloks
+    // Resolve unknown shared components via template-aware resolver
     if (typeof prop === "string" && prop.startsWith("shared_")) {
-      return PremadeSectionWrapper;
+      return SharedTemplateResolver;
     }
     return undefined;
   },

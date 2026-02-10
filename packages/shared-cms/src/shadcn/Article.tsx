@@ -11,8 +11,7 @@ import {
 import {
   extractRichTextHeadings,
   ShadcnRichTextContent,
-  type RichTextHeadingLevel,
-  type RichTextHeadingOverrideConfig,
+  type RichTextNodeOverrides,
 } from "./RichText";
 
 export interface ShadcnArticleBlok extends SbBlokData {
@@ -21,19 +20,24 @@ export interface ShadcnArticleBlok extends SbBlokData {
   styles?: StylesBreakpointOptionsBlok[];
 }
 
-const ARTICLE_HEADING_OVERRIDES = {
-  1: {
+const ARTICLE_RICHTEXT_OVERRIDES = {
+  headingOne: {
     component: "shared_article_heading_1",
     textField: "title",
     mirrorTextFields: ["content"],
     wrapperClassName: "sb-article-heading-1",
   },
-  2: {
+  headingTwo: {
     component: "shared_article_heading_2",
     textField: "title",
     wrapperClassName: "sb-article-heading-2",
   },
-} satisfies Partial<Record<RichTextHeadingLevel, RichTextHeadingOverrideConfig>>;
+  quote: {
+    component: "shared_article_quote",
+    textField: "quote",
+    wrapperClassName: "sb-article-quote",
+  },
+} satisfies RichTextNodeOverrides;
 
 export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
   const headings = extractRichTextHeadings(blok.body);
@@ -99,7 +103,7 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
             content={blok.body}
             variant="article"
             headingIds={headings.map((heading) => heading.id)}
-            headingComponentOverrides={ARTICLE_HEADING_OVERRIDES}
+            overrides={ARTICLE_RICHTEXT_OVERRIDES}
           />
         </div>
       </div>
