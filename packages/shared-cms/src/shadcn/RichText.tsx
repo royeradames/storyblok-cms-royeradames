@@ -33,6 +33,15 @@ const proseSizeMap = {
 
 type RichTextVariant = "default" | "article";
 type ResolverNode = RichTextNode & { children?: React.ReactNode };
+export type RichTextHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
+export interface RichTextHeadingOverrideConfig {
+  component: string;
+  textField: string;
+  mirrorTextFields?: string[];
+  wrapperClassName?: string;
+  staticFields?: Record<string, unknown>;
+}
 
 interface RichTextNode {
   type?: string;
@@ -104,10 +113,14 @@ export function ShadcnRichTextContent({
   content,
   variant = "default",
   headingIds,
+  headingComponentOverrides,
 }: {
   content: ISbRichtext;
   variant?: RichTextVariant;
   headingIds?: string[];
+  headingComponentOverrides?: Partial<
+    Record<RichTextHeadingLevel, RichTextHeadingOverrideConfig>
+  >;
 }) {
   let headingIndex = 0;
   const isArticle = variant === "article";
@@ -128,6 +141,105 @@ export function ShadcnRichTextContent({
       return (onlyChild as ReactElement<any>).props.children;
     }
     return children;
+  };
+
+  const renderDefaultHeading = (
+    level: RichTextHeadingLevel,
+    key: string,
+    id: string | undefined,
+    className: string | undefined,
+    children: React.ReactNode,
+  ) => {
+    if (level === 1)
+      return (
+        <h1 key={key} id={id} className={className}>
+          {children}
+        </h1>
+      );
+    if (level === 2)
+      return (
+        <h2 key={key} id={id} className={className}>
+          {children}
+        </h2>
+      );
+    if (level === 3)
+      return (
+        <h3 key={key} id={id} className={className}>
+          {children}
+        </h3>
+      );
+    if (level === 4)
+      return (
+        <h4 key={key} id={id} className={className}>
+          {children}
+        </h4>
+      );
+    if (level === 5)
+      return (
+        <h5 key={key} id={id} className={className}>
+          {children}
+        </h5>
+      );
+    return (
+      <h6 key={key} id={id} className={className}>
+        {children}
+      </h6>
+    );
+  };
+
+  const warnedOverrideLevels = new Set<number>();
+
+  const renderHeadingOverride = (
+    level: RichTextHeadingLevel,
+    key: string,
+    id: string | undefined,
+    headingText: string,
+    fallbackClassName: string | undefined,
+    children: React.ReactNode,
+  ) => {
+    const override = headingComponentOverrides?.[level];
+    if (!override) {
+      return renderDefaultHeading(level, key, id, fallbackClassName, children);
+    }
+
+    const componentName =
+      typeof override.component === "string" ? override.component.trim() : "";
+    const textField =
+      typeof override.textField === "string" ? override.textField.trim() : "";
+
+    if (!componentName || !textField) {
+      if (!warnedOverrideLevels.has(level)) {
+        warnedOverrideLevels.add(level);
+        console.warn(
+          `[ShadcnRichTextContent] Invalid heading override for level ${level}; falling back to semantic heading`,
+          override,
+        );
+      }
+      return renderDefaultHeading(level, key, id, fallbackClassName, children);
+    }
+
+    const overrideBlok: Record<string, any> = {
+      _uid: `${key}-${componentName}-${level}`,
+      component: componentName,
+      [textField]: headingText,
+      ...(override.staticFields ?? {}),
+    };
+    for (const mirrorField of override.mirrorTextFields ?? []) {
+      const fieldName = mirrorField?.trim();
+      if (fieldName && !(fieldName in overrideBlok)) {
+        overrideBlok[fieldName] = headingText;
+      }
+    }
+
+    return (
+      <div
+        key={key}
+        id={id}
+        className={cn("scroll-mt-24", override.wrapperClassName)}
+      >
+        <StoryblokComponent blok={overrideBlok as SbBlokData} />
+      </div>
+    );
   };
 
   function renderTable(
@@ -160,7 +272,10 @@ export function ShadcnRichTextContent({
 
   const resolvers = {
     [BlockTypes.HEADING]: (node: ResolverNode) => {
-      const level = Math.min(Math.max(Number(node.attrs?.level || 2), 1), 6);
+      const level = Math.min(
+        Math.max(Number(node.attrs?.level || 2), 1),
+        6,
+      ) as RichTextHeadingLevel;
       const id = headingIds?.[headingIndex++];
       const className = isArticle
         ? "text-primary font-semibold scroll-mt-24"
@@ -168,55 +283,13 @@ export function ShadcnRichTextContent({
       const key = getNodeKey(node, `h${level}`);
       const headingText = getNodeText(node).trim();
 
-      if (level === 1)
-        if (isArticle) {
-          const articleHeadingBlok: SbBlokData = {
-            _uid: `${key}-article-heading-1`,
-            component: "shared_article_heading_1",
-            title: headingText,
-            content: headingText,
-          } as SbBlokData;
-
-          return (
-            <div key={key} id={id} className="sb-article-heading-1 scroll-mt-24">
-              <StoryblokComponent blok={articleHeadingBlok} />
-            </div>
-          );
-        }
-      if (level === 1)
-        return (
-          <h1 key={key} id={id} className={className}>
-            {node.children}
-          </h1>
-        );
-      if (level === 2)
-        return (
-          <h2 key={key} id={id} className={className}>
-            {node.children}
-          </h2>
-        );
-      if (level === 3)
-        return (
-          <h3 key={key} id={id} className={className}>
-            {node.children}
-          </h3>
-        );
-      if (level === 4)
-        return (
-          <h4 key={key} id={id} className={className}>
-            {node.children}
-          </h4>
-        );
-      if (level === 5)
-        return (
-          <h5 key={key} id={id} className={className}>
-            {node.children}
-          </h5>
-        );
-      return (
-        <h6 key={key} id={id} className={className}>
-          {node.children}
-        </h6>
+      return renderHeadingOverride(
+        level,
+        key,
+        id,
+        headingText,
+        className,
+        node.children,
       );
     },
     [BlockTypes.PARAGRAPH]: (node: ResolverNode) => (
@@ -377,10 +450,14 @@ export function ShadcnRichText({
   blok,
   variant = "default",
   headingIds,
+  headingComponentOverrides,
 }: {
   blok: ShadcnRichTextBlok;
   variant?: RichTextVariant;
   headingIds?: string[];
+  headingComponentOverrides?: Partial<
+    Record<RichTextHeadingLevel, RichTextHeadingOverrideConfig>
+  >;
 }) {
   const isArticle = variant === "article";
 
@@ -401,6 +478,7 @@ export function ShadcnRichText({
         content={blok.content}
         variant={variant}
         headingIds={headingIds}
+        headingComponentOverrides={headingComponentOverrides}
       />
     </div>
   );
