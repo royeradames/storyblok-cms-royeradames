@@ -899,22 +899,15 @@ export const componentDefinitions: StoryblokComponent[] = [
         description:
           "Long-form article body (headings, paragraphs, lists, quotes, tables, and embedded bloks such as alerts)",
       },
-      show_toc: {
-        type: "boolean",
-        pos: 1,
-        default_value: true,
-        description:
-          "Show a right-side table of contents on XL+ screens (generated from headings)",
-      },
       toc_title: {
         type: "text",
-        pos: 2,
+        pos: 1,
         default_value: "On this page",
         description: "Table of contents label",
       },
       styles: {
         type: "bloks",
-        pos: 3,
+        pos: 2,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
