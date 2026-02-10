@@ -31,6 +31,7 @@ export interface ShadcnTextBlok extends SbBlokData {
   /** Dark theme color (native-color-picker). Overrides semantic color when set. */
   color_dark?: NativeColorPickerValue;
   align?: "left" | "center" | "right";
+  font_style?: "normal" | "italic";
   line_height?: "none" | "tight" | "snug" | "normal" | "relaxed" | "loose";
   letter_spacing?: "tighter" | "tight" | "normal" | "wide" | "wider" | "widest";
   sr_only?: boolean;
@@ -73,6 +74,11 @@ const alignMap = {
   right: "text-right",
 };
 
+const fontStyleMap = {
+  normal: "not-italic",
+  italic: "italic",
+};
+
 const lineHeightMap = {
   none: "leading-none",
   tight: "leading-tight",
@@ -107,6 +113,7 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         !blok.sr_only && weightMap[blok.weight || "normal"],
         !blok.sr_only && (useThemeColorStyle ? undefined : colorMap[blok.color || "default"]),
         !blok.sr_only && alignMap[blok.align || "left"],
+        !blok.sr_only && fontStyleMap[blok.font_style ?? "normal"],
         !blok.sr_only && lineHeightMap[blok.line_height ?? "normal"],
         !blok.sr_only && letterSpacingMap[blok.letter_spacing ?? "normal"],
         ...buildStyleClasses(blok.styles)

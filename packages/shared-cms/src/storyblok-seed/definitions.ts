@@ -784,30 +784,40 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "left",
         options: alignOptions,
       },
-      line_height: {
+      font_style: {
         type: "option",
         pos: 8,
+        default_value: "normal",
+        options: [
+          { value: "normal", name: "Normal" },
+          { value: "italic", name: "Italic" },
+        ],
+        description: "Font style",
+      },
+      line_height: {
+        type: "option",
+        pos: 9,
         default_value: "normal",
         options: lineHeightOptions,
         description: "Line height",
       },
       letter_spacing: {
         type: "option",
-        pos: 9,
+        pos: 10,
         default_value: "normal",
         options: letterSpacingOptions,
         description: "Letter spacing",
       },
       sr_only: {
         type: "boolean",
-        pos: 9.5,
+        pos: 10.5,
         default_value: false,
         description:
           "Screen-reader only. Visually hides the text but keeps it accessible (e.g. descriptive link text for icon-only buttons).",
       },
       styles: {
         type: "bloks",
-        pos: 10,
+        pos: 11,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl). Gap, padding, margin, and sizing options show pixel values.",
         restrict_components: true,

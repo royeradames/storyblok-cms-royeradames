@@ -64,12 +64,12 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   margin?: (keyof typeof marginMap)[] | keyof typeof marginMap;
   /** Border width classes (multi-select): all Tailwind border-* width utilities (e.g. border-b, border-l-4). */
   border?: (keyof typeof borderClassMap)[];
-  /** Border color (semantic, legacy single value) */
-  border_color?: keyof typeof borderColorMap;
   /** Border color in light theme (semantic). */
   border_color_light?: keyof typeof borderColorMap;
   /** Border color in dark theme (semantic). */
   border_color_dark?: keyof typeof borderColorMap;
+  /** Border color (semantic, legacy single value). */
+  border_color?: keyof typeof borderColorMap;
   /** Border style (solid, dashed, dotted, etc.) */
   border_style?: keyof typeof borderStyleMap;
   /** Box shadow */
