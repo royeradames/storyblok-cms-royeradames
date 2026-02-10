@@ -2,6 +2,15 @@ function isObject(value: unknown): value is Record<string, any> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function toSnakeCaseKey(input: string): string {
+  return input
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_]+/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
 function hasSectionMarker(node: unknown): boolean {
   if (!isObject(node)) return false;
 
@@ -77,9 +86,9 @@ export function resolveTemplateComponentName(
     typeof template.data_section_name === "string" &&
     template.data_section_name.trim().length > 0
   ) {
-    return template.data_section_name.trim();
+    return toSnakeCaseKey(template.data_section_name);
   }
-  return `${slugPrefix}_section`;
+  return `${toSnakeCaseKey(slugPrefix)}_section`;
 }
 
 /**
