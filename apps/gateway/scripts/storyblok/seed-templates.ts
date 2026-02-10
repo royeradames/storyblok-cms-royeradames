@@ -43,6 +43,11 @@ const db = drizzle(client);
 
 /** Rate-limit delay between API calls (ms) */
 const DELAY_MS = 350;
+const BUILDER_ROOT_COMPONENTS = new Set([
+  "page",
+  "element_builder_page",
+  "form_builder_page",
+]);
 
 /**
  * Fetches all stories under section-builder/ from Storyblok Management API.
@@ -111,6 +116,13 @@ async function main() {
 
   for (const story of stories) {
     const slug = story.full_slug as string;
+    const rootComponent = story.content?.component as string | undefined;
+    if (rootComponent && !BUILDER_ROOT_COMPONENTS.has(rootComponent)) {
+      console.log(
+        `  Skipping ${slug}: unsupported root component "${rootComponent}"`,
+      );
+      continue;
+    }
     const componentName = slugToComponent(slug);
     // Extract the actual section template from the page wrapper (body[0])
     const template = story.content?.body?.[0] ?? story.content;

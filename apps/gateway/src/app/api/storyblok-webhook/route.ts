@@ -20,6 +20,12 @@ import {
   failBuild,
 } from "@/lib/webhook-status";
 
+const BUILDER_ROOT_COMPONENTS = new Set([
+  "page",
+  "element_builder_page",
+  "form_builder_page",
+]);
+
 /**
  * Storyblok webhook handler.
  *
@@ -72,6 +78,17 @@ export async function POST(request: NextRequest) {
         { error: `Story not found: ${slug}` },
         { status: 404 },
       );
+    }
+    const storyRootComponent = story.content?.component;
+    if (
+      typeof storyRootComponent === "string" &&
+      !BUILDER_ROOT_COMPONENTS.has(storyRootComponent)
+    ) {
+      await completeBuild(
+        jobId,
+        `Skipped (unsupported root component: ${storyRootComponent})`,
+      );
+      return NextResponse.json({ ok: true, skipped: true });
     }
 
     const prefix = slugToPrefix(slug);

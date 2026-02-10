@@ -613,11 +613,17 @@ export const componentDefinitions: StoryblokComponent[] = [
         description:
           "Border width (multi-select). All Tailwind border-* utilities: sides (All, Top, Right, Bottom, Left, X, Y, Start, End) × 0/1/2/4/8px. Use search to filter.",
       },
-      border_color: {
+      border_color_light: {
         type: "option",
         pos: 16,
         options: flexBorderColorOptions,
-        description: "Border color (semantic).",
+        description: "Border color in light theme (semantic).",
+      },
+      border_color_dark: {
+        type: "option",
+        pos: 16.5,
+        options: flexBorderColorOptions,
+        description: "Border color in dark theme (semantic).",
       },
       border_style: {
         type: "option",

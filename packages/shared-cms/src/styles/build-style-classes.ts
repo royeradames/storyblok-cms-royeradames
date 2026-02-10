@@ -120,8 +120,18 @@ export function buildStyleClasses(
       const cls = borderClassMap[key];
       if (cls) classes.push(prefix + cls);
     });
-    if (opt.border_color && borderColorMap[opt.border_color])
-      classes.push(prefix + borderColorMap[opt.border_color]);
+    const lightBorderColor = opt.border_color_light ?? opt.border_color;
+    if (lightBorderColor && borderColorMap[lightBorderColor]) {
+      classes.push(prefix + borderColorMap[lightBorderColor]);
+    }
+    if (opt.border_color_dark && borderColorMap[opt.border_color_dark]) {
+      classes.push(
+        breakpointPrefix +
+          "dark:" +
+          variantPrefix +
+          borderColorMap[opt.border_color_dark]
+      );
+    }
     if (opt.border_style && opt.border_style in borderStyleMap)
       classes.push(
         prefix + borderStyleMap[opt.border_style as keyof typeof borderStyleMap]

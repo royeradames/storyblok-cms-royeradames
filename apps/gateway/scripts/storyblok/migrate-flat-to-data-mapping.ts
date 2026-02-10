@@ -42,6 +42,11 @@ const SPACE_ID = process.env.STORYBLOK_SPACE_ID;
 const TOKEN = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
 const API_BASE = "https://mapi.storyblok.com/v1";
 const DELAY_MS = 350;
+const BUILDER_ROOT_COMPONENTS = new Set([
+  "page",
+  "element_builder_page",
+  "form_builder_page",
+]);
 
 if (!DATABASE_URL) {
   console.error("Missing DATABASE_URL in .env");
@@ -312,6 +317,15 @@ async function main() {
   for (let si = 0; si < stories.length; si++) {
     const story = stories[si]!;
     const slug = story.full_slug as string;
+    const rootComponent = story.content?.component as string | undefined;
+    if (rootComponent && !BUILDER_ROOT_COMPONENTS.has(rootComponent)) {
+      const skipLabel = slug.replace("section-builder/", "");
+      console.log(`── ${skipLabel} (${si + 1}/${stories.length}) ──`);
+      console.log(
+        `Skipping: unsupported root component "${rootComponent}"\n`,
+      );
+      continue;
+    }
     const prefix = slugToPrefix(slug);
     const componentName = `${prefix}_section`;
     const label = slug.replace("section-builder/", "");

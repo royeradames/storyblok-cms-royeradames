@@ -73,4 +73,32 @@ export const gatewayComponentDefinitions: StoryblokComponentDef[] = [
       },
     },
   },
+  {
+    name: "element_builder_page",
+    display_name: "Element Builder Page",
+    is_root: true,
+    is_nestable: false,
+    icon: "block-blocks",
+    schema: {
+      body: {
+        type: "bloks",
+        pos: 0,
+        description: "Unrestricted element builder body (any blok allowed)",
+      },
+    },
+  },
+  {
+    name: "form_builder_page",
+    display_name: "Form Builder Page",
+    is_root: true,
+    is_nestable: false,
+    icon: "block-embed",
+    schema: {
+      body: {
+        type: "bloks",
+        pos: 0,
+        description: "Unrestricted form builder body (any blok allowed)",
+      },
+    },
+  },
 ];

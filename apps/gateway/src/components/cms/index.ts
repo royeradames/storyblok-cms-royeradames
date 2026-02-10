@@ -20,6 +20,8 @@ const sharedWithPrefix = Object.fromEntries(
 const baseComponents: Record<string, any> = {
   ...sharedWithPrefix,
   page: Page,
+  element_builder_page: Page,
+  form_builder_page: Page,
 };
 
 /**
