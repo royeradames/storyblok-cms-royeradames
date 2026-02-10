@@ -109,6 +109,14 @@ export function BuildStatusBanner() {
 
     const triggerLocalWebhook = async (slug: string) => {
       console.log(`[BuildStatusBanner] Triggering local webhook for: ${slug}`);
+      setStatus({
+        active: true,
+        status: "building",
+        message: "Starting build...",
+        slug,
+        startedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
       try {
         await fetch("/api/storyblok-webhook", {
           method: "POST",
@@ -121,8 +129,11 @@ export function BuildStatusBanner() {
             full_slug: slug,
           }),
         });
+        // Sync with persisted status as soon as trigger request returns.
+        void fetchStatus();
       } catch (e) {
         console.error("[BuildStatusBanner] Failed to trigger local webhook:", e);
+        void fetchStatus();
       }
     };
 
@@ -155,6 +166,14 @@ export function BuildStatusBanner() {
 
       if (slug) {
         setDismissed(false);
+        setStatus({
+          active: true,
+          status: "building",
+          message: "Publish detected. Initializing build...",
+          slug,
+          startedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
         triggerLocalWebhook(slug);
       }
     };
