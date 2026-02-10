@@ -87,16 +87,15 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
       <div className="min-w-0 xl:order-1">
         <div
         className={cn(
-          "prose prose-base max-w-none",
+          "prose prose-base max-w-none flex flex-col gap-4",
           "prose-headings:text-primary prose-headings:font-semibold",
           "prose-p:text-muted-foreground prose-li:text-muted-foreground",
           "prose-strong:text-foreground prose-a:text-primary prose-a:underline",
           "[&>*]:!my-0",
-          "[&>*+*]:pt-4",
-          "[&>*+h1]:pt-8 [&>*+h2]:pt-8 [&>*+h3]:pt-8 [&>*+h4]:pt-8 [&>*+h5]:pt-8 [&>*+h6]:pt-8",
-          "[&>*+.sb-article-heading-1]:pt-8",
-          "[&>*+.sb-article-heading-2]:pt-8",
-          "[&_.sb-richtext-blok]:pt-4 [&_.sb-richtext-blok:first-child]:pt-0",
+          "[&>*+h1]:pt-4 [&>*+h2]:pt-4 [&>*+h3]:pt-4 [&>*+h4]:pt-4 [&>*+h5]:pt-4 [&>*+h6]:pt-4",
+          "[&>*+.sb-article-heading-1]:pt-4",
+          "[&>*+.sb-article-heading-2]:pt-4",
+          "[&_.sb-richtext-blok]:grid [&_.sb-richtext-blok]:gap-4",
         )}
         >
           <ShadcnRichTextContent

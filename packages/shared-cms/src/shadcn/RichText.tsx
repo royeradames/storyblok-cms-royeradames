@@ -267,7 +267,8 @@ export function ShadcnRichTextContent({
     if (idField && id) overrideBlok[idField] = id;
     const levelField =
       typeof override.levelField === "string" ? override.levelField.trim() : "";
-    if (levelField && typeof level === "number") overrideBlok[levelField] = level;
+    if (levelField && typeof level === "number")
+      overrideBlok[levelField] = level;
     const bodyField =
       typeof override.bodyField === "string" ? override.bodyField.trim() : "";
     if (bodyField && body) overrideBlok[bodyField] = body;
@@ -351,14 +352,7 @@ export function ShadcnRichTextContent({
         headingText,
         undefined,
         "scroll-mt-24",
-        () =>
-          renderDefaultHeading(
-            level,
-            key,
-            id,
-            className,
-            node.children,
-          ),
+        () => renderDefaultHeading(level, key, id, className, node.children),
       );
     },
     [BlockTypes.PARAGRAPH]: (node: ResolverNode) => {
@@ -425,7 +419,7 @@ export function ShadcnRichTextContent({
             key={key}
             className={
               isArticle
-                ? "text-muted-foreground list-disc list-outside pl-6 marker:text-muted-foreground"
+                ? "text-muted-foreground list-disc dark:marker:text-[#364152] list-outside pl-6 "
                 : undefined
             }
           >
@@ -608,7 +602,8 @@ export function ShadcnRichTextContent({
               <StoryblokComponent
                 blok={nestedBlok}
                 key={
-                  nestedBlok._uid || `${nestedBlok.component || "blok"}-${index}`
+                  nestedBlok._uid ||
+                  `${nestedBlok.component || "blok"}-${index}`
                 }
               />
             ))}
