@@ -312,7 +312,9 @@ export function ShadcnRichTextContent({
     );
 
     return wrapperClassName ? (
-      <div className={wrapperClassName}>{table}</div>
+      <div>
+        <div className={wrapperClassName}>{table}</div>
+      </div>
     ) : (
       table
     );
