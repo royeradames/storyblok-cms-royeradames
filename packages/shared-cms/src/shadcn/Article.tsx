@@ -28,6 +28,11 @@ const ARTICLE_HEADING_OVERRIDES = {
     mirrorTextFields: ["content"],
     wrapperClassName: "sb-article-heading-1",
   },
+  2: {
+    component: "shared_article_heading_2",
+    textField: "title",
+    wrapperClassName: "sb-article-heading-2",
+  },
 } satisfies Partial<Record<RichTextHeadingLevel, RichTextHeadingOverrideConfig>>;
 
 export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
@@ -86,6 +91,7 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
           "[&>*+*]:pt-4",
           "[&>*+h1]:pt-8 [&>*+h2]:pt-8 [&>*+h3]:pt-8 [&>*+h4]:pt-8 [&>*+h5]:pt-8 [&>*+h6]:pt-8",
           "[&>*+.sb-article-heading-1]:pt-8",
+          "[&>*+.sb-article-heading-2]:pt-8",
           "[&_.sb-richtext-blok]:pt-4 [&_.sb-richtext-blok:first-child]:pt-0",
         )}
         >
