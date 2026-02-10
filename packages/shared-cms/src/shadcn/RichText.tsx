@@ -471,7 +471,7 @@ export function ShadcnRichTextContent({
             key={key}
             className={cn(
               "whitespace-pre-line",
-              isArticle ? "text-muted-foreground" : undefined,
+              isArticle ? "text-primary" : undefined,
             )}
           >
             {normalizeListItemChildren(node.children)}
@@ -484,7 +484,7 @@ export function ShadcnRichTextContent({
         ? renderTable(
             node,
             "w-full caption-bottom text-sm",
-            "overflow-x-auto rounded-md border border-border/70",
+            "overflow-x-auto rounded-md border-b dark:border-b-[#364152] even:bg-muted border-border/70",
           )
         : renderTable(node),
     [BlockTypes.TABLE_ROW]: (node: ResolverNode) => {
@@ -501,7 +501,11 @@ export function ShadcnRichTextContent({
         () => (
           <tr
             key={key}
-            className={isArticle ? "border-b border-border/60" : undefined}
+            className={
+              isArticle
+                ? "border-b dark:border-b-[#364152] even:bg-muted border-border/60"
+                : undefined
+            }
           >
             {node.children}
           </tr>
@@ -524,8 +528,7 @@ export function ShadcnRichTextContent({
             key={key}
             className={cn(
               "text-left",
-              isArticle &&
-                "h-10 px-3 align-middle font-medium text-primary bg-muted/30",
+              isArticle && "h-10 px-3 align-middle font-medium text-primary ",
             )}
           >
             {node.children}
@@ -559,7 +562,11 @@ export function ShadcnRichTextContent({
     table_row: (node: ResolverNode) => (
       <tr
         key={getNodeKey(node, "tr")}
-        className={isArticle ? "border-b border-border/60" : undefined}
+        className={
+          isArticle
+            ? "border-b dark:border-b-[#364152] even:bg-muted border-border/60"
+            : undefined
+        }
       >
         {node.children}
       </tr>
