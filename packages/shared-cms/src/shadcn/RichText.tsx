@@ -11,7 +11,11 @@ import {
 import { cn } from "@repo/ui";
 import React, { type ReactElement } from "react";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import {
+  buildStyleClasses,
+  buildInlineStyles,
+  type StylesBreakpointOptionsBlok,
+} from "../styles";
 
 export interface ShadcnRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
@@ -86,7 +90,9 @@ function collectHeadings(
   }
 }
 
-export function extractRichTextHeadings(content: ISbRichtext): RichTextHeading[] {
+export function extractRichTextHeadings(
+  content: ISbRichtext,
+): RichTextHeading[] {
   const root = content as unknown as RichTextNode;
   const ids = new Map<string, number>();
   const headings: RichTextHeading[] = [];
@@ -110,6 +116,20 @@ export function ShadcnRichTextContent({
   const getNodeKey = (node: ResolverNode | RichTextNode, prefix: string) =>
     node.attrs?.key ?? `${prefix}-${resolverKeyCounter++}`;
 
+  const normalizeListItemChildren = (children: React.ReactNode) => {
+    const items = React.Children.toArray(children);
+    if (items.length !== 1) return children;
+    const onlyChild = items[0];
+    if (
+      React.isValidElement(onlyChild) &&
+      typeof onlyChild.type === "string" &&
+      onlyChild.type === "p"
+    ) {
+      return (onlyChild as ReactElement<any>).props.children;
+    }
+    return children;
+  };
+
   function renderTable(
     node: ResolverNode,
     className?: string,
@@ -119,7 +139,11 @@ export function ShadcnRichTextContent({
     const allRows = childrenArray.every(
       (child) => React.isValidElement(child) && child.type === "tr",
     );
-    const tableChildren = allRows ? <tbody>{childrenArray}</tbody> : node.children;
+    const tableChildren = allRows ? (
+      <tbody>{childrenArray}</tbody>
+    ) : (
+      node.children
+    );
 
     const table = (
       <table key={getNodeKey(node, "table")} className={className}>
@@ -127,25 +151,68 @@ export function ShadcnRichTextContent({
       </table>
     );
 
-    return wrapperClassName ? <div className={wrapperClassName}>{table}</div> : table;
+    return wrapperClassName ? (
+      <div className={wrapperClassName}>{table}</div>
+    ) : (
+      table
+    );
   }
 
   const resolvers = {
     [BlockTypes.HEADING]: (node: ResolverNode) => {
       const level = Math.min(Math.max(Number(node.attrs?.level || 2), 1), 6);
       const id = headingIds?.[headingIndex++];
-      const className = isArticle ? "text-primary font-semibold scroll-mt-24" : undefined;
+      const className = isArticle
+        ? "text-primary font-semibold scroll-mt-24"
+        : undefined;
       const key = getNodeKey(node, `h${level}`);
 
-      if (level === 1) return <h1 key={key} id={id} className={className}>{node.children}</h1>;
-      if (level === 2) return <h2 key={key} id={id} className={className}>{node.children}</h2>;
-      if (level === 3) return <h3 key={key} id={id} className={className}>{node.children}</h3>;
-      if (level === 4) return <h4 key={key} id={id} className={className}>{node.children}</h4>;
-      if (level === 5) return <h5 key={key} id={id} className={className}>{node.children}</h5>;
-      return <h6 key={key} id={id} className={className}>{node.children}</h6>;
+      if (level === 1)
+        return (
+          <h1 key={key} id={id} className={className}>
+            {node.children}
+          </h1>
+        );
+      if (level === 2)
+        return (
+          <h2 key={key} id={id} className={className}>
+            {node.children}
+          </h2>
+        );
+      if (level === 3)
+        return (
+          <h3 key={key} id={id} className={className}>
+            {node.children}
+          </h3>
+        );
+      if (level === 4)
+        return (
+          <h4 key={key} id={id} className={className}>
+            {node.children}
+          </h4>
+        );
+      if (level === 5)
+        return (
+          <h5 key={key} id={id} className={className}>
+            {node.children}
+          </h5>
+        );
+      return (
+        <h6 key={key} id={id} className={className}>
+          {node.children}
+        </h6>
+      );
     },
     [BlockTypes.PARAGRAPH]: (node: ResolverNode) => (
-      <p key={getNodeKey(node, "p")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</p>
+      <p
+        key={getNodeKey(node, "p")}
+        className={cn(
+          "whitespace-pre-line",
+          isArticle ? "text-muted-foreground" : undefined,
+        )}
+      >
+        {node.children}
+      </p>
     ),
     [BlockTypes.QUOTE]: (node: ResolverNode) => (
       <blockquote
@@ -159,26 +226,55 @@ export function ShadcnRichTextContent({
       </blockquote>
     ),
     [BlockTypes.UL_LIST]: (node: ResolverNode) => (
-      <ul key={getNodeKey(node, "ul")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</ul>
+      <ul
+        key={getNodeKey(node, "ul")}
+        className={
+          isArticle
+            ? "text-muted-foreground list-disc list-outside pl-6 marker:text-muted-foreground"
+            : undefined
+        }
+      >
+        {node.children}
+      </ul>
     ),
     [BlockTypes.OL_LIST]: (node: ResolverNode) => (
-      <ol key={getNodeKey(node, "ol")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</ol>
+      <ol
+        key={getNodeKey(node, "ol")}
+        className={
+          isArticle
+            ? "text-muted-foreground list-decimal list-outside pl-6 marker:text-muted-foreground"
+            : undefined
+        }
+      >
+        {node.children}
+      </ol>
     ),
     [BlockTypes.LIST_ITEM]: (node: ResolverNode) => (
-      <li key={getNodeKey(node, "li")} className={isArticle ? "text-muted-foreground" : undefined}>{node.children}</li>
+      <li
+        key={getNodeKey(node, "li")}
+        className={cn(
+          "whitespace-pre-line",
+          isArticle ? "text-muted-foreground" : undefined,
+        )}
+      >
+        {normalizeListItemChildren(node.children)}
+      </li>
     ),
     [BlockTypes.TABLE]: (node: ResolverNode) =>
-      isArticle ? (
-        renderTable(
-          node,
-          "w-full caption-bottom text-sm",
-          "my-6 overflow-x-auto rounded-md border border-border/70",
-        )
-      ) : (
-        renderTable(node)
-      ),
+      isArticle
+        ? renderTable(
+            node,
+            "w-full caption-bottom text-sm",
+            "overflow-x-auto rounded-md border border-border/70",
+          )
+        : renderTable(node),
     [BlockTypes.TABLE_ROW]: (node: ResolverNode) => (
-      <tr key={getNodeKey(node, "tr")} className={isArticle ? "border-b border-border/60" : undefined}>{node.children}</tr>
+      <tr
+        key={getNodeKey(node, "tr")}
+        className={isArticle ? "border-b border-border/60" : undefined}
+      >
+        {node.children}
+      </tr>
     ),
     [BlockTypes.TABLE_HEADER]: (node: ResolverNode) => (
       <th
@@ -193,12 +289,22 @@ export function ShadcnRichTextContent({
       </th>
     ),
     [BlockTypes.TABLE_CELL]: (node: ResolverNode) => (
-      <td key={getNodeKey(node, "td")} className={isArticle ? "p-3 align-middle text-muted-foreground" : undefined}>
+      <td
+        key={getNodeKey(node, "td")}
+        className={
+          isArticle ? "p-3 align-middle text-muted-foreground" : undefined
+        }
+      >
         {node.children}
       </td>
     ),
     table_row: (node: ResolverNode) => (
-      <tr key={getNodeKey(node, "tr")} className={isArticle ? "border-b border-border/60" : undefined}>{node.children}</tr>
+      <tr
+        key={getNodeKey(node, "tr")}
+        className={isArticle ? "border-b border-border/60" : undefined}
+      >
+        {node.children}
+      </tr>
     ),
     table_header: (node: ResolverNode) => (
       <th
@@ -213,19 +319,26 @@ export function ShadcnRichTextContent({
       </th>
     ),
     table_cell: (node: ResolverNode) => (
-      <td key={getNodeKey(node, "td")} className={isArticle ? "p-3 align-middle text-muted-foreground" : undefined}>
+      <td
+        key={getNodeKey(node, "td")}
+        className={
+          isArticle ? "p-3 align-middle text-muted-foreground" : undefined
+        }
+      >
         {node.children}
       </td>
     ),
     [BlockTypes.COMPONENT]: (node: RichTextNode) => (
-      <React.Fragment key={getNodeKey(node, "blok")}>
+      <div key={getNodeKey(node, "blok")} className="sb-richtext-blok">
         {(node.attrs?.body || []).map((nestedBlok, index) => (
           <StoryblokComponent
             blok={nestedBlok}
-            key={nestedBlok._uid || `${nestedBlok.component || "blok"}-${index}`}
+            key={
+              nestedBlok._uid || `${nestedBlok.component || "blok"}-${index}`
+            }
           />
         ))}
-      </React.Fragment>
+      </div>
     ),
   } as const;
 

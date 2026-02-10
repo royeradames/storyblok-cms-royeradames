@@ -36,6 +36,9 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
             "prose-headings:text-primary prose-headings:font-semibold",
             "prose-p:text-muted-foreground prose-li:text-muted-foreground",
             "prose-strong:text-foreground prose-a:text-primary prose-a:underline",
+            "[&>*]:!my-0",
+            "[&>*+*]:pt-4",
+            "[&>*+h1]:pt-8 [&>*+h2]:pt-8 [&>*+h3]:pt-8 [&>*+h4]:pt-8 [&>*+h5]:pt-8 [&>*+h6]:pt-8",
           )}
         >
           <ShadcnRichTextContent
