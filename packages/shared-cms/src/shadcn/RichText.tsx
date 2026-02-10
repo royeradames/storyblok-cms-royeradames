@@ -166,7 +166,23 @@ export function ShadcnRichTextContent({
         ? "text-primary font-semibold scroll-mt-24"
         : undefined;
       const key = getNodeKey(node, `h${level}`);
+      const headingText = getNodeText(node).trim();
 
+      if (level === 1)
+        if (isArticle) {
+          const articleHeadingBlok: SbBlokData = {
+            _uid: `${key}-article-heading-1`,
+            component: "shared_article_heading_1",
+            title: headingText,
+            content: headingText,
+          } as SbBlokData;
+
+          return (
+            <div key={key} id={id} className="sb-article-heading-1 scroll-mt-24">
+              <StoryblokComponent blok={articleHeadingBlok} />
+            </div>
+          );
+        }
       if (level === 1)
         return (
           <h1 key={key} id={id} className={className}>

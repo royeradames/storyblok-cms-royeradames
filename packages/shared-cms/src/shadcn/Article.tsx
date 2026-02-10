@@ -71,6 +71,7 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
           "[&>*]:!my-0",
           "[&>*+*]:pt-4",
           "[&>*+h1]:pt-8 [&>*+h2]:pt-8 [&>*+h3]:pt-8 [&>*+h4]:pt-8 [&>*+h5]:pt-8 [&>*+h6]:pt-8",
+          "[&>*+.sb-article-heading-1]:pt-8",
           "[&_.sb-richtext-blok]:pt-4 [&_.sb-richtext-blok:first-child]:pt-0",
         )}
         >
