@@ -625,21 +625,37 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexBorderColorOptions,
         description: "Border color in dark theme (semantic).",
       },
+      border_color_light_custom: {
+        type: "custom",
+        pos: 16.75,
+        default_value: "",
+        description:
+          "Border color in light theme (custom). Overrides semantic light border color when set.",
+        field_type: "native-color-picker",
+      },
+      border_color_dark_custom: {
+        type: "custom",
+        pos: 17,
+        default_value: "",
+        description:
+          "Border color in dark theme (custom). Overrides semantic dark border color when set.",
+        field_type: "native-color-picker",
+      },
       border_style: {
         type: "option",
-        pos: 17,
+        pos: 18,
         options: flexBorderStyleOptions,
         description: "Border style (solid, dashed, dotted, etc.).",
       },
       shadow: {
         type: "option",
-        pos: 18,
+        pos: 19,
         options: flexShadowOptions,
         description: "Box shadow (Tailwind scale).",
       },
       text_size: {
         type: "option",
-        pos: 19,
+        pos: 20,
         options: textSizeOptionsWithPx,
         description:
           "Text size (font-size) per breakpoint. Options show px (e.g. Base (16px)).",

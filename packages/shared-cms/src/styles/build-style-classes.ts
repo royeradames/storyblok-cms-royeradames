@@ -4,6 +4,7 @@ import {
   type BreakpointKey,
   type StylesBreakpointOptionsBlok,
 } from "./types";
+import { getColorValue } from "../storyblok/plugins";
 import {
   displayMap,
   directionMap,
@@ -27,6 +28,24 @@ import {
   GROUP_CLASS,
 } from "./maps";
 
+function sortStyles(
+  styles: StylesBreakpointOptionsBlok[] | null | undefined
+): StylesBreakpointOptionsBlok[] {
+  const list = styles ?? [];
+  if (!Array.isArray(list) || list.length === 0) return [];
+  return [...list].sort(
+    (a, b) =>
+      BREAKPOINT_ORDER.indexOf((a.breakpoint ?? "base") as BreakpointKey) -
+      BREAKPOINT_ORDER.indexOf((b.breakpoint ?? "base") as BreakpointKey)
+  );
+}
+
+function toThemeKey(opt: StylesBreakpointOptionsBlok): string {
+  const bp = opt.breakpoint ?? "base";
+  const variant = opt.variant ?? "none";
+  return `${bp}-${variant}`.replace(/[^a-zA-Z0-9_-]/g, "-");
+}
+
 function getBreakpointPrefix(breakpoint: BreakpointKey): string {
   return breakpoint === "base" ? "" : `${breakpoint}:`;
 }
@@ -45,14 +64,8 @@ function getVariantPrefix(
 export function buildStyleClasses(
   styles: StylesBreakpointOptionsBlok[] | null | undefined
 ): string[] {
-  const list = styles ?? [];
-  if (!Array.isArray(list) || list.length === 0) return [];
-
-  const sorted = [...list].sort(
-    (a, b) =>
-      BREAKPOINT_ORDER.indexOf((a.breakpoint ?? "base") as BreakpointKey) -
-      BREAKPOINT_ORDER.indexOf((b.breakpoint ?? "base") as BreakpointKey)
-  );
+  const sorted = sortStyles(styles);
+  if (sorted.length === 0) return [];
 
   const classes: string[] = [];
 
@@ -120,11 +133,29 @@ export function buildStyleClasses(
       const cls = borderClassMap[key];
       if (cls) classes.push(prefix + cls);
     });
-    const lightBorderColor = opt.border_color_light ?? opt.border_color;
-    if (lightBorderColor && borderColorMap[lightBorderColor]) {
-      classes.push(prefix + borderColorMap[lightBorderColor]);
+    const themeKey = toThemeKey(opt);
+    const lightCustomColor = getColorValue(opt.border_color_light_custom);
+    const darkCustomColor = getColorValue(opt.border_color_dark_custom);
+    const lightColorVar = `--sb-border-color-light-${themeKey}`;
+    const darkColorVar = `--sb-border-color-dark-${themeKey}`;
+
+    if (lightCustomColor) {
+      classes.push(prefix + `border-[var(${lightColorVar})]`);
+    } else {
+      const lightBorderColor = opt.border_color_light ?? opt.border_color;
+      if (lightBorderColor && borderColorMap[lightBorderColor]) {
+        classes.push(prefix + borderColorMap[lightBorderColor]);
+      }
     }
-    if (opt.border_color_dark && borderColorMap[opt.border_color_dark]) {
+
+    if (darkCustomColor) {
+      classes.push(
+        breakpointPrefix +
+          "dark:" +
+          variantPrefix +
+          `border-[var(${darkColorVar})]`
+      );
+    } else if (opt.border_color_dark && borderColorMap[opt.border_color_dark]) {
       classes.push(
         breakpointPrefix +
           "dark:" +
@@ -150,24 +181,37 @@ export function buildStyleClasses(
 }
 
 /**
- * Extract arbitrary/custom inline styles from breakpoint style options.
- * Only base-breakpoint custom values are supported (responsive breakpoints are ignored).
+ * Extract inline styles from breakpoint style options.
+ * Theme color CSS variables are emitted for any breakpoint/variant combination.
+ * Non-variable custom values (e.g. custom_max_width) remain base-only.
  * Returns a CSSProperties object to spread onto the element's `style` prop.
  */
 export function buildInlineStyles(
   styles: StylesBreakpointOptionsBlok[] | null | undefined,
 ): React.CSSProperties {
-  const list = styles ?? [];
-  if (!Array.isArray(list) || list.length === 0) return {};
+  const sorted = sortStyles(styles);
+  if (sorted.length === 0) return {};
 
   const inlineStyles: React.CSSProperties = {};
+  const cssVars = inlineStyles as Record<string, string>;
 
-  for (const opt of list) {
-    // Only base breakpoint supports inline custom values
-    if (opt.breakpoint && opt.breakpoint !== "base") continue;
+  for (const opt of sorted) {
+    const themeKey = toThemeKey(opt);
+    const lightCustomColor = getColorValue(opt.border_color_light_custom);
+    const darkCustomColor = getColorValue(opt.border_color_dark_custom);
 
-    if (opt.custom_max_width) {
-      inlineStyles.maxWidth = opt.custom_max_width;
+    if (lightCustomColor) {
+      cssVars[`--sb-border-color-light-${themeKey}`] = lightCustomColor;
+    }
+    if (darkCustomColor) {
+      cssVars[`--sb-border-color-dark-${themeKey}`] = darkCustomColor;
+    }
+
+    // Only base breakpoint supports non-variable inline custom values.
+    if (opt.breakpoint === "base" || !opt.breakpoint) {
+      if (opt.custom_max_width) {
+        inlineStyles.maxWidth = opt.custom_max_width;
+      }
     }
   }
 

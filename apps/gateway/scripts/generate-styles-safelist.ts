@@ -37,6 +37,8 @@ import {
 
 const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
 const OUT_PATH = path.join(process.cwd(), "src/app/styles-safelist.txt");
+const BORDER_CUSTOM_LIGHT_VAR_PREFIX = "--sb-border-color-light-";
+const BORDER_CUSTOM_DARK_VAR_PREFIX = "--sb-border-color-dark-";
 
 const VARIANTS = (
   Object.keys(variantMap) as (keyof typeof variantMap)[]
@@ -88,6 +90,13 @@ function collectBreakpointVariantPrefixedClasses(
 
 function collectBaseClasses(map: Record<string, string>): string[] {
   return Object.values(map) as string[];
+}
+
+function styleThemeKey(
+  breakpoint: "base" | (typeof BREAKPOINTS)[number],
+  variant: keyof typeof variantMap,
+): string {
+  return `${breakpoint}-${variant}`.replace(/[^a-zA-Z0-9_-]/g, "-");
 }
 
 function main() {
@@ -154,6 +163,28 @@ function main() {
   all.push(GROUP_CLASS);
   for (const bp of BREAKPOINTS) {
     all.push(`${bp}:${GROUP_CLASS}`);
+  }
+
+  // Custom border color arbitrary classes:
+  // border-[var(--sb-border-color-...)] and dark variants across base/breakpoint + variant prefixes
+  const allBreakpoints: ("base" | (typeof BREAKPOINTS)[number])[] = [
+    "base",
+    ...BREAKPOINTS,
+  ];
+  const allVariants = Object.keys(variantMap) as (keyof typeof variantMap)[];
+  for (const bp of allBreakpoints) {
+    for (const variant of allVariants) {
+      const variantPrefix = variantMap[variant] ?? "";
+      const bpPrefix = bp === "base" ? "" : `${bp}:`;
+      const key = styleThemeKey(bp, variant);
+
+      all.push(
+        `${bpPrefix}${variantPrefix}border-[var(${BORDER_CUSTOM_LIGHT_VAR_PREFIX}${key})]`,
+      );
+      all.push(
+        `${bpPrefix}dark:${variantPrefix}border-[var(${BORDER_CUSTOM_DARK_VAR_PREFIX}${key})]`,
+      );
+    }
   }
 
   const unique = [...new Set(all)];

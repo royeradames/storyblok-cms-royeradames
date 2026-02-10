@@ -4,6 +4,7 @@
 2xl:border-2
 2xl:border-4
 2xl:border-8
+2xl:border-[var(--sb-border-color-light-2xl-none)]
 2xl:border-b
 2xl:border-b-0
 2xl:border-b-2
@@ -55,12 +56,24 @@
 2xl:border-y-2
 2xl:border-y-4
 2xl:border-y-8
+2xl:dark:border-[var(--sb-border-color-dark-2xl-none)]
+2xl:dark:even:border-[var(--sb-border-color-dark-2xl-even)]
+2xl:dark:first:border-[var(--sb-border-color-dark-2xl-first)]
+2xl:dark:focus-visible:border-[var(--sb-border-color-dark-2xl-focus_visible)]
+2xl:dark:focus:border-[var(--sb-border-color-dark-2xl-focus)]
+2xl:dark:group-focus:border-[var(--sb-border-color-dark-2xl-group_focus)]
+2xl:dark:group-hover:border-[var(--sb-border-color-dark-2xl-group_hover)]
+2xl:dark:hover:border-[var(--sb-border-color-dark-2xl-hover)]
+2xl:dark:last:border-[var(--sb-border-color-dark-2xl-last)]
+2xl:dark:odd:border-[var(--sb-border-color-dark-2xl-odd)]
+2xl:dark:only:border-[var(--sb-border-color-dark-2xl-only)]
 2xl:even:block
 2xl:even:border
 2xl:even:border-0
 2xl:even:border-2
 2xl:even:border-4
 2xl:even:border-8
+2xl:even:border-[var(--sb-border-color-light-2xl-even)]
 2xl:even:border-b
 2xl:even:border-b-0
 2xl:even:border-b-2
@@ -1076,6 +1089,7 @@
 2xl:first:border-2
 2xl:first:border-4
 2xl:first:border-8
+2xl:first:border-[var(--sb-border-color-light-2xl-first)]
 2xl:first:border-b
 2xl:first:border-b-0
 2xl:first:border-b-2
@@ -2097,6 +2111,7 @@
 2xl:focus-visible:border-2
 2xl:focus-visible:border-4
 2xl:focus-visible:border-8
+2xl:focus-visible:border-[var(--sb-border-color-light-2xl-focus_visible)]
 2xl:focus-visible:border-b
 2xl:focus-visible:border-b-0
 2xl:focus-visible:border-b-2
@@ -3112,6 +3127,7 @@
 2xl:focus:border-2
 2xl:focus:border-4
 2xl:focus:border-8
+2xl:focus:border-[var(--sb-border-color-light-2xl-focus)]
 2xl:focus:border-b
 2xl:focus:border-b-0
 2xl:focus:border-b-2
@@ -4234,6 +4250,7 @@
 2xl:group-focus:border-2
 2xl:group-focus:border-4
 2xl:group-focus:border-8
+2xl:group-focus:border-[var(--sb-border-color-light-2xl-group_focus)]
 2xl:group-focus:border-b
 2xl:group-focus:border-b-0
 2xl:group-focus:border-b-2
@@ -5249,6 +5266,7 @@
 2xl:group-hover:border-2
 2xl:group-hover:border-4
 2xl:group-hover:border-8
+2xl:group-hover:border-[var(--sb-border-color-light-2xl-group_hover)]
 2xl:group-hover:border-b
 2xl:group-hover:border-b-0
 2xl:group-hover:border-b-2
@@ -6324,6 +6342,7 @@
 2xl:hover:border-2
 2xl:hover:border-4
 2xl:hover:border-8
+2xl:hover:border-[var(--sb-border-color-light-2xl-hover)]
 2xl:hover:border-b
 2xl:hover:border-b-0
 2xl:hover:border-b-2
@@ -7356,6 +7375,7 @@
 2xl:last:border-2
 2xl:last:border-4
 2xl:last:border-8
+2xl:last:border-[var(--sb-border-color-light-2xl-last)]
 2xl:last:border-b
 2xl:last:border-b-0
 2xl:last:border-b-2
@@ -8802,6 +8822,7 @@
 2xl:odd:border-2
 2xl:odd:border-4
 2xl:odd:border-8
+2xl:odd:border-[var(--sb-border-color-light-2xl-odd)]
 2xl:odd:border-b
 2xl:odd:border-b-0
 2xl:odd:border-b-2
@@ -9817,6 +9838,7 @@
 2xl:only:border-2
 2xl:only:border-4
 2xl:only:border-8
+2xl:only:border-[var(--sb-border-color-light-2xl-only)]
 2xl:only:border-b
 2xl:only:border-b-0
 2xl:only:border-b-2
@@ -11170,6 +11192,7 @@ border-0
 border-2
 border-4
 border-8
+border-[var(--sb-border-color-light-base-none)]
 border-b
 border-b-0
 border-b-2
@@ -11221,12 +11244,24 @@ border-y-0
 border-y-2
 border-y-4
 border-y-8
+dark:border-[var(--sb-border-color-dark-base-none)]
+dark:even:border-[var(--sb-border-color-dark-base-even)]
+dark:first:border-[var(--sb-border-color-dark-base-first)]
+dark:focus-visible:border-[var(--sb-border-color-dark-base-focus_visible)]
+dark:focus:border-[var(--sb-border-color-dark-base-focus)]
+dark:group-focus:border-[var(--sb-border-color-dark-base-group_focus)]
+dark:group-hover:border-[var(--sb-border-color-dark-base-group_hover)]
+dark:hover:border-[var(--sb-border-color-dark-base-hover)]
+dark:last:border-[var(--sb-border-color-dark-base-last)]
+dark:odd:border-[var(--sb-border-color-dark-base-odd)]
+dark:only:border-[var(--sb-border-color-dark-base-only)]
 even:block
 even:border
 even:border-0
 even:border-2
 even:border-4
 even:border-8
+even:border-[var(--sb-border-color-light-base-even)]
 even:border-b
 even:border-b-0
 even:border-b-2
@@ -12242,6 +12277,7 @@ first:border-0
 first:border-2
 first:border-4
 first:border-8
+first:border-[var(--sb-border-color-light-base-first)]
 first:border-b
 first:border-b-0
 first:border-b-2
@@ -13263,6 +13299,7 @@ focus-visible:border-0
 focus-visible:border-2
 focus-visible:border-4
 focus-visible:border-8
+focus-visible:border-[var(--sb-border-color-light-base-focus_visible)]
 focus-visible:border-b
 focus-visible:border-b-0
 focus-visible:border-b-2
@@ -14278,6 +14315,7 @@ focus:border-0
 focus:border-2
 focus:border-4
 focus:border-8
+focus:border-[var(--sb-border-color-light-base-focus)]
 focus:border-b
 focus:border-b-0
 focus:border-b-2
@@ -15400,6 +15438,7 @@ group-focus:border-0
 group-focus:border-2
 group-focus:border-4
 group-focus:border-8
+group-focus:border-[var(--sb-border-color-light-base-group_focus)]
 group-focus:border-b
 group-focus:border-b-0
 group-focus:border-b-2
@@ -16415,6 +16454,7 @@ group-hover:border-0
 group-hover:border-2
 group-hover:border-4
 group-hover:border-8
+group-hover:border-[var(--sb-border-color-light-base-group_hover)]
 group-hover:border-b
 group-hover:border-b-0
 group-hover:border-b-2
@@ -17490,6 +17530,7 @@ hover:border-0
 hover:border-2
 hover:border-4
 hover:border-8
+hover:border-[var(--sb-border-color-light-base-hover)]
 hover:border-b
 hover:border-b-0
 hover:border-b-2
@@ -18522,6 +18563,7 @@ last:border-0
 last:border-2
 last:border-4
 last:border-8
+last:border-[var(--sb-border-color-light-base-last)]
 last:border-b
 last:border-b-0
 last:border-b-2
@@ -19537,6 +19579,7 @@ lg:border-0
 lg:border-2
 lg:border-4
 lg:border-8
+lg:border-[var(--sb-border-color-light-lg-none)]
 lg:border-b
 lg:border-b-0
 lg:border-b-2
@@ -19588,12 +19631,24 @@ lg:border-y-0
 lg:border-y-2
 lg:border-y-4
 lg:border-y-8
+lg:dark:border-[var(--sb-border-color-dark-lg-none)]
+lg:dark:even:border-[var(--sb-border-color-dark-lg-even)]
+lg:dark:first:border-[var(--sb-border-color-dark-lg-first)]
+lg:dark:focus-visible:border-[var(--sb-border-color-dark-lg-focus_visible)]
+lg:dark:focus:border-[var(--sb-border-color-dark-lg-focus)]
+lg:dark:group-focus:border-[var(--sb-border-color-dark-lg-group_focus)]
+lg:dark:group-hover:border-[var(--sb-border-color-dark-lg-group_hover)]
+lg:dark:hover:border-[var(--sb-border-color-dark-lg-hover)]
+lg:dark:last:border-[var(--sb-border-color-dark-lg-last)]
+lg:dark:odd:border-[var(--sb-border-color-dark-lg-odd)]
+lg:dark:only:border-[var(--sb-border-color-dark-lg-only)]
 lg:even:block
 lg:even:border
 lg:even:border-0
 lg:even:border-2
 lg:even:border-4
 lg:even:border-8
+lg:even:border-[var(--sb-border-color-light-lg-even)]
 lg:even:border-b
 lg:even:border-b-0
 lg:even:border-b-2
@@ -20609,6 +20664,7 @@ lg:first:border-0
 lg:first:border-2
 lg:first:border-4
 lg:first:border-8
+lg:first:border-[var(--sb-border-color-light-lg-first)]
 lg:first:border-b
 lg:first:border-b-0
 lg:first:border-b-2
@@ -21630,6 +21686,7 @@ lg:focus-visible:border-0
 lg:focus-visible:border-2
 lg:focus-visible:border-4
 lg:focus-visible:border-8
+lg:focus-visible:border-[var(--sb-border-color-light-lg-focus_visible)]
 lg:focus-visible:border-b
 lg:focus-visible:border-b-0
 lg:focus-visible:border-b-2
@@ -22645,6 +22702,7 @@ lg:focus:border-0
 lg:focus:border-2
 lg:focus:border-4
 lg:focus:border-8
+lg:focus:border-[var(--sb-border-color-light-lg-focus)]
 lg:focus:border-b
 lg:focus:border-b-0
 lg:focus:border-b-2
@@ -23767,6 +23825,7 @@ lg:group-focus:border-0
 lg:group-focus:border-2
 lg:group-focus:border-4
 lg:group-focus:border-8
+lg:group-focus:border-[var(--sb-border-color-light-lg-group_focus)]
 lg:group-focus:border-b
 lg:group-focus:border-b-0
 lg:group-focus:border-b-2
@@ -24782,6 +24841,7 @@ lg:group-hover:border-0
 lg:group-hover:border-2
 lg:group-hover:border-4
 lg:group-hover:border-8
+lg:group-hover:border-[var(--sb-border-color-light-lg-group_hover)]
 lg:group-hover:border-b
 lg:group-hover:border-b-0
 lg:group-hover:border-b-2
@@ -25857,6 +25917,7 @@ lg:hover:border-0
 lg:hover:border-2
 lg:hover:border-4
 lg:hover:border-8
+lg:hover:border-[var(--sb-border-color-light-lg-hover)]
 lg:hover:border-b
 lg:hover:border-b-0
 lg:hover:border-b-2
@@ -26889,6 +26950,7 @@ lg:last:border-0
 lg:last:border-2
 lg:last:border-4
 lg:last:border-8
+lg:last:border-[var(--sb-border-color-light-lg-last)]
 lg:last:border-b
 lg:last:border-b-0
 lg:last:border-b-2
@@ -28335,6 +28397,7 @@ lg:odd:border-0
 lg:odd:border-2
 lg:odd:border-4
 lg:odd:border-8
+lg:odd:border-[var(--sb-border-color-light-lg-odd)]
 lg:odd:border-b
 lg:odd:border-b-0
 lg:odd:border-b-2
@@ -29350,6 +29413,7 @@ lg:only:border-0
 lg:only:border-2
 lg:only:border-4
 lg:only:border-8
+lg:only:border-[var(--sb-border-color-light-lg-only)]
 lg:only:border-b
 lg:only:border-b-0
 lg:only:border-b-2
@@ -30875,6 +30939,7 @@ md:border-0
 md:border-2
 md:border-4
 md:border-8
+md:border-[var(--sb-border-color-light-md-none)]
 md:border-b
 md:border-b-0
 md:border-b-2
@@ -30926,12 +30991,24 @@ md:border-y-0
 md:border-y-2
 md:border-y-4
 md:border-y-8
+md:dark:border-[var(--sb-border-color-dark-md-none)]
+md:dark:even:border-[var(--sb-border-color-dark-md-even)]
+md:dark:first:border-[var(--sb-border-color-dark-md-first)]
+md:dark:focus-visible:border-[var(--sb-border-color-dark-md-focus_visible)]
+md:dark:focus:border-[var(--sb-border-color-dark-md-focus)]
+md:dark:group-focus:border-[var(--sb-border-color-dark-md-group_focus)]
+md:dark:group-hover:border-[var(--sb-border-color-dark-md-group_hover)]
+md:dark:hover:border-[var(--sb-border-color-dark-md-hover)]
+md:dark:last:border-[var(--sb-border-color-dark-md-last)]
+md:dark:odd:border-[var(--sb-border-color-dark-md-odd)]
+md:dark:only:border-[var(--sb-border-color-dark-md-only)]
 md:even:block
 md:even:border
 md:even:border-0
 md:even:border-2
 md:even:border-4
 md:even:border-8
+md:even:border-[var(--sb-border-color-light-md-even)]
 md:even:border-b
 md:even:border-b-0
 md:even:border-b-2
@@ -31947,6 +32024,7 @@ md:first:border-0
 md:first:border-2
 md:first:border-4
 md:first:border-8
+md:first:border-[var(--sb-border-color-light-md-first)]
 md:first:border-b
 md:first:border-b-0
 md:first:border-b-2
@@ -32968,6 +33046,7 @@ md:focus-visible:border-0
 md:focus-visible:border-2
 md:focus-visible:border-4
 md:focus-visible:border-8
+md:focus-visible:border-[var(--sb-border-color-light-md-focus_visible)]
 md:focus-visible:border-b
 md:focus-visible:border-b-0
 md:focus-visible:border-b-2
@@ -33983,6 +34062,7 @@ md:focus:border-0
 md:focus:border-2
 md:focus:border-4
 md:focus:border-8
+md:focus:border-[var(--sb-border-color-light-md-focus)]
 md:focus:border-b
 md:focus:border-b-0
 md:focus:border-b-2
@@ -35105,6 +35185,7 @@ md:group-focus:border-0
 md:group-focus:border-2
 md:group-focus:border-4
 md:group-focus:border-8
+md:group-focus:border-[var(--sb-border-color-light-md-group_focus)]
 md:group-focus:border-b
 md:group-focus:border-b-0
 md:group-focus:border-b-2
@@ -36120,6 +36201,7 @@ md:group-hover:border-0
 md:group-hover:border-2
 md:group-hover:border-4
 md:group-hover:border-8
+md:group-hover:border-[var(--sb-border-color-light-md-group_hover)]
 md:group-hover:border-b
 md:group-hover:border-b-0
 md:group-hover:border-b-2
@@ -37195,6 +37277,7 @@ md:hover:border-0
 md:hover:border-2
 md:hover:border-4
 md:hover:border-8
+md:hover:border-[var(--sb-border-color-light-md-hover)]
 md:hover:border-b
 md:hover:border-b-0
 md:hover:border-b-2
@@ -38227,6 +38310,7 @@ md:last:border-0
 md:last:border-2
 md:last:border-4
 md:last:border-8
+md:last:border-[var(--sb-border-color-light-md-last)]
 md:last:border-b
 md:last:border-b-0
 md:last:border-b-2
@@ -39673,6 +39757,7 @@ md:odd:border-0
 md:odd:border-2
 md:odd:border-4
 md:odd:border-8
+md:odd:border-[var(--sb-border-color-light-md-odd)]
 md:odd:border-b
 md:odd:border-b-0
 md:odd:border-b-2
@@ -40688,6 +40773,7 @@ md:only:border-0
 md:only:border-2
 md:only:border-4
 md:only:border-8
+md:only:border-[var(--sb-border-color-light-md-only)]
 md:only:border-b
 md:only:border-b-0
 md:only:border-b-2
@@ -42300,6 +42386,7 @@ odd:border-0
 odd:border-2
 odd:border-4
 odd:border-8
+odd:border-[var(--sb-border-color-light-base-odd)]
 odd:border-b
 odd:border-b-0
 odd:border-b-2
@@ -43315,6 +43402,7 @@ only:border-0
 only:border-2
 only:border-4
 only:border-8
+only:border-[var(--sb-border-color-light-base-only)]
 only:border-b
 only:border-b-0
 only:border-b-2
@@ -44583,6 +44671,7 @@ sm:border-0
 sm:border-2
 sm:border-4
 sm:border-8
+sm:border-[var(--sb-border-color-light-sm-none)]
 sm:border-b
 sm:border-b-0
 sm:border-b-2
@@ -44634,12 +44723,24 @@ sm:border-y-0
 sm:border-y-2
 sm:border-y-4
 sm:border-y-8
+sm:dark:border-[var(--sb-border-color-dark-sm-none)]
+sm:dark:even:border-[var(--sb-border-color-dark-sm-even)]
+sm:dark:first:border-[var(--sb-border-color-dark-sm-first)]
+sm:dark:focus-visible:border-[var(--sb-border-color-dark-sm-focus_visible)]
+sm:dark:focus:border-[var(--sb-border-color-dark-sm-focus)]
+sm:dark:group-focus:border-[var(--sb-border-color-dark-sm-group_focus)]
+sm:dark:group-hover:border-[var(--sb-border-color-dark-sm-group_hover)]
+sm:dark:hover:border-[var(--sb-border-color-dark-sm-hover)]
+sm:dark:last:border-[var(--sb-border-color-dark-sm-last)]
+sm:dark:odd:border-[var(--sb-border-color-dark-sm-odd)]
+sm:dark:only:border-[var(--sb-border-color-dark-sm-only)]
 sm:even:block
 sm:even:border
 sm:even:border-0
 sm:even:border-2
 sm:even:border-4
 sm:even:border-8
+sm:even:border-[var(--sb-border-color-light-sm-even)]
 sm:even:border-b
 sm:even:border-b-0
 sm:even:border-b-2
@@ -45655,6 +45756,7 @@ sm:first:border-0
 sm:first:border-2
 sm:first:border-4
 sm:first:border-8
+sm:first:border-[var(--sb-border-color-light-sm-first)]
 sm:first:border-b
 sm:first:border-b-0
 sm:first:border-b-2
@@ -46676,6 +46778,7 @@ sm:focus-visible:border-0
 sm:focus-visible:border-2
 sm:focus-visible:border-4
 sm:focus-visible:border-8
+sm:focus-visible:border-[var(--sb-border-color-light-sm-focus_visible)]
 sm:focus-visible:border-b
 sm:focus-visible:border-b-0
 sm:focus-visible:border-b-2
@@ -47691,6 +47794,7 @@ sm:focus:border-0
 sm:focus:border-2
 sm:focus:border-4
 sm:focus:border-8
+sm:focus:border-[var(--sb-border-color-light-sm-focus)]
 sm:focus:border-b
 sm:focus:border-b-0
 sm:focus:border-b-2
@@ -48813,6 +48917,7 @@ sm:group-focus:border-0
 sm:group-focus:border-2
 sm:group-focus:border-4
 sm:group-focus:border-8
+sm:group-focus:border-[var(--sb-border-color-light-sm-group_focus)]
 sm:group-focus:border-b
 sm:group-focus:border-b-0
 sm:group-focus:border-b-2
@@ -49828,6 +49933,7 @@ sm:group-hover:border-0
 sm:group-hover:border-2
 sm:group-hover:border-4
 sm:group-hover:border-8
+sm:group-hover:border-[var(--sb-border-color-light-sm-group_hover)]
 sm:group-hover:border-b
 sm:group-hover:border-b-0
 sm:group-hover:border-b-2
@@ -50903,6 +51009,7 @@ sm:hover:border-0
 sm:hover:border-2
 sm:hover:border-4
 sm:hover:border-8
+sm:hover:border-[var(--sb-border-color-light-sm-hover)]
 sm:hover:border-b
 sm:hover:border-b-0
 sm:hover:border-b-2
@@ -51935,6 +52042,7 @@ sm:last:border-0
 sm:last:border-2
 sm:last:border-4
 sm:last:border-8
+sm:last:border-[var(--sb-border-color-light-sm-last)]
 sm:last:border-b
 sm:last:border-b-0
 sm:last:border-b-2
@@ -53381,6 +53489,7 @@ sm:odd:border-0
 sm:odd:border-2
 sm:odd:border-4
 sm:odd:border-8
+sm:odd:border-[var(--sb-border-color-light-sm-odd)]
 sm:odd:border-b
 sm:odd:border-b-0
 sm:odd:border-b-2
@@ -54396,6 +54505,7 @@ sm:only:border-0
 sm:only:border-2
 sm:only:border-4
 sm:only:border-8
+sm:only:border-[var(--sb-border-color-light-sm-only)]
 sm:only:border-b
 sm:only:border-b-0
 sm:only:border-b-2
@@ -55834,6 +55944,7 @@ xl:border-0
 xl:border-2
 xl:border-4
 xl:border-8
+xl:border-[var(--sb-border-color-light-xl-none)]
 xl:border-b
 xl:border-b-0
 xl:border-b-2
@@ -55885,12 +55996,24 @@ xl:border-y-0
 xl:border-y-2
 xl:border-y-4
 xl:border-y-8
+xl:dark:border-[var(--sb-border-color-dark-xl-none)]
+xl:dark:even:border-[var(--sb-border-color-dark-xl-even)]
+xl:dark:first:border-[var(--sb-border-color-dark-xl-first)]
+xl:dark:focus-visible:border-[var(--sb-border-color-dark-xl-focus_visible)]
+xl:dark:focus:border-[var(--sb-border-color-dark-xl-focus)]
+xl:dark:group-focus:border-[var(--sb-border-color-dark-xl-group_focus)]
+xl:dark:group-hover:border-[var(--sb-border-color-dark-xl-group_hover)]
+xl:dark:hover:border-[var(--sb-border-color-dark-xl-hover)]
+xl:dark:last:border-[var(--sb-border-color-dark-xl-last)]
+xl:dark:odd:border-[var(--sb-border-color-dark-xl-odd)]
+xl:dark:only:border-[var(--sb-border-color-dark-xl-only)]
 xl:even:block
 xl:even:border
 xl:even:border-0
 xl:even:border-2
 xl:even:border-4
 xl:even:border-8
+xl:even:border-[var(--sb-border-color-light-xl-even)]
 xl:even:border-b
 xl:even:border-b-0
 xl:even:border-b-2
@@ -56906,6 +57029,7 @@ xl:first:border-0
 xl:first:border-2
 xl:first:border-4
 xl:first:border-8
+xl:first:border-[var(--sb-border-color-light-xl-first)]
 xl:first:border-b
 xl:first:border-b-0
 xl:first:border-b-2
@@ -57927,6 +58051,7 @@ xl:focus-visible:border-0
 xl:focus-visible:border-2
 xl:focus-visible:border-4
 xl:focus-visible:border-8
+xl:focus-visible:border-[var(--sb-border-color-light-xl-focus_visible)]
 xl:focus-visible:border-b
 xl:focus-visible:border-b-0
 xl:focus-visible:border-b-2
@@ -58942,6 +59067,7 @@ xl:focus:border-0
 xl:focus:border-2
 xl:focus:border-4
 xl:focus:border-8
+xl:focus:border-[var(--sb-border-color-light-xl-focus)]
 xl:focus:border-b
 xl:focus:border-b-0
 xl:focus:border-b-2
@@ -60064,6 +60190,7 @@ xl:group-focus:border-0
 xl:group-focus:border-2
 xl:group-focus:border-4
 xl:group-focus:border-8
+xl:group-focus:border-[var(--sb-border-color-light-xl-group_focus)]
 xl:group-focus:border-b
 xl:group-focus:border-b-0
 xl:group-focus:border-b-2
@@ -61079,6 +61206,7 @@ xl:group-hover:border-0
 xl:group-hover:border-2
 xl:group-hover:border-4
 xl:group-hover:border-8
+xl:group-hover:border-[var(--sb-border-color-light-xl-group_hover)]
 xl:group-hover:border-b
 xl:group-hover:border-b-0
 xl:group-hover:border-b-2
@@ -62154,6 +62282,7 @@ xl:hover:border-0
 xl:hover:border-2
 xl:hover:border-4
 xl:hover:border-8
+xl:hover:border-[var(--sb-border-color-light-xl-hover)]
 xl:hover:border-b
 xl:hover:border-b-0
 xl:hover:border-b-2
@@ -63186,6 +63315,7 @@ xl:last:border-0
 xl:last:border-2
 xl:last:border-4
 xl:last:border-8
+xl:last:border-[var(--sb-border-color-light-xl-last)]
 xl:last:border-b
 xl:last:border-b-0
 xl:last:border-b-2
@@ -64632,6 +64762,7 @@ xl:odd:border-0
 xl:odd:border-2
 xl:odd:border-4
 xl:odd:border-8
+xl:odd:border-[var(--sb-border-color-light-xl-odd)]
 xl:odd:border-b
 xl:odd:border-b-0
 xl:odd:border-b-2
@@ -65647,6 +65778,7 @@ xl:only:border-0
 xl:only:border-2
 xl:only:border-4
 xl:only:border-8
+xl:only:border-[var(--sb-border-color-light-xl-only)]
 xl:only:border-b
 xl:only:border-b-0
 xl:only:border-b-2

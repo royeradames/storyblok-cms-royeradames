@@ -1,4 +1,5 @@
 import type { SbBlokData } from "@storyblok/react";
+import type { NativeColorPickerValue } from "../storyblok/plugins";
 import {
   displayMap,
   directionMap,
@@ -68,6 +69,10 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   border_color_light?: keyof typeof borderColorMap;
   /** Border color in dark theme (semantic). */
   border_color_dark?: keyof typeof borderColorMap;
+  /** Border color in light theme (custom). Overrides semantic color when set. */
+  border_color_light_custom?: NativeColorPickerValue;
+  /** Border color in dark theme (custom). Overrides semantic color when set. */
+  border_color_dark_custom?: NativeColorPickerValue;
   /** Border color (semantic, legacy single value). */
   border_color?: keyof typeof borderColorMap;
   /** Border style (solid, dashed, dotted, etc.) */
