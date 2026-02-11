@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Floating banner that shows real-time section-builder webhook progress
@@ -27,23 +28,40 @@ interface BuildStatus {
   updatedAt: string;
 }
 
-const POLL_INTERVAL = 2000;
+interface BuildStatusResponse extends Partial<BuildStatus> {
+  active: boolean;
+}
+
+const ACTIVE_POLL_INTERVAL = 2000;
+const IDLE_POLL_INTERVALS = [4000, 8000, 12000] as const;
+const METRICS_LOG_INTERVAL_MS = 60_000;
 const RELOAD_DELAY = 1500;
 const BUILDER_SLUG_REGEX = /\/preview\/((section-builder|element-builder|form-builder)\/[^/]+)/;
 
 export function BuildStatusBanner() {
+  const pathname = usePathname();
+  const isBuilderPreviewPath = BUILDER_SLUG_REGEX.test(pathname ?? "");
   const [status, setStatus] = useState<BuildStatus | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const reloadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousStatusRef = useRef<string | null>(null);
+  const idlePollLevelRef = useRef(0);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const metricsRef = useRef({
+    requestCount: 0,
+    totalDurationMs: 0,
+    windowStartedAt: Date.now(),
+  });
 
   // ── Fetch build status ──
 
   const fetchStatus = useCallback(async () => {
+    const startedAt = performance.now();
+
     try {
       const res = await fetch("/api/build-status", { cache: "no-store" });
       if (!res.ok) return;
-      const data: BuildStatus = await res.json();
+      const data: BuildStatusResponse = await res.json();
 
       // Reset dismissed state when a new build starts
       if (data.active && previousStatusRef.current !== "building") {
@@ -52,22 +70,89 @@ export function BuildStatusBanner() {
       previousStatusRef.current = data.status ?? null;
 
       if (data.active || data.status === "done" || data.status === "error") {
-        setStatus(data);
+        idlePollLevelRef.current = 0;
+      } else {
+        idlePollLevelRef.current = Math.min(
+          idlePollLevelRef.current + 1,
+          IDLE_POLL_INTERVALS.length - 1,
+        );
+      }
+
+      if (data.active || data.status === "done" || data.status === "error") {
+        setStatus(data as BuildStatus);
       } else {
         setStatus(null);
       }
     } catch {
       // Silently ignore fetch errors
+    } finally {
+      const durationMs = performance.now() - startedAt;
+      if (process.env.NODE_ENV === "development") {
+        metricsRef.current.requestCount += 1;
+        metricsRef.current.totalDurationMs += durationMs;
+
+        const elapsed = Date.now() - metricsRef.current.windowStartedAt;
+        if (elapsed >= METRICS_LOG_INTERVAL_MS) {
+          const avgDuration =
+            metricsRef.current.requestCount > 0
+              ? metricsRef.current.totalDurationMs / metricsRef.current.requestCount
+              : 0;
+          const requestsPerMinute =
+            (metricsRef.current.requestCount / elapsed) * METRICS_LOG_INTERVAL_MS;
+
+          console.log(
+            `[BuildStatusBanner] polling metrics avg=${Math.round(avgDuration)}ms rpm=${requestsPerMinute.toFixed(1)} route=${pathname ?? "unknown"}`,
+          );
+
+          metricsRef.current.requestCount = 0;
+          metricsRef.current.totalDurationMs = 0;
+          metricsRef.current.windowStartedAt = Date.now();
+        }
+      }
     }
-  }, []);
+  }, [pathname]);
 
   // ── Poll build status ──
 
   useEffect(() => {
-    fetchStatus();
-    const interval = setInterval(fetchStatus, POLL_INTERVAL);
-    return () => clearInterval(interval);
-  }, [fetchStatus]);
+    if (!isBuilderPreviewPath) {
+      setStatus(null);
+      idlePollLevelRef.current = 0;
+      if (pollTimerRef.current) {
+        clearTimeout(pollTimerRef.current);
+        pollTimerRef.current = null;
+      }
+      return;
+    }
+
+    let cancelled = false;
+
+    const scheduleNextPoll = () => {
+      if (cancelled) return;
+      const hasActiveBuild =
+        previousStatusRef.current === "building" || status?.status === "building";
+      const nextInterval = hasActiveBuild
+        ? ACTIVE_POLL_INTERVAL
+        : IDLE_POLL_INTERVALS[idlePollLevelRef.current] ?? ACTIVE_POLL_INTERVAL;
+
+      pollTimerRef.current = setTimeout(async () => {
+        await fetchStatus();
+        scheduleNextPoll();
+      }, nextInterval);
+    };
+
+    void fetchStatus().then(() => {
+      scheduleNextPoll();
+    });
+
+    return () => {
+      cancelled = true;
+      if (pollTimerRef.current) {
+        clearTimeout(pollTimerRef.current);
+        pollTimerRef.current = null;
+      }
+    };
+  }, [fetchStatus, isBuilderPreviewPath, status?.status]);
 
   // ── Listen for Storyblok publish via postMessage ──
 

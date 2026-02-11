@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { SeoMetatagsValue } from "@/types/seo";
 import { metadataFromStory } from "@/lib/metadata";
+import { ensureStoryblokServerInit } from "@/lib/storyblok/server-init";
+
+ensureStoryblokServerInit();
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>;

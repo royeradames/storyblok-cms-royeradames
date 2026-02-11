@@ -9,7 +9,7 @@
  * any component matching `shared_*_section` that isn't already a shared UI component
  * is automatically handled by PremadeSectionWrapper.
  */
-import { components as sharedComponents } from "@repo/shared-cms";
+import { components as sharedComponents } from "@repo/shared-cms/components-map";
 import { Page } from "./Page";
 import { SharedTemplateResolver } from "./PremadeSectionWrapper";
 
