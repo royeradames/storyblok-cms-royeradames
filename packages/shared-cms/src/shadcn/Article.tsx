@@ -43,7 +43,7 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
   const headings = extractRichTextHeadings(blok.body);
 
   return (
-    <article
+    <div
       {...storyblokEditable(blok)}
       className={cn(
         "grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10 ",
@@ -92,9 +92,8 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
             "prose-p:text-muted-foreground prose-li:text-muted-foreground",
             "prose-strong:text-foreground prose-a:text-primary prose-a:underline",
             "[&>*]:!my-0",
-            "[&>*+h1]:pt-4 [&>*+h2]:pt-4 [&>*+h3]:pt-4 [&>*+h4]:pt-4 [&>*+h5]:pt-4 [&>*+h6]:pt-4",
-            "[&>*+.sb-article-heading-1]:pt-4",
-            "[&>*+.sb-article-heading-2]:pt-4",
+            "[&_.sb-heading-section]:my-0",
+            "[&_.sb-heading-section>h1]:mt-0 [&_.sb-heading-section>h2]:mt-0 [&_.sb-heading-section>h3]:mt-0 [&_.sb-heading-section>h4]:mt-0 [&_.sb-heading-section>h5]:mt-0 [&_.sb-heading-section>h6]:mt-0",
             "[&_.sb-richtext-blok]:grid [&_.sb-richtext-blok]:gap-4",
           )}
         >
@@ -106,6 +105,6 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
           />
         </div>
       </div>
-    </article>
+    </div>
   );
 }

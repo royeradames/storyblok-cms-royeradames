@@ -83,6 +83,20 @@ export interface RichTextHeading {
   level: number;
 }
 
+interface RenderedHeadingMeta {
+  level: RichTextHeadingLevel;
+  id?: string;
+  text?: string;
+}
+
+interface ArticleSectionNode {
+  kind: "section";
+  heading: RenderedHeadingMeta;
+  children: ArticleSectionChild[];
+}
+
+type ArticleSectionChild = React.ReactNode | ArticleSectionNode;
+
 function slugifyHeading(input: string): string {
   return input
     .toLowerCase()
@@ -95,6 +109,124 @@ function slugifyHeading(input: string): string {
 function getNodeText(node: RichTextNode): string {
   if (node.type === "text") return node.text || "";
   return (node.content || []).map(getNodeText).join("");
+}
+
+function getHeadingLevelFromClassName(className?: string): number | null {
+  if (!className) return null;
+  const match = className.match(/(?:^|\s)sb-article-heading-([1-6])(?:\s|$)/);
+  if (!match) return null;
+  return Number(match[1]);
+}
+
+function getRenderedHeadingLevel(node: React.ReactNode): number | null {
+  if (!React.isValidElement<{ className?: string }>(node)) return null;
+  const elementType = node.type;
+  if (typeof elementType === "string") {
+    const headingMatch = elementType.match(/^h([1-6])$/i);
+    if (headingMatch) return Number(headingMatch[1]);
+    const className =
+      typeof node.props.className === "string" ? node.props.className : "";
+    return getHeadingLevelFromClassName(className);
+  }
+  return null;
+}
+
+function getRenderedHeadingId(node: React.ReactNode): string | undefined {
+  if (!React.isValidElement<{ id?: string }>(node)) return undefined;
+  return typeof node.props.id === "string" ? node.props.id : undefined;
+}
+
+function normalizeHeadingText(text?: string): string | undefined {
+  if (!text) return undefined;
+  const normalized = text.replace(/\s+/g, " ").trim();
+  return normalized.length > 0 ? normalized : undefined;
+}
+
+function isArticleSectionNode(
+  child: ArticleSectionChild,
+): child is ArticleSectionNode {
+  return (
+    typeof child === "object" &&
+    child !== null &&
+    "kind" in child &&
+    (child as ArticleSectionNode).kind === "section"
+  );
+}
+
+function buildArticleSectionTree(
+  renderedNode: React.ReactNode,
+  headingMeta: RenderedHeadingMeta[],
+): ArticleSectionChild[] {
+  const blocks = React.Children.toArray(renderedNode);
+  const rootChildren: ArticleSectionChild[] = [];
+  const sectionStack: ArticleSectionNode[] = [];
+  let headingMetaIndex = 0;
+
+  for (const block of blocks) {
+    const renderedLevel = getRenderedHeadingLevel(block);
+    if (!renderedLevel) {
+      const parentChildren =
+        sectionStack.length > 0
+          ? sectionStack[sectionStack.length - 1]!.children
+          : rootChildren;
+      parentChildren.push(block);
+      continue;
+    }
+
+    const nextMeta = headingMeta[headingMetaIndex++];
+    const level = Math.min(
+      Math.max(Number(nextMeta?.level ?? renderedLevel), 1),
+      6,
+    ) as RichTextHeadingLevel;
+    const sectionNode: ArticleSectionNode = {
+      kind: "section",
+      heading: {
+        level,
+        id: nextMeta?.id ?? getRenderedHeadingId(block),
+        text: normalizeHeadingText(nextMeta?.text),
+      },
+      children: [block],
+    };
+
+    while (
+      sectionStack.length > 0 &&
+      sectionStack[sectionStack.length - 1]!.heading.level >= level
+    ) {
+      sectionStack.pop();
+    }
+
+    const parentChildren =
+      sectionStack.length > 0
+        ? sectionStack[sectionStack.length - 1]!.children
+        : rootChildren;
+    parentChildren.push(sectionNode);
+    sectionStack.push(sectionNode);
+  }
+
+  return rootChildren;
+}
+
+function renderArticleSectionChildren(
+  children: ArticleSectionChild[],
+  keyPrefix = "sb-section",
+): React.ReactNode[] {
+  return children.map((child, index) => {
+    if (!isArticleSectionNode(child)) return child;
+    const sectionKey = child.heading.id
+      ? `${keyPrefix}-${child.heading.id}`
+      : `${keyPrefix}-${index}`;
+    return (
+      <section
+        key={sectionKey}
+        className={cn("sb-heading-section grid gap-4", index > 0 && "pt-4")}
+        data-sb-heading-level={child.heading.level}
+        data-sb-heading-id={child.heading.id}
+        data-sb-heading-text={child.heading.text}
+      >
+        {renderArticleSectionChildren(child.children, sectionKey)}
+      </section>
+    );
+  });
 }
 
 function collectHeadings(
@@ -146,6 +278,7 @@ export function ShadcnRichTextContent({
   let headingIndex = 0;
   const isArticle = variant === "article";
   let resolverKeyCounter = 0;
+  const renderedHeadingMeta: RenderedHeadingMeta[] = [];
 
   const getNodeKey = (node: ResolverNode | RichTextNode, prefix: string) =>
     node.attrs?.key ?? `${prefix}-${resolverKeyCounter++}`;
@@ -344,6 +477,11 @@ export function ShadcnRichTextContent({
                 : level === 5
                   ? overrides?.headingFive
                   : overrides?.headingSix;
+      renderedHeadingMeta.push({
+        level,
+        id,
+        text: normalizeHeadingText(headingText),
+      });
 
       return renderOverrideOrFallback(
         `heading${level}`,
@@ -634,7 +772,11 @@ export function ShadcnRichTextContent({
     resolvers: resolvers as any,
   });
   const richTextNode = render(content as any);
-  return <>{convertAttributesInElement(richTextNode as ReactElement)}</>;
+  const convertedNode = convertAttributesInElement(richTextNode as ReactElement);
+  if (!isArticle) return <>{convertedNode}</>;
+
+  const sectionTree = buildArticleSectionTree(convertedNode, renderedHeadingMeta);
+  return <>{renderArticleSectionChildren(sectionTree)}</>;
 }
 
 export function ShadcnRichText({
