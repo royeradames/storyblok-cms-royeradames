@@ -88,7 +88,15 @@ export function buildStyleClasses(
       classes.push(prefix + justifyMap[opt.justify]);
     if (opt.align && alignMap[opt.align])
       classes.push(prefix + alignMap[opt.align]);
-    if (opt.gap && gapMap[opt.gap]) classes.push(prefix + gapMap[opt.gap]);
+    // Gap: multi-options array or legacy single key
+    const gapKeys = Array.isArray(opt.gap)
+      ? (opt.gap as (keyof typeof gapMap)[]).filter((v) => v && v in gapMap)
+      : opt.gap && opt.gap in gapMap
+        ? [opt.gap as keyof typeof gapMap]
+        : [];
+    gapKeys.forEach((key) => {
+      if (gapMap[key]) classes.push(prefix + gapMap[key]);
+    });
     if (opt.wrap) classes.push(prefix + "flex-wrap");
     if (opt.width && widthMap[opt.width])
       classes.push(prefix + widthMap[opt.width]);

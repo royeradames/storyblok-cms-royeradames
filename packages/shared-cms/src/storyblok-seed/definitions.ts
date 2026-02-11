@@ -561,11 +561,12 @@ export const componentDefinitions: StoryblokComponent[] = [
           "Only applied when set (opt-in). Container uses its own defaults when empty.",
       },
       gap: {
-        type: "option",
+        type: "options",
         pos: 5,
         options: flexGapOptions,
+        max_choices: 4,
         description:
-          "Gap between items. Options show pixel values (e.g. gap-2 (8px)).",
+          "Spacing between items: pick 0–4 gap utilities (e.g. gap-4, gap-x-6, gap-y-2). Options show pixel values.",
       },
       wrap: {
         type: "boolean",

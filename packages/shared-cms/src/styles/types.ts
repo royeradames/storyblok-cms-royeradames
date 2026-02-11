@@ -51,7 +51,8 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   direction?: keyof typeof directionMap;
   justify?: keyof typeof justifyMap;
   align?: keyof typeof alignMap;
-  gap?: keyof typeof gapMap;
+  /** 0–4 gap utilities (multi-options) or legacy single key */
+  gap?: (keyof typeof gapMap)[] | keyof typeof gapMap;
   wrap?: boolean;
   width?: keyof typeof widthMap;
   height?: keyof typeof heightMap;

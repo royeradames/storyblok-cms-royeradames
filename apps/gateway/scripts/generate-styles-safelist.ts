@@ -14,6 +14,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {
   displayMap,
+  gridColumnsMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -104,6 +105,7 @@ function main() {
 
   const maps = [
     displayMap,
+    gridColumnsMap,
     directionMap,
     justifyMap,
     alignMap,
