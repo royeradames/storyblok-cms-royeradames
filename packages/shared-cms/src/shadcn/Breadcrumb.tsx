@@ -2,6 +2,7 @@
 
 import React from "react";
 import { storyblokEditable } from "@storyblok/react";
+import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,11 +23,39 @@ export interface ShadcnBreadcrumbItemBlok extends SbBlokData {
 }
 
 export interface ShadcnBreadcrumbBlok extends SbBlokData {
-  items: ShadcnBreadcrumbItemBlok[];
+  items?: ShadcnBreadcrumbItemBlok[];
   styles?: StylesBreakpointOptionsBlok[];
 }
 
+function formatSegmentLabel(segment: string): string {
+  const decodedSegment = (() => {
+    try {
+      return decodeURIComponent(segment);
+    } catch {
+      return segment;
+    }
+  })();
+
+  return decodedSegment
+    .replace(/[-_]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export function ShadcnBreadcrumb({ blok }: { blok: ShadcnBreadcrumbBlok }) {
+  const pathname = usePathname();
+  const segments = pathname.split("/").filter(Boolean);
+  const breadcrumbs = [
+    { href: "/", label: "Home", isCurrent: segments.length === 0 },
+    ...segments.map((segment, index) => ({
+      href: `/${segments.slice(0, index + 1).join("/")}`,
+      label: formatSegmentLabel(segment),
+      isCurrent: index === segments.length - 1,
+    })),
+  ];
+
   return (
     <Breadcrumb
       {...storyblokEditable(blok)}
@@ -34,19 +63,16 @@ export function ShadcnBreadcrumb({ blok }: { blok: ShadcnBreadcrumbBlok }) {
       style={buildInlineStyles(blok.styles)}
     >
       <BreadcrumbList>
-        {blok.items?.map((item, index) => (
-          <React.Fragment key={item._uid}>
-            <BreadcrumbItem
-              className={cn(...buildStyleClasses(item.styles))}
-              {...storyblokEditable(item)}
-            >
-              {item.is_current || !item.href ? (
+        {breadcrumbs.map((item, index) => (
+          <React.Fragment key={item.href}>
+            <BreadcrumbItem>
+              {item.isCurrent ? (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
               )}
             </BreadcrumbItem>
-            {index < (blok.items?.length || 0) - 1 && <BreadcrumbSeparator />}
+            {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
           </React.Fragment>
         ))}
       </BreadcrumbList>
