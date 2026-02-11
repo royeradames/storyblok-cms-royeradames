@@ -749,6 +749,8 @@ focus:shadow-md
 focus:shadow-none
 focus:shadow-sm
 focus:shadow-xl
+focus:shrink
+focus:shrink-0
 focus:static
 focus:sticky
 focus:table
@@ -1685,6 +1687,8 @@ hover:shadow-md
 hover:shadow-none
 hover:shadow-sm
 hover:shadow-xl
+hover:shrink
+hover:shrink-0
 hover:static
 hover:sticky
 hover:table
@@ -2577,6 +2581,8 @@ lg:focus:shadow-md
 lg:focus:shadow-none
 lg:focus:shadow-sm
 lg:focus:shadow-xl
+lg:focus:shrink
+lg:focus:shrink-0
 lg:focus:static
 lg:focus:sticky
 lg:focus:table
@@ -3513,6 +3519,8 @@ lg:hover:shadow-md
 lg:hover:shadow-none
 lg:hover:shadow-sm
 lg:hover:shadow-xl
+lg:hover:shrink
+lg:hover:shrink-0
 lg:hover:static
 lg:hover:sticky
 lg:hover:table
@@ -4124,6 +4132,8 @@ lg:shadow-md
 lg:shadow-none
 lg:shadow-sm
 lg:shadow-xl
+lg:shrink
+lg:shrink-0
 lg:static
 lg:sticky
 lg:table
@@ -5153,6 +5163,8 @@ md:focus:shadow-md
 md:focus:shadow-none
 md:focus:shadow-sm
 md:focus:shadow-xl
+md:focus:shrink
+md:focus:shrink-0
 md:focus:static
 md:focus:sticky
 md:focus:table
@@ -6089,6 +6101,8 @@ md:hover:shadow-md
 md:hover:shadow-none
 md:hover:shadow-sm
 md:hover:shadow-xl
+md:hover:shrink
+md:hover:shrink-0
 md:hover:static
 md:hover:sticky
 md:hover:table
@@ -6700,6 +6714,8 @@ md:shadow-md
 md:shadow-none
 md:shadow-sm
 md:shadow-xl
+md:shrink
+md:shrink-0
 md:static
 md:sticky
 md:table
@@ -7140,6 +7156,8 @@ shadow-md
 shadow-none
 shadow-sm
 shadow-xl
+shrink
+shrink-0
 sm:absolute
 sm:block
 sm:border
@@ -7891,6 +7909,8 @@ sm:focus:shadow-md
 sm:focus:shadow-none
 sm:focus:shadow-sm
 sm:focus:shadow-xl
+sm:focus:shrink
+sm:focus:shrink-0
 sm:focus:static
 sm:focus:sticky
 sm:focus:table
@@ -8827,6 +8847,8 @@ sm:hover:shadow-md
 sm:hover:shadow-none
 sm:hover:shadow-sm
 sm:hover:shadow-xl
+sm:hover:shrink
+sm:hover:shrink-0
 sm:hover:static
 sm:hover:sticky
 sm:hover:table
@@ -9438,6 +9460,8 @@ sm:shadow-md
 sm:shadow-none
 sm:shadow-sm
 sm:shadow-xl
+sm:shrink
+sm:shrink-0
 sm:static
 sm:sticky
 sm:table

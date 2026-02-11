@@ -12,6 +12,7 @@ import {
   directionMap,
   justifyMap,
   alignMap,
+  flexShrinkMap,
   gapMap,
   widthMap,
   heightMap,
@@ -94,6 +95,8 @@ export function buildStyleClasses(
       classes.push(prefix + justifyMap[opt.justify]);
     if (opt.align && alignMap[opt.align])
       classes.push(prefix + alignMap[opt.align]);
+    if (opt.flex_shrink && flexShrinkMap[opt.flex_shrink])
+      classes.push(prefix + flexShrinkMap[opt.flex_shrink]);
     // Gap: multi-options array or legacy single key
     const gapKeys = Array.isArray(opt.gap)
       ? (opt.gap as (keyof typeof gapMap)[]).filter((v) => v && v in gapMap)

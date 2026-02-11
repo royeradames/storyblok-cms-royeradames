@@ -7,6 +7,7 @@ import {
   directionMap,
   justifyMap,
   alignMap,
+  flexShrinkMap,
   gapMap,
   widthMap,
   heightMap,
@@ -56,6 +57,7 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   direction?: keyof typeof directionMap;
   justify?: keyof typeof justifyMap;
   align?: keyof typeof alignMap;
+  flex_shrink?: keyof typeof flexShrinkMap;
   /** 0–4 gap utilities (multi-options) or legacy single key */
   gap?: (keyof typeof gapMap)[] | keyof typeof gapMap;
   wrap?: boolean;

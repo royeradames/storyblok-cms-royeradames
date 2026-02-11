@@ -14,6 +14,7 @@ import {
   directionMap,
   justifyMap,
   alignMap,
+  flexShrinkMap,
   gapMap,
   widthMap,
   heightMap,
@@ -202,6 +203,10 @@ const flexJustifyOptions: StoryblokOption[] = (
 
 const flexAlignOptions: StoryblokOption[] = (
   Object.keys(alignMap) as (keyof typeof alignMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexShrinkOptions: StoryblokOption[] = (
+  Object.keys(flexShrinkMap) as (keyof typeof flexShrinkMap)[]
 ).map((key) => ({ value: key, name: key }));
 
 const flexGapOptions: StoryblokOption[] = (
@@ -603,6 +608,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexAlignOptions,
         description:
           "Only applied when set (opt-in). Container uses its own defaults when empty.",
+      },
+      flex_shrink: {
+        type: "option",
+        pos: 4.5,
+        options: flexShrinkOptions,
+        description:
+          "Flex shrink behavior (shrink to allow shrinking, shrink-0 to prevent shrinking).",
       },
       gap: {
         type: "options",

@@ -171,6 +171,12 @@ export const alignMap = {
   "items-stretch": "items-stretch",
 } as const;
 
+/** Flex shrink */
+export const flexShrinkMap = {
+  shrink: "shrink",
+  "shrink-0": "shrink-0",
+} as const;
+
 /** Gap */
 export const gapMap = {
   "gap-0": "gap-0",
