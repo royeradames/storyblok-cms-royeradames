@@ -1,8 +1,5 @@
 import { getStoryblokApi, StoryblokStory } from "@storyblok/react/rsc";
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import type { SeoMetatagsValue } from "@/types/seo";
-import { metadataFromStory } from "@/lib/metadata";
 import { ensureStoryblokServerInit } from "@/lib/storyblok/server-init";
 
 ensureStoryblokServerInit();
@@ -11,7 +8,32 @@ interface PageProps {
   params: Promise<{ slug?: string[] }>;
 }
 
+const DEV_PREVIEW_CACHE_TTL_MS = 1500;
+const draftStoryCache = new Map<string, { expiresAt: number; story: unknown }>();
+
+function getCachedDraftStory(slug: string): unknown | null {
+  if (process.env.NODE_ENV !== "development") return null;
+  const cached = draftStoryCache.get(slug);
+  if (!cached) return null;
+  if (cached.expiresAt < Date.now()) {
+    draftStoryCache.delete(slug);
+    return null;
+  }
+  return cached.story;
+}
+
+function setCachedDraftStory(slug: string, story: unknown): void {
+  if (process.env.NODE_ENV !== "development") return;
+  draftStoryCache.set(slug, {
+    story,
+    expiresAt: Date.now() + DEV_PREVIEW_CACHE_TTL_MS,
+  });
+}
+
 async function fetchDraftStory(slug: string) {
+  const cached = getCachedDraftStory(slug);
+  if (cached) return cached;
+
   const storyblokApi = getStoryblokApi();
 
   try {
@@ -19,20 +41,11 @@ async function fetchDraftStory(slug: string) {
       version: "draft", // Fetch draft content in preview
       cv: Date.now(),
     });
+    setCachedDraftStory(slug, data.story);
     return data.story;
   } catch {
     return null;
   }
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const slugPath = slug ? slug.join("/") : "home";
-  const story = await fetchDraftStory(slugPath);
-  const meta = story?.content?.metadata as SeoMetatagsValue | undefined;
-  return metadataFromStory(meta);
 }
 
 export default async function PreviewPage({ params }: PageProps) {

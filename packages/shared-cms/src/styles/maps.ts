@@ -629,6 +629,19 @@ export const boxShadowMap = {
   "shadow-inner": "shadow-inner",
 } as const;
 
+/** Border radius (Tailwind default rounded scale). */
+export const roundedMap = {
+  "rounded-none": "rounded-none",
+  "rounded-sm": "rounded-sm",
+  rounded: "rounded",
+  "rounded-md": "rounded-md",
+  "rounded-lg": "rounded-lg",
+  "rounded-xl": "rounded-xl",
+  "rounded-2xl": "rounded-2xl",
+  "rounded-3xl": "rounded-3xl",
+  "rounded-full": "rounded-full",
+} as const;
+
 /**
  * Tailwind variants (modifiers). When set, all utilities in the style block get this prefix.
  * Order in output: breakpoint + variant + utility (e.g. sm:last:border-b).

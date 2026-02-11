@@ -27,6 +27,7 @@ import {
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
+  roundedMap,
   spacingTokenToPx,
   namedSizeToPx,
   textSizeToPx,
@@ -289,6 +290,25 @@ const flexShadowOptions: StoryblokOption[] = (
 ).map((key) => ({
   value: key,
   name: boxShadowLabels[key],
+}));
+
+const roundedLabels: Record<keyof typeof roundedMap, string> = {
+  "rounded-none": "None",
+  "rounded-sm": "SM",
+  rounded: "Default",
+  "rounded-md": "MD",
+  "rounded-lg": "LG",
+  "rounded-xl": "XL",
+  "rounded-2xl": "2XL",
+  "rounded-3xl": "3XL",
+  "rounded-full": "Full",
+};
+
+const flexRoundedOptions: StoryblokOption[] = (
+  Object.keys(roundedMap) as (keyof typeof roundedMap)[]
+).map((key) => ({
+  value: key,
+  name: roundedLabels[key],
 }));
 
 const flexBreakpointOptions: StoryblokOption[] = [
@@ -671,6 +691,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 19,
         options: flexShadowOptions,
         description: "Box shadow (Tailwind scale).",
+      },
+      rounded: {
+        type: "option",
+        pos: 19.5,
+        options: flexRoundedOptions,
+        description: "Border radius (Tailwind rounded scale).",
       },
       text_size: {
         type: "option",

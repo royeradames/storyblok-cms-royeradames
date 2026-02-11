@@ -24,6 +24,7 @@ import {
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
+  roundedMap,
   textSizeMap,
   variantMap,
   GROUP_CLASS,
@@ -182,6 +183,8 @@ export function buildStyleClasses(
       classes.push(
         prefix + boxShadowMap[opt.shadow as keyof typeof boxShadowMap]
       );
+    if (opt.rounded && opt.rounded in roundedMap)
+      classes.push(prefix + roundedMap[opt.rounded as keyof typeof roundedMap]);
     if (opt.text_size && opt.text_size in textSizeMap)
       classes.push(
         prefix + textSizeMap[opt.text_size as keyof typeof textSizeMap]

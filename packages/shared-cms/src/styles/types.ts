@@ -19,6 +19,7 @@ import {
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
+  roundedMap,
   textSizeMap,
   type VariantKey,
 } from "./maps";
@@ -84,6 +85,8 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   border_style?: keyof typeof borderStyleMap;
   /** Box shadow */
   shadow?: keyof typeof boxShadowMap;
+  /** Border radius */
+  rounded?: keyof typeof roundedMap;
   /** Text size (font-size) per breakpoint */
   text_size?: keyof typeof textSizeMap;
 }

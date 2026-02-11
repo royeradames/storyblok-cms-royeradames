@@ -31,6 +31,7 @@ import {
   borderColorMap,
   borderStyleMap,
   boxShadowMap,
+  roundedMap,
   textSizeMap,
   variantMap,
   GROUP_CLASS,
@@ -122,6 +123,7 @@ function main() {
     borderColorMap,
     borderStyleMap,
     boxShadowMap,
+    roundedMap,
     textSizeMap,
   ] as Record<string, string>[];
 
