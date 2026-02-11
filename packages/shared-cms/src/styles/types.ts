@@ -59,6 +59,8 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   custom_max_width?: string;
   min_height?: keyof typeof minHeightMap;
   max_height?: keyof typeof maxHeightMap;
+  /** Arbitrary max-height (e.g. "524px", "33rem"). Base breakpoint only. Overrides max_height dropdown. */
+  custom_max_height?: string;
   /** 0–4 padding directions (multi-options) or legacy single key */
   padding?: (keyof typeof paddingMap)[] | keyof typeof paddingMap;
   /** 0–4 margin directions (multi-options) or legacy single key */

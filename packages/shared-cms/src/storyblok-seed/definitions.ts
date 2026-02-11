@@ -597,6 +597,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 13,
         options: flexMaxHeightOptions,
       },
+      custom_max_height: {
+        type: "text",
+        pos: 13.5,
+        description:
+          "Arbitrary max-height (e.g. 524px, 33rem). Overrides the Max Height dropdown. Only applies at the base breakpoint — responsive breakpoints are ignored for this field.",
+      },
       margin: {
         type: "options",
         pos: 14,

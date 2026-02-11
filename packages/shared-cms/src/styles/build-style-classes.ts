@@ -183,7 +183,7 @@ export function buildStyleClasses(
 /**
  * Extract inline styles from breakpoint style options.
  * Theme color CSS variables are emitted for any breakpoint/variant combination.
- * Non-variable custom values (e.g. custom_max_width) remain base-only.
+ * Non-variable custom values (e.g. custom_max_width/custom_max_height) remain base-only.
  * Returns a CSSProperties object to spread onto the element's `style` prop.
  */
 export function buildInlineStyles(
@@ -211,6 +211,9 @@ export function buildInlineStyles(
     if (opt.breakpoint === "base" || !opt.breakpoint) {
       if (opt.custom_max_width) {
         inlineStyles.maxWidth = opt.custom_max_width;
+      }
+      if (opt.custom_max_height) {
+        inlineStyles.maxHeight = opt.custom_max_height;
       }
     }
   }
