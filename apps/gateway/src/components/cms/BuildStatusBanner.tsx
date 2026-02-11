@@ -32,13 +32,20 @@ interface BuildStatusResponse extends Partial<BuildStatus> {
   active: boolean;
 }
 
+type PreviewSyncMode = "live" | "perf";
+
+function resolvePreviewSyncMode(): PreviewSyncMode {
+  const configured = process.env.NEXT_PUBLIC_PREVIEW_SYNC_MODE;
+  if (configured === "live" || configured === "perf") return configured;
+  return process.env.NODE_ENV === "development" ? "live" : "perf";
+}
+
 const ACTIVE_POLL_INTERVAL = 2000;
 const IDLE_POLL_INTERVALS = [4000, 8000, 12000] as const;
 const METRICS_LOG_INTERVAL_MS = 60_000;
 const RELOAD_DELAY = 1500;
-const AUTO_RELOAD_ON_DONE =
-  process.env.NODE_ENV !== "development" ||
-  process.env.NEXT_PUBLIC_PREVIEW_AUTO_RELOAD === "1";
+const PREVIEW_SYNC_MODE = resolvePreviewSyncMode();
+const AUTO_RELOAD_ON_DONE = PREVIEW_SYNC_MODE === "live";
 const BUILDER_SLUG_REGEX = /\/preview\/((section-builder|element-builder|form-builder)\/[^/]+)/;
 
 export function BuildStatusBanner() {

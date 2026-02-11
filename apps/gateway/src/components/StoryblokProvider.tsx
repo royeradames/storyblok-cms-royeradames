@@ -5,6 +5,16 @@ import { useSearchParams } from "next/navigation";
 import { storyblokInit, apiPlugin } from "@storyblok/react";
 import { components } from "@/components/cms";
 
+type PreviewSyncMode = "live" | "perf";
+
+function resolvePreviewSyncMode(): PreviewSyncMode {
+  const configured = process.env.NEXT_PUBLIC_PREVIEW_SYNC_MODE;
+  if (configured === "live" || configured === "perf") return configured;
+  return process.env.NODE_ENV === "development" ? "live" : "perf";
+}
+
+const PREVIEW_SYNC_MODE = resolvePreviewSyncMode();
+
 let storyblokInitialized = false;
 let bridgeEnabled = false;
 
@@ -25,9 +35,8 @@ function ensureStoryblokClientInit(enableBridge: boolean) {
   bridgeEnabled = bridgeEnabled || enableBridge;
 }
 
-// Initialize without bridge by default to avoid unnecessary bridge-driven reloads
-// outside the Storyblok editor context.
-ensureStoryblokClientInit(false);
+// In dev default to live mode; in prod default to perf mode.
+ensureStoryblokClientInit(PREVIEW_SYNC_MODE === "live");
 
 export function StoryblokProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
@@ -35,7 +44,9 @@ export function StoryblokProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const hasStoryblokParam = searchParams.has("_storyblok");
     const inIframe = window.self !== window.top;
-    ensureStoryblokClientInit(hasStoryblokParam && inIframe);
+    const shouldEnableBridge =
+      PREVIEW_SYNC_MODE === "live" ? true : hasStoryblokParam && inIframe;
+    ensureStoryblokClientInit(shouldEnableBridge);
   }, [searchParams]);
 
   return <>{children}</>;
