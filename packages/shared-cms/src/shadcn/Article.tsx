@@ -46,12 +46,12 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
     <article
       {...storyblokEditable(blok)}
       className={cn(
-        "max-w-5xl flex w-full justify-center align-center",
+        " flex w-full justify-center align-center",
         ...buildStyleClasses(blok.styles),
       )}
       style={buildInlineStyles(blok.styles)}
     >
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10 ">
+      <div className="max-w-5xl grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10 ">
         <aside className="lg:order-2">
           <div className="rounded-lg border border-border/70 bg-card/70 p-4 backdrop-blur lg:sticky lg:top-24">
             <p className="mb-3 text-sm font-medium text-primary">
