@@ -115,6 +115,15 @@ export const displayMap = {
   hidden: "hidden",
 } as const;
 
+/** Position */
+export const positionMap = {
+  static: "static",
+  fixed: "fixed",
+  absolute: "absolute",
+  relative: "relative",
+  sticky: "sticky",
+} as const;
+
 /** Grid columns */
 export const gridColumnsMap = {
   "grid-cols-1": "grid-cols-1",
@@ -473,6 +482,13 @@ export const marginMap = {
   "m-auto": "m-auto",
   "mx-auto": "mx-auto",
   "my-auto": "my-auto",
+} as const;
+
+/** Top inset */
+export const topMap = {
+  ...Object.fromEntries(spacingScale.map((s) => [`top-${s}`, `top-${s}`])),
+  "top-auto": "top-auto",
+  "top-full": "top-full",
 } as const;
 
 /** Border sides (multi-select). Tailwind: border = all, border-t/r/b/l = per side. */

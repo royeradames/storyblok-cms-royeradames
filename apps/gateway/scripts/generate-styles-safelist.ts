@@ -14,6 +14,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {
   displayMap,
+  positionMap,
   gridColumnsMap,
   directionMap,
   justifyMap,
@@ -27,6 +28,7 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
+  topMap,
   borderClassMap,
   borderColorMap,
   borderStyleMap,
@@ -150,6 +152,8 @@ function main() {
 
   const maps = [
     displayMap,
+    positionMap,
+    topMap,
     gridColumnsMap,
     directionMap,
     justifyMap,

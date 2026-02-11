@@ -9,6 +9,7 @@
 
 import {
   displayMap,
+  positionMap,
   gridColumnsMap,
   directionMap,
   justifyMap,
@@ -22,6 +23,7 @@ import {
   maxHeightMap,
   paddingMap,
   marginMap,
+  topMap,
   borderClassMap,
   borderClassLabels,
   borderColorMap,
@@ -177,6 +179,14 @@ const gapOptions: StoryblokOption[] = [
 const flexDisplayOptions: StoryblokOption[] = (
   Object.keys(displayMap) as (keyof typeof displayMap)[]
 ).map((key) => ({ value: key, name: key }));
+
+const flexPositionOptions: StoryblokOption[] = (
+  Object.keys(positionMap) as (keyof typeof positionMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexTopOptions: StoryblokOption[] = (
+  Object.keys(topMap) as (keyof typeof topMap)[]
+).map((key) => ({ value: key, name: optionNameWithSpacingPx(key) }));
 
 const flexGridColumnsOptions: StoryblokOption[] = (
   Object.keys(gridColumnsMap) as (keyof typeof gridColumnsMap)[]
@@ -551,6 +561,20 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexDisplayOptions,
         description:
           "Display (opt-in, no default). Only applied when set. Container always uses flex in code.",
+      },
+      position: {
+        type: "option",
+        pos: 1.2,
+        options: flexPositionOptions,
+        description:
+          "Position utility (e.g. sticky). Combine with Top for sticky offsets.",
+      },
+      top: {
+        type: "option",
+        pos: 1.3,
+        options: flexTopOptions,
+        description:
+          "Top inset utility (e.g. top-10). Useful with position: sticky/fixed/absolute.",
       },
       grid_columns: {
         type: "option",
