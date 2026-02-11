@@ -36,6 +36,9 @@ const ACTIVE_POLL_INTERVAL = 2000;
 const IDLE_POLL_INTERVALS = [4000, 8000, 12000] as const;
 const METRICS_LOG_INTERVAL_MS = 60_000;
 const RELOAD_DELAY = 1500;
+const AUTO_RELOAD_ON_DONE =
+  process.env.NODE_ENV !== "development" ||
+  process.env.NEXT_PUBLIC_PREVIEW_AUTO_RELOAD === "1";
 const BUILDER_SLUG_REGEX = /\/preview\/((section-builder|element-builder|form-builder)\/[^/]+)/;
 
 export function BuildStatusBanner() {
@@ -270,7 +273,7 @@ export function BuildStatusBanner() {
   // ── Auto-reload when build completes ──
 
   useEffect(() => {
-    if (status?.status === "done" && !dismissed) {
+    if (status?.status === "done" && !dismissed && AUTO_RELOAD_ON_DONE) {
       reloadTimerRef.current = setTimeout(() => {
         window.location.reload();
       }, RELOAD_DELAY);
@@ -339,33 +342,56 @@ export function BuildStatusBanner() {
             <strong style={{ fontWeight: 600 }}>{sectionName}</strong>
             {": "}
             {status.message}
-            {status.status === "done" && " Reloading..."}
+            {status.status === "done" &&
+              (AUTO_RELOAD_ON_DONE ? " Reloading..." : " Ready to reload.")}
           </span>
         </div>
 
         {(status.status === "error" || status.status === "done") && (
-          <button
-            onClick={() => {
-              setDismissed(true);
-              if (reloadTimerRef.current) {
-                clearTimeout(reloadTimerRef.current);
-                reloadTimerRef.current = null;
-              }
-            }}
-            style={{
-              background: "none",
-              border: "1px solid currentColor",
-              borderRadius: "4px",
-              padding: "2px 8px",
-              cursor: "pointer",
-              color: "inherit",
-              fontSize: "12px",
-              opacity: 0.8,
-              flexShrink: 0,
-            }}
-          >
-            Dismiss
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {status.status === "done" && !AUTO_RELOAD_ON_DONE && (
+              <button
+                onClick={() => {
+                  window.location.reload();
+                }}
+                style={{
+                  background: "none",
+                  border: "1px solid currentColor",
+                  borderRadius: "4px",
+                  padding: "2px 8px",
+                  cursor: "pointer",
+                  color: "inherit",
+                  fontSize: "12px",
+                  opacity: 0.9,
+                  flexShrink: 0,
+                }}
+              >
+                Reload now
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setDismissed(true);
+                if (reloadTimerRef.current) {
+                  clearTimeout(reloadTimerRef.current);
+                  reloadTimerRef.current = null;
+                }
+              }}
+              style={{
+                background: "none",
+                border: "1px solid currentColor",
+                borderRadius: "4px",
+                padding: "2px 8px",
+                cursor: "pointer",
+                color: "inherit",
+                fontSize: "12px",
+                opacity: 0.8,
+                flexShrink: 0,
+              }}
+            >
+              Dismiss
+            </button>
+          </div>
         )}
       </div>
     </div>

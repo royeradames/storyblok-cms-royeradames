@@ -37,18 +37,59 @@ import {
   GROUP_CLASS,
 } from "@repo/shared-cms/flex-maps";
 
-const BREAKPOINTS = ["sm", "md", "lg", "xl", "2xl"] as const;
+type SafelistProfile = "dev" | "full";
+const SAFELIST_PROFILE: SafelistProfile =
+  process.env.STYLES_SAFELIST_PROFILE === "full" ? "full" : "dev";
+const BREAKPOINTS =
+  SAFELIST_PROFILE === "full"
+    ? ["sm", "md", "lg", "xl", "2xl"]
+    : ["sm", "md", "lg"];
 const OUT_PATH = path.join(process.cwd(), "src/app/styles-safelist.txt");
 const BORDER_CUSTOM_LIGHT_VAR_PREFIX = "--sb-border-color-light-";
 const BORDER_CUSTOM_DARK_VAR_PREFIX = "--sb-border-color-dark-";
 
-const VARIANTS = (
-  Object.keys(variantMap) as (keyof typeof variantMap)[]
-).filter((k) => k !== "none");
+const VARIANTS =
+  SAFELIST_PROFILE === "full"
+    ? (Object.keys(variantMap) as (keyof typeof variantMap)[]).filter(
+        (k) => k !== "none",
+      )
+    : (["hover", "focus"] as (keyof typeof variantMap)[]);
+
+const DEV_SPACING_TOKENS = new Set([
+  "0",
+  "px",
+  "0.5",
+  "1",
+  "1.5",
+  "2",
+  "2.5",
+  "3",
+  "3.5",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+]);
+
+function trimSpacingUtilitiesForDev(
+  map: Record<string, string>,
+): Record<string, string> {
+  if (SAFELIST_PROFILE === "full") return map;
+  const entries = Object.entries(map).filter(([key]) => {
+    const token = key.split("-").pop() ?? "";
+    return DEV_SPACING_TOKENS.has(token);
+  });
+  return Object.fromEntries(entries);
+}
 
 function collectPrefixedClasses(
   map: Record<string, string>,
-  breakpoints: readonly string[] = BREAKPOINTS
+  breakpoints: readonly string[] = BREAKPOINTS,
 ): string[] {
   const classes: string[] = [];
   const values = Object.values(map) as string[];
@@ -74,7 +115,7 @@ function collectVariantPrefixedClasses(map: Record<string, string>): string[] {
 }
 
 function collectBreakpointVariantPrefixedClasses(
-  map: Record<string, string>
+  map: Record<string, string>,
 ): string[] {
   const classes: string[] = [];
   const values = Object.values(map) as string[];
@@ -95,7 +136,7 @@ function collectBaseClasses(map: Record<string, string>): string[] {
 }
 
 function styleThemeKey(
-  breakpoint: "base" | (typeof BREAKPOINTS)[number],
+  breakpoint: "base" | string,
   variant: keyof typeof variantMap,
 ): string {
   return `${breakpoint}-${variant}`.replace(/[^a-zA-Z0-9_-]/g, "-");
@@ -103,6 +144,9 @@ function styleThemeKey(
 
 function main() {
   const all: string[] = [];
+  const safeGapMap = trimSpacingUtilitiesForDev(gapMap);
+  const safePaddingMap = trimSpacingUtilitiesForDev(paddingMap);
+  const safeMarginMap = trimSpacingUtilitiesForDev(marginMap);
 
   const maps = [
     displayMap,
@@ -110,15 +154,15 @@ function main() {
     directionMap,
     justifyMap,
     alignMap,
-    gapMap,
+    safeGapMap,
     widthMap,
     heightMap,
     minWidthMap,
     maxWidthMap,
     minHeightMap,
     maxHeightMap,
-    paddingMap,
-    marginMap,
+    safePaddingMap,
+    safeMarginMap,
     borderClassMap,
     borderColorMap,
     borderStyleMap,
@@ -171,11 +215,14 @@ function main() {
 
   // Custom border color arbitrary classes:
   // border-[var(--sb-border-color-...)] and dark variants across base/breakpoint + variant prefixes
-  const allBreakpoints: ("base" | (typeof BREAKPOINTS)[number])[] = [
+  const allBreakpoints: ("base" | string)[] = [
     "base",
     ...BREAKPOINTS,
   ];
-  const allVariants = Object.keys(variantMap) as (keyof typeof variantMap)[];
+  const allVariants =
+    SAFELIST_PROFILE === "full"
+      ? (Object.keys(variantMap) as (keyof typeof variantMap)[])
+      : (["none", ...VARIANTS] as (keyof typeof variantMap)[]);
   for (const bp of allBreakpoints) {
     for (const variant of allVariants) {
       const variantPrefix = variantMap[variant] ?? "";
@@ -195,7 +242,9 @@ function main() {
   const content = unique.sort().join("\n") + "\n";
 
   fs.writeFileSync(OUT_PATH, content, "utf-8");
-  console.log(`Wrote ${unique.length} Styles safelist classes to ${OUT_PATH}`);
+  console.log(
+    `Wrote ${unique.length} Styles safelist classes to ${OUT_PATH} (profile=${SAFELIST_PROFILE})`,
+  );
 }
 
 main();

@@ -29,7 +29,8 @@
     "storyblok:migrate-styles-gap-to-options": "bun scripts/storyblok/migrate-styles-gap-to-options.ts",
     "storyblok:migrate-flex-to-container": "bun scripts/storyblok/migrate-flex-to-container.ts",
     "storyblok:delete-component": "bun scripts/storyblok/delete-component.ts",
-    "styles:safelist": "bun scripts/generate-styles-safelist.ts"
+    "styles:safelist": "STYLES_SAFELIST_PROFILE=dev bun scripts/generate-styles-safelist.ts",
+    "styles:safelist:full": "STYLES_SAFELIST_PROFILE=full bun scripts/generate-styles-safelist.ts"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
