@@ -9,6 +9,7 @@
 
 import {
   displayMap,
+  gridColumnsMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -174,6 +175,10 @@ const gapOptions: StoryblokOption[] = [
 // Flex: Tailwind class options (value = name = class)
 const flexDisplayOptions: StoryblokOption[] = (
   Object.keys(displayMap) as (keyof typeof displayMap)[]
+).map((key) => ({ value: key, name: key }));
+
+const flexGridColumnsOptions: StoryblokOption[] = (
+  Object.keys(gridColumnsMap) as (keyof typeof gridColumnsMap)[]
 ).map((key) => ({ value: key, name: key }));
 
 const flexDirectionOptions: StoryblokOption[] = (
@@ -526,6 +531,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: flexDisplayOptions,
         description:
           "Display (opt-in, no default). Only applied when set. Container always uses flex in code.",
+      },
+      grid_columns: {
+        type: "option",
+        pos: 1.5,
+        options: flexGridColumnsOptions,
+        description:
+          "Grid template columns (e.g. grid-cols-2). Use with display = grid or components that already render as grid.",
       },
       direction: {
         type: "option",

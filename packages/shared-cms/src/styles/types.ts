@@ -2,6 +2,7 @@ import type { SbBlokData } from "@storyblok/react";
 import type { NativeColorPickerValue } from "../storyblok/plugins";
 import {
   displayMap,
+  gridColumnsMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -46,6 +47,7 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   /** Add "group" class on container so children can use group-hover:, group-focus:. */
   group?: boolean;
   display?: keyof typeof displayMap;
+  grid_columns?: keyof typeof gridColumnsMap;
   direction?: keyof typeof directionMap;
   justify?: keyof typeof justifyMap;
   align?: keyof typeof alignMap;

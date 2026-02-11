@@ -7,6 +7,7 @@ import {
 import { getColorValue } from "../storyblok/plugins";
 import {
   displayMap,
+  gridColumnsMap,
   directionMap,
   justifyMap,
   alignMap,
@@ -79,6 +80,8 @@ export function buildStyleClasses(
     if (opt.group) classes.push(breakpointPrefix + GROUP_CLASS);
     if (opt.display && displayMap[opt.display])
       classes.push(prefix + displayMap[opt.display]);
+    if (opt.grid_columns && gridColumnsMap[opt.grid_columns])
+      classes.push(prefix + gridColumnsMap[opt.grid_columns]);
     if (opt.direction && directionMap[opt.direction])
       classes.push(prefix + directionMap[opt.direction]);
     if (opt.justify && justifyMap[opt.justify])
