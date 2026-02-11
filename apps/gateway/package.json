@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --experimental-https",
+    "dev:lite": "bun run styles:safelist && next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
