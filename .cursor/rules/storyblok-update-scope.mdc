@@ -1,0 +1,21 @@
+---
+description: Update only Storyblok components affected by current changes.
+alwaysApply: true
+---
+
+# Storyblok Update Scope
+
+Default behavior: only update Storyblok components that were actually changed by the current work.
+
+- Do not run full `bun run storyblok:seed` by default.
+- First identify changed component definitions/schema fields related to the current task.
+- Prefer targeted push/update flow for those components only.
+- If current changes are global by nature, then run full update.
+
+Treat as **global change** (full update allowed) when changes affect shared foundations, for example:
+
+- `styles_breakpoint_options` schema shape used across most components
+- shared seed generation/push behavior
+- broad shared maps/types that impact many Storyblok fields/components
+
+For narrow changes (e.g. one component option/text/style), update only that component (and directly dependent ones if needed).
