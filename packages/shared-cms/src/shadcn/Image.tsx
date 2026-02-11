@@ -18,6 +18,10 @@ export interface ShadcnImageBlok extends SbBlokData {
   image_light: ImageAsset;
   /** Dark theme image (optional) */
   image_dark?: ImageAsset;
+  /** Apply CSS invert filter while in light mode */
+  invert_in_light?: boolean;
+  /** Apply CSS invert filter while in dark mode */
+  invert_in_dark?: boolean;
   /** @deprecated Use image_light instead. Kept for backward compat during migration. */
   image?: ImageAsset;
   aspect_ratio?: "auto" | "square" | "video" | "portrait" | "wide";
@@ -63,6 +67,7 @@ export function ShadcnImage({ blok }: { blok: ShadcnImageBlok }) {
   const ratio = ratioMap[blok.aspect_ratio || "auto"];
   const objectFit = objectFitMap[blok.object_fit || "cover"];
   const rounded = roundedMap[blok.rounded || "md"];
+  const shouldInvert = isDark ? Boolean(blok.invert_in_dark) : Boolean(blok.invert_in_light);
 
   if (!activeImage?.filename) {
     return null;
@@ -71,7 +76,7 @@ export function ShadcnImage({ blok }: { blok: ShadcnImageBlok }) {
     <img
       src={activeImage.filename}
       alt={activeImage.alt || ""}
-      className={cn("w-full h-full", objectFit, rounded)}
+      className={cn("w-full h-full", objectFit, rounded, shouldInvert && "invert")}
     />
   );
 

@@ -1409,6 +1409,18 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "none", name: "None" },
         ],
       },
+      invert_in_light: {
+        type: "boolean",
+        pos: 2.5,
+        default_value: false,
+        description: "Apply invert filter in light mode",
+      },
+      invert_in_dark: {
+        type: "boolean",
+        pos: 2.6,
+        default_value: false,
+        description: "Apply invert filter in dark mode",
+      },
       rounded: {
         type: "option",
         pos: 3,
