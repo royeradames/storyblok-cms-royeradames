@@ -52,7 +52,7 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
       style={buildInlineStyles(blok.styles)}
     >
       <aside className="lg:order-2">
-        <div className="rounded-lg border border-border/70 bg-card/70 p-4 backdrop-blur lg:sticky lg:top-24">
+        <div className="rounded-lg border border-border/70 bg-card/70 p-4 backdrop-blur lg:sticky lg:top-10">
           <p className="mb-3 text-sm font-medium text-primary">
             {blok.toc_title || "On this page"}
           </p>
