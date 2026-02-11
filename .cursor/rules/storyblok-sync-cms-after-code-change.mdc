@@ -1,0 +1,19 @@
+---
+description: Always sync Storyblok CMS after Storyblok code/schema changes.
+alwaysApply: true
+---
+
+# Storyblok CMS Sync Requirement
+
+When a task changes Storyblok-related code, schema, seed definitions, mappings, or Storyblok component behavior, the agent must also update the CMS in the same task.
+
+- Do not stop after code edits only.
+- Run the appropriate Storyblok update command(s) before finishing.
+- Verify the update command succeeded and report result.
+
+Use this in combination with scope rules:
+
+- Prefer targeted CMS/component updates for narrow changes.
+- Run full CMS update only when changes are global/foundation-level.
+
+Default expectation: no manual reminder is needed; if Storyblok code changed, CMS sync is required.
