@@ -1260,52 +1260,9 @@ export const componentDefinitions: StoryblokComponent[] = [
     is_nestable: true,
     icon: "block-arrow-pointer",
     schema: {
-      items: {
-        type: "bloks",
-        pos: 0,
-        restrict_components: true,
-        component_whitelist: ["shadcn_breadcrumb_item"],
-        description: "Breadcrumb items",
-      },
       styles: {
         type: "bloks",
-        pos: 1,
-        description:
-          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
-        restrict_components: true,
-        component_whitelist: ["styles_breakpoint_options"],
-      },
-    },
-  },
-
-  {
-    name: "shadcn_breadcrumb_item",
-    display_name: "Breadcrumb Item",
-    is_root: false,
-    is_nestable: true,
-    icon: "block-buildin",
-    preview_field: "label",
-    schema: {
-      label: {
-        type: "text",
         pos: 0,
-        required: true,
-        description: "Item label",
-      },
-      href: {
-        type: "text",
-        pos: 1,
-        description: "Link URL (empty for current page)",
-      },
-      is_current: {
-        type: "boolean",
-        pos: 2,
-        default_value: false,
-        description: "Is this the current page?",
-      },
-      styles: {
-        type: "bloks",
-        pos: 3,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

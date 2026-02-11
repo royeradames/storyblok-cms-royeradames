@@ -679,45 +679,18 @@
       "is_root": false,
       "is_nestable": true,
       "schema": {
-        "items": {
+        "styles": {
           "type": "bloks",
           "pos": 0,
-          "description": "Breadcrumb items",
+          "description": "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
           "restrict_type": "",
           "restrict_components": true,
           "component_whitelist": [
-            "shadcn_breadcrumb_item"
+            "styles_breakpoint_options"
           ]
         }
       },
       "icon": "block-arrow-pointer"
-    },
-    {
-      "name": "shadcn_breadcrumb_item",
-      "display_name": "Breadcrumb Item",
-      "is_root": false,
-      "is_nestable": true,
-      "schema": {
-        "label": {
-          "type": "text",
-          "pos": 0,
-          "required": true,
-          "description": "Item label"
-        },
-        "href": {
-          "type": "text",
-          "pos": 1,
-          "description": "Link URL (empty for current page)"
-        },
-        "is_current": {
-          "type": "boolean",
-          "pos": 2,
-          "default_value": "false",
-          "description": "Is this the current page?"
-        }
-      },
-      "preview_field": "label",
-      "icon": "block-buildin"
     },
     {
       "name": "shadcn_pagination",

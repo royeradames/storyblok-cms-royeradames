@@ -30,7 +30,6 @@ export {
 export {
   ShadcnBreadcrumb,
   type ShadcnBreadcrumbBlok,
-  type ShadcnBreadcrumbItemBlok,
 } from "./Breadcrumb";
 export { ShadcnPagination, type ShadcnPaginationBlok } from "./Pagination";
 
