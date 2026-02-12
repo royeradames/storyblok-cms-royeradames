@@ -2,54 +2,48 @@
 
 import { StoryblokComponent, storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
-import type { ISbRichtext, SbBlokData } from "@storyblok/react";
+import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
   buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "../styles";
 import {
-  ARTICLE_RICH_TEXT_RENDER_CONFIG,
-  resolveRichTextRenderConfig,
-  type BuilderRichTextInputsBlok,
-  extractRichTextHeadings,
-  ShadcnRichTextContent,
-  type RichTextNodeOverrides,
+  extractRichTextHeadingsFromBloks,
 } from "./rich-text/RichText";
+import type { BuilderRichTextBlok } from "./BuilderRichText";
 import type { ShadcnArticleAsideBlok } from "./ArticleAside";
 
 export interface ShadcnArticleBlok extends SbBlokData {
-  body: ISbRichtext;
+  article_content?: SbBlokData[];
   table_of_contents?: ShadcnArticleAsideBlok[];
-  rich_text_inputs?: BuilderRichTextInputsBlok[];
   styles?: StylesBreakpointOptionsBlok[];
 }
 
-const ARTICLE_RICHTEXT_OVERRIDES = {
-  headingOne: {
-    component: "shared_article_heading_1",
-    textField: "title",
-    mirrorTextFields: ["content"],
-    wrapperClassName: "sb-article-heading-1",
-  },
-  headingTwo: {
-    component: "shared_article_heading_2",
-    textField: "title",
-    wrapperClassName: "sb-article-heading-2",
-  },
-  quote: {
-    component: "shared_article_quote",
-    textField: "quote",
-    wrapperClassName: "sb-article-quote",
-  },
-} satisfies RichTextNodeOverrides;
+function isBuilderRichTextBlok(blok: SbBlokData): blok is BuilderRichTextBlok {
+  const componentName = typeof blok.component === "string" ? blok.component : "";
+  return componentName.endsWith("builder_rich_text");
+}
 
 export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
-  const headings = extractRichTextHeadings(blok.body);
-  const articleRichTextConfig = resolveRichTextRenderConfig({
-    base: ARTICLE_RICH_TEXT_RENDER_CONFIG,
-    blokInputs: blok.rich_text_inputs?.[0],
-  });
+  const articleContentBloks = blok.article_content ?? [];
+  const { headings, headingIdsByBlokUid } =
+    extractRichTextHeadingsFromBloks(articleContentBloks);
+  const articleContentWithComputedData: SbBlokData[] = articleContentBloks.map(
+    (contentBlok) => {
+      const blokUid = typeof contentBlok._uid === "string" ? contentBlok._uid : "";
+      if (!isBuilderRichTextBlok(contentBlok) || !blokUid) return contentBlok;
+
+      const headingIds = headingIdsByBlokUid[blokUid];
+      if (!headingIds) return contentBlok;
+
+      const contentBlokWithHeadingIds: BuilderRichTextBlok = {
+        ...contentBlok,
+        heading_ids: headingIds,
+      };
+      return contentBlokWithHeadingIds;
+    },
+  );
   const tableOfContentsBlok = blok.table_of_contents?.[0];
   const asideBlokWithArticleData = tableOfContentsBlok
     ? ({
@@ -77,25 +71,21 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
         />
       )}
       <div className={cn("min-w-0", hasTableOfContents ? "lg:order-1" : "")}>
-        <div
-          className={cn(
-            "prose prose-base max-w-none flex flex-col gap-4",
-            "prose-headings:text-primary prose-headings:font-semibold",
-            "prose-p:text-muted-foreground prose-li:text-muted-foreground",
-            "prose-strong:text-foreground prose-a:text-primary prose-a:underline",
-            "[&>*]:!my-0",
-            "[&_.sb-heading-section]:my-0",
-            "[&_.sb-heading-section>h1]:mt-0 [&_.sb-heading-section>h2]:mt-0 [&_.sb-heading-section>h3]:mt-0 [&_.sb-heading-section>h4]:mt-0 [&_.sb-heading-section>h5]:mt-0 [&_.sb-heading-section>h6]:mt-0",
-            "[&_.sb-richtext-blok]:grid [&_.sb-richtext-blok]:gap-4",
-          )}
-        >
-          <ShadcnRichTextContent
-            content={blok.body}
-            headingIds={headings.map((heading) => heading.id)}
-            overrides={ARTICLE_RICHTEXT_OVERRIDES}
-            renderConfig={articleRichTextConfig}
-          />
-        </div>
+        {articleContentWithComputedData.map((contentBlok, index) => {
+          const contentBlokUid =
+            typeof contentBlok._uid === "string" ? contentBlok._uid : "";
+          const contentBlokComponent =
+            typeof contentBlok.component === "string"
+              ? contentBlok.component
+              : "article-content";
+
+          return (
+            <StoryblokComponent
+              blok={contentBlok}
+              key={contentBlokUid || `${contentBlokComponent}-${index}`}
+            />
+          );
+        })}
       </div>
     </div>
   );

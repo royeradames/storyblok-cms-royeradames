@@ -16,7 +16,11 @@ import {
   buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "../../styles";
-import { extractRichTextHeadings, getNodeText } from "./heading-utils";
+import {
+  extractRichTextHeadings,
+  extractRichTextHeadingsFromBloks,
+  getNodeText,
+} from "./heading-utils";
 import {
   ARTICLE_RICH_TEXT_RENDER_CONFIG,
   DEFAULT_RICH_TEXT_RENDER_CONFIG,
@@ -50,7 +54,7 @@ export type {
   RichTextRenderConfigInput,
   RichTextRenderElementClassNames,
 } from "./types";
-export { extractRichTextHeadings } from "./heading-utils";
+export { extractRichTextHeadings, extractRichTextHeadingsFromBloks } from "./heading-utils";
 export {
   ARTICLE_RICH_TEXT_RENDER_CONFIG,
   DEFAULT_RICH_TEXT_RENDER_CONFIG,

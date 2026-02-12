@@ -10,6 +10,7 @@ import { ShadcnGrid } from "./shadcn/Grid";
 import { ShadcnContainer } from "./shadcn/container/Container";
 import { ShadcnText } from "./shadcn/Text";
 import { ShadcnRichText } from "./shadcn/rich-text/RichText";
+import { BuilderRichText } from "./shadcn/BuilderRichText";
 import { BuilderRichTextInputs } from "./shadcn/BuilderRichTextInputs";
 import { ShadcnArticle } from "./shadcn/Article";
 import { ShadcnArticleAside } from "./shadcn/ArticleAside";
@@ -71,6 +72,7 @@ export const components = {
   // === Typography & Content ===
   shadcn_text: ShadcnText,
   shadcn_rich_text: ShadcnRichText,
+  builder_rich_text: BuilderRichText,
   builder_rich_text_inputs: BuilderRichTextInputs,
   shadcn_article: ShadcnArticle,
   shadcn_article_aside: ShadcnArticleAside,

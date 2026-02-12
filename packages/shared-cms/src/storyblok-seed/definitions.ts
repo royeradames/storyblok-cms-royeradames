@@ -941,95 +941,160 @@ export const componentDefinitions: StoryblokComponent[] = [
       wrap_heading_sections: {
         type: "boolean",
         pos: 0,
-        default_value: false,
+        default_value: true,
         description:
           "Wrap content in heading-based section containers for section-builder metadata",
       },
       prose_class_name: {
         type: "textarea",
         pos: 1,
+        default_value:
+          "prose-a:text-primary prose-a:underline prose-headings:font-semibold prose-headings:text-primary prose-p:text-muted-foreground prose-li:text-muted-foreground prose-strong:text-foreground prose-code:text-foreground",
         description: "Additional prose-level class names",
       },
       heading_class_name: {
         type: "textarea",
         pos: 2,
+        default_value: "text-primary font-semibold scroll-mt-24",
         description: "Heading element class names (h1-h6)",
       },
       heading_wrapper_class_name: {
         type: "textarea",
         pos: 3,
+        default_value: "scroll-mt-24",
         description: "Wrapper class names used when heading overrides render custom bloks",
       },
       paragraph_class_name: {
         type: "textarea",
         pos: 4,
+        default_value: "whitespace-pre-line text-primary",
         description: "Paragraph class names",
       },
       quote_class_name: {
         type: "textarea",
         pos: 5,
+        default_value: "border-l-2 border-border pl-4 italic text-muted-foreground",
         description: "Blockquote class names",
       },
       unordered_list_class_name: {
         type: "textarea",
         pos: 6,
+        default_value:
+          "text-muted-foreground list-disc dark:marker:text-[#364152] list-outside pl-6",
         description: "Unordered list class names",
       },
       ordered_list_class_name: {
         type: "textarea",
         pos: 7,
+        default_value:
+          "text-muted-foreground list-decimal list-outside pl-6 marker:text-muted-foreground",
         description: "Ordered list class names",
       },
       list_item_class_name: {
         type: "textarea",
         pos: 8,
+        default_value: "whitespace-pre-line text-primary",
         description: "List item class names",
       },
       table_class_name: {
         type: "textarea",
         pos: 9,
+        default_value: "w-full caption-bottom text-sm",
         description: "Table class names",
       },
       table_wrapper_class_name: {
         type: "textarea",
         pos: 10,
+        default_value:
+          "overflow-x-auto rounded-md border-b dark:border-b-[#364152] even:bg-muted border-border/70",
         description: "Table wrapper class names",
       },
       table_row_class_name: {
         type: "textarea",
         pos: 11,
+        default_value: "border-b dark:border-b-[#364152] even:bg-muted border-border/60",
         description: "Table row class names",
       },
       table_header_class_name: {
         type: "textarea",
         pos: 12,
+        default_value: "text-left h-10 px-3 align-middle font-medium text-primary",
         description: "Table header class names",
       },
       table_header_legacy_class_name: {
         type: "textarea",
         pos: 13,
+        default_value:
+          "text-left h-10 px-3 align-middle font-medium text-primary bg-muted/30",
         description: "Legacy table header class names used by fallback nodes",
       },
       table_cell_class_name: {
         type: "textarea",
         pos: 14,
+        default_value: "p-3 align-middle text-muted-foreground",
         description: "Table cell class names",
       },
       embedded_component_class_name: {
         type: "textarea",
         pos: 15,
+        default_value: "sb-richtext-blok",
         description: "Wrapper class names for embedded Storyblok components",
       },
       heading_section_class_name: {
         type: "textarea",
         pos: 16,
+        default_value: "sb-heading-section grid gap-4",
         description: "Section class names when heading section wrapping is enabled",
       },
       heading_section_spacing_class_name: {
         type: "textarea",
         pos: 17,
+        default_value: "pt-4",
         description:
           "Additional class names applied to heading sections after the first section",
+      },
+    },
+  },
+
+  {
+    name: "builder_rich_text",
+    display_name: "Rich Text",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-doc",
+    preview_field: "content",
+    schema: {
+      content: {
+        type: "richtext",
+        pos: 0,
+        required: true,
+        description: "Rich text content with formatting",
+      },
+      prose_size: {
+        type: "option",
+        pos: 1,
+        default_value: "base",
+        options: [
+          { value: "sm", name: "Small" },
+          { value: "base", name: "Base" },
+          { value: "lg", name: "Large" },
+        ],
+      },
+      render_inputs: {
+        type: "bloks",
+        pos: 2,
+        description:
+          "Optional rich-text render inputs from element builder (classes and behavior).",
+        restrict_components: true,
+        component_whitelist: ["builder_rich_text_inputs"],
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["styles_breakpoint_options"],
       },
     },
   },
@@ -1113,14 +1178,16 @@ export const componentDefinitions: StoryblokComponent[] = [
     is_root: false,
     is_nestable: true,
     icon: "block-doc",
-    preview_field: "body",
+    preview_field: "article_content",
     schema: {
-      body: {
-        type: "richtext",
+      article_content: {
+        type: "bloks",
         pos: 0,
         required: true,
         description:
-          "Long-form article body (headings, paragraphs, lists, quotes, tables, and embedded bloks such as alerts)",
+          "Long-form article content blocks rendered with builder-rich-text components",
+        restrict_components: true,
+        component_whitelist: ["builder_rich_text"],
       },
       table_of_contents: {
         type: "bloks",
@@ -1130,17 +1197,9 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["shadcn_article_aside"],
       },
-      rich_text_inputs: {
-        type: "bloks",
-        pos: 2,
-        description:
-          "Optional article-specific rich-text render inputs from element builder.",
-        restrict_components: true,
-        component_whitelist: ["builder_rich_text_inputs"],
-      },
       styles: {
         type: "bloks",
-        pos: 3,
+        pos: 2,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

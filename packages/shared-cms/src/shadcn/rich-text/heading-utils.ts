@@ -1,4 +1,4 @@
-import type { ISbRichtext } from "@storyblok/react";
+import type { ISbRichtext, SbBlokData } from "@storyblok/react";
 import type { RichTextHeading, RichTextNode } from "./types";
 
 function slugifyHeading(input: string): string {
@@ -46,4 +46,44 @@ export function extractRichTextHeadings(content: ISbRichtext): RichTextHeading[]
   const headings: RichTextHeading[] = [];
   collectHeadings(root, ids, headings);
   return headings;
+}
+
+function isRichTextDocument(value: unknown): value is ISbRichtext {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  return (value as { type?: unknown }).type === "doc";
+}
+
+function isBuilderRichTextBlok(
+  blok: SbBlokData,
+): blok is SbBlokData & { content: ISbRichtext } {
+  const componentName = typeof blok.component === "string" ? blok.component : "";
+  if (!componentName.endsWith("builder_rich_text")) return false;
+  return isRichTextDocument((blok as { content?: unknown }).content);
+}
+
+export interface RichTextHeadingsFromBloksResult {
+  headings: RichTextHeading[];
+  headingIdsByBlokUid: Record<string, string[]>;
+}
+
+export function extractRichTextHeadingsFromBloks(
+  bloks: SbBlokData[],
+): RichTextHeadingsFromBloksResult {
+  const ids = new Map<string, number>();
+  const headings: RichTextHeading[] = [];
+  const headingIdsByBlokUid: Record<string, string[]> = {};
+
+  for (const blok of bloks) {
+    if (!isBuilderRichTextBlok(blok)) continue;
+
+    const blokStartIndex = headings.length;
+    collectHeadings(blok.content as unknown as RichTextNode, ids, headings);
+    if (typeof blok._uid !== "string" || blok._uid.length === 0) continue;
+
+    headingIdsByBlokUid[blok._uid] = headings
+      .slice(blokStartIndex)
+      .map((heading) => heading.id);
+  }
+
+  return { headings, headingIdsByBlokUid };
 }
