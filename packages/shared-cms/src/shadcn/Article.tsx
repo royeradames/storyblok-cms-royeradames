@@ -12,7 +12,7 @@ import {
   extractRichTextHeadings,
   ShadcnRichTextContent,
   type RichTextNodeOverrides,
-} from "./RichText";
+} from "./rich-text/RichText";
 import type { ShadcnArticleAsideBlok } from "./ArticleAside";
 
 export interface ShadcnArticleBlok extends SbBlokData {

@@ -15,7 +15,7 @@ import {
   buildStyleClasses,
   buildInlineStyles,
   type StylesBreakpointOptionsBlok,
-} from "../styles";
+} from "../../styles";
 
 export interface ShadcnRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
@@ -772,10 +772,15 @@ export function ShadcnRichTextContent({
     resolvers: resolvers as any,
   });
   const richTextNode = render(content as any);
-  const convertedNode = convertAttributesInElement(richTextNode as ReactElement);
+  const convertedNode = convertAttributesInElement(
+    richTextNode as ReactElement,
+  );
   if (!isArticle) return <>{convertedNode}</>;
 
-  const sectionTree = buildArticleSectionTree(convertedNode, renderedHeadingMeta);
+  const sectionTree = buildArticleSectionTree(
+    convertedNode,
+    renderedHeadingMeta,
+  );
   return <>{renderArticleSectionChildren(sectionTree)}</>;
 }
 

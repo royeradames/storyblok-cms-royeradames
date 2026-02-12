@@ -9,9 +9,12 @@ export {
 
 // Typography & Content
 export { ShadcnText, type ShadcnTextBlok } from "./Text";
-export { ShadcnRichText, type ShadcnRichTextBlok } from "./RichText";
+export { ShadcnRichText, type ShadcnRichTextBlok } from "./rich-text/RichText";
 export { ShadcnArticle, type ShadcnArticleBlok } from "./Article";
-export { ShadcnArticleAside, type ShadcnArticleAsideBlok } from "./ArticleAside";
+export {
+  ShadcnArticleAside,
+  type ShadcnArticleAsideBlok,
+} from "./ArticleAside";
 export { ShadcnAlert, type ShadcnAlertBlok } from "./Alert";
 export { ShadcnBadge, type ShadcnBadgeBlok } from "./Badge";
 export { ShadcnIcon, type ShadcnIconBlok } from "./Icon";
@@ -28,10 +31,7 @@ export {
   type ShadcnTabsBlok,
   type ShadcnTabItemBlok,
 } from "./Tabs";
-export {
-  ShadcnBreadcrumb,
-  type ShadcnBreadcrumbBlok,
-} from "./Breadcrumb";
+export { ShadcnBreadcrumb, type ShadcnBreadcrumbBlok } from "./Breadcrumb";
 export { ShadcnPagination, type ShadcnPaginationBlok } from "./Pagination";
 
 // Media

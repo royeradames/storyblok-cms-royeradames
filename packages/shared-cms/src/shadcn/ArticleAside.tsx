@@ -8,7 +8,7 @@ import {
   buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "../styles";
-import type { RichTextHeading } from "./RichText";
+import type { RichTextHeading } from "./rich-text/RichText";
 
 export interface ShadcnArticleAsideBlok extends SbBlokData {
   title?: string;

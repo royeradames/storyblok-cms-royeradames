@@ -9,7 +9,7 @@ import { ShadcnSection } from "./shadcn/Section";
 import { ShadcnGrid } from "./shadcn/Grid";
 import { ShadcnContainer } from "./shadcn/container/Container";
 import { ShadcnText } from "./shadcn/Text";
-import { ShadcnRichText } from "./shadcn/RichText";
+import { ShadcnRichText } from "./shadcn/rich-text/RichText";
 import { ShadcnArticle } from "./shadcn/Article";
 import { ShadcnArticleAside } from "./shadcn/ArticleAside";
 import { ShadcnAlert } from "./shadcn/Alert";
