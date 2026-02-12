@@ -966,6 +966,37 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
+    name: "shadcn_article_aside",
+    display_name: "Article Aside",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-menu",
+    preview_field: "title",
+    schema: {
+      title: {
+        type: "text",
+        pos: 0,
+        default_value: "On this page",
+        description: "Table of contents title",
+      },
+      empty_message: {
+        type: "text",
+        pos: 1,
+        default_value: "No headings yet",
+        description: "Message shown when the article has no headings",
+      },
+      styles: {
+        type: "bloks",
+        pos: 2,
+        description:
+          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+        restrict_components: true,
+        component_whitelist: ["styles_breakpoint_options"],
+      },
+    },
+  },
+
+  {
     name: "shadcn_article",
     display_name: "Article",
     is_root: false,
@@ -980,11 +1011,13 @@ export const componentDefinitions: StoryblokComponent[] = [
         description:
           "Long-form article body (headings, paragraphs, lists, quotes, tables, and embedded bloks such as alerts)",
       },
-      toc_title: {
-        type: "text",
+      table_of_contents: {
+        type: "bloks",
         pos: 1,
-        default_value: "On this page",
-        description: "Table of contents label",
+        description:
+          "Optional table of contents aside blok. Receives article heading data at runtime.",
+        restrict_components: true,
+        component_whitelist: ["shadcn_article_aside"],
       },
       styles: {
         type: "bloks",

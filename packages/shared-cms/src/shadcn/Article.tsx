@@ -1,7 +1,7 @@
 "use client";
 
-import { storyblokEditable } from "@storyblok/react";
-import { cn, ScrollArea } from "@repo/ui";
+import { StoryblokComponent, storyblokEditable } from "@storyblok/react";
+import { cn } from "@repo/ui";
 import type { ISbRichtext, SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
@@ -13,10 +13,11 @@ import {
   ShadcnRichTextContent,
   type RichTextNodeOverrides,
 } from "./RichText";
+import type { ShadcnArticleAsideBlok } from "./ArticleAside";
 
 export interface ShadcnArticleBlok extends SbBlokData {
   body: ISbRichtext;
-  toc_title?: string;
+  table_of_contents?: ShadcnArticleAsideBlok[];
   styles?: StylesBreakpointOptionsBlok[];
 }
 
@@ -41,50 +42,33 @@ const ARTICLE_RICHTEXT_OVERRIDES = {
 
 export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
   const headings = extractRichTextHeadings(blok.body);
+  const tableOfContentsBlok = blok.table_of_contents?.[0];
+  const asideBlokWithArticleData = tableOfContentsBlok
+    ? ({
+        ...tableOfContentsBlok,
+        headings,
+      } satisfies ShadcnArticleAsideBlok)
+    : null;
+  const hasTableOfContents = Boolean(asideBlokWithArticleData);
 
   return (
     <div
       {...storyblokEditable(blok)}
       className={cn(
-        "grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10 ",
+        hasTableOfContents
+          ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10"
+          : "",
         ...buildStyleClasses(blok.styles),
       )}
       style={buildInlineStyles(blok.styles)}
     >
-      <aside className="lg:order-2">
-        <div className="rounded-lg border border-border/70 bg-card/70 p-4 backdrop-blur lg:sticky lg:top-10">
-          <p className="mb-3 text-sm font-medium text-primary">
-            {blok.toc_title || "On this page"}
-          </p>
-          <ScrollArea className="max-h-[calc(100vh-10rem)] pr-3">
-            <nav aria-label="Table of contents">
-              <ul className="space-y-1">
-                {headings.length > 0 ? (
-                  headings.map((heading) => (
-                    <li key={heading.id}>
-                      <a
-                        href={`#${heading.id}`}
-                        className={cn(
-                          "block rounded px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary",
-                          heading.level >= 3 ? "ml-3" : "",
-                          heading.level >= 4 ? "ml-6" : "",
-                        )}
-                      >
-                        {heading.text}
-                      </a>
-                    </li>
-                  ))
-                ) : (
-                  <li className="px-2 py-1 text-sm text-muted-foreground">
-                    No headings yet
-                  </li>
-                )}
-              </ul>
-            </nav>
-          </ScrollArea>
-        </div>
-      </aside>
-      <div className="min-w-0 lg:order-1 ">
+      {asideBlokWithArticleData && (
+        <StoryblokComponent
+          blok={asideBlokWithArticleData}
+          key={asideBlokWithArticleData._uid}
+        />
+      )}
+      <div className={cn("min-w-0", hasTableOfContents ? "lg:order-1" : "")}>
         <div
           className={cn(
             "prose prose-base max-w-none flex flex-col gap-4",
