@@ -1,0 +1,20 @@
+---
+description: Use descriptive names so code documents intent and abstraction.
+alwaysApply: true
+---
+
+# Document Through Code Naming
+
+Prefer self-documenting code by expressing intent through function, variable, and type names.
+
+- Name functions by behavior and outcome, not implementation detail.
+- Name variables by meaning and role in the domain, not temporary mechanics.
+- Use abstraction-revealing names that communicate "why" and "what" at a glance.
+- Keep naming consistent with surrounding domain terms.
+
+Avoid:
+- Generic names like `data`, `value`, `item`, `temp`, or `handler` when a specific name is possible.
+- Misleading names that hide side effects or business intent.
+- Abbreviations unless they are standard and unambiguous in the codebase.
+
+Prefer code readability through naming first; add comments only when naming and structure cannot fully express intent.
