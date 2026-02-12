@@ -1,0 +1,19 @@
+---
+description: Extract nested object shapes into named reusable TypeScript types.
+alwaysApply: true
+---
+
+# Extract Nested Object Types
+
+When a TypeScript type includes nested object literals, prefer moving those nested shapes into their own named types.
+
+- Extract repeated or meaningful nested object shapes into `type` aliases.
+- Reference extracted types from parent types instead of inline nested literals.
+- Name extracted types by domain meaning and role.
+- Reuse extracted types across props, API models, and utility signatures when applicable.
+
+Avoid:
+- Deep inline nested object literals that are hard to scan or reuse.
+- Duplicating the same nested shape across multiple parent types.
+
+Use inline nested object literals only when the shape is truly one-off and trivial.

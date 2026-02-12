@@ -1,0 +1,19 @@
+---
+description: Prefer TypeScript `satisfies` for shape verification without widening inferred types.
+alwaysApply: true
+---
+
+# Use TypeScript `satisfies` When Appropriate
+
+Use the `satisfies` operator when you want to verify that a value matches a required type while keeping precise inferred literal types.
+
+- Prefer `const value = {...} satisfies SomeType` for static config objects, maps, and option definitions.
+- Use `satisfies` to catch missing keys, extra invalid fields, and incompatible value types at compile time.
+- Keep inference narrow for downstream usage instead of forcing broad annotation with `: SomeType`.
+- Use type annotations (`: SomeType`) when you intentionally want type widening or explicit API boundaries.
+
+Avoid:
+- Replacing every annotation with `satisfies` by default.
+- Using `as` assertions where `satisfies` can provide safer verification.
+
+Use `satisfies` when verification + inference preservation is the goal.
