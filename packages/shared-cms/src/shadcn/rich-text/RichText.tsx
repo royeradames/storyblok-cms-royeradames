@@ -16,10 +16,51 @@ import {
   buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "../../styles";
+import { extractRichTextHeadings, getNodeText } from "./heading-utils";
+import {
+  ARTICLE_RICH_TEXT_RENDER_CONFIG,
+  DEFAULT_RICH_TEXT_RENDER_CONFIG,
+  resolveRichTextRenderConfig,
+} from "./render-config";
+import {
+  buildHeadingSectionTree,
+  renderHeadingSectionTree,
+} from "./section-tree";
+import type {
+  BuilderRichTextInputsBlok,
+  RenderedHeadingMeta,
+  RichTextHeading,
+  RichTextHeadingLevel,
+  RichTextNode,
+  RichTextNodeOverrideConfig,
+  RichTextNodeOverrides,
+  RichTextRenderConfig,
+  RichTextRenderConfigInput,
+} from "./types";
+
+export type {
+  BuilderRichTextInputsBlok,
+  RichTextHeading,
+  RichTextHeadingLevel,
+  RichTextHeadingOverrideConfig,
+  RichTextNodeOverrideConfig,
+  RichTextNodeOverrides,
+  RichTextRenderBehavior,
+  RichTextRenderConfig,
+  RichTextRenderConfigInput,
+  RichTextRenderElementClassNames,
+} from "./types";
+export { extractRichTextHeadings } from "./heading-utils";
+export {
+  ARTICLE_RICH_TEXT_RENDER_CONFIG,
+  DEFAULT_RICH_TEXT_RENDER_CONFIG,
+  resolveRichTextRenderConfig,
+} from "./render-config";
 
 export interface ShadcnRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
   prose_size?: "sm" | "base" | "lg";
+  render_inputs?: BuilderRichTextInputsBlok[];
   styles?: StylesBreakpointOptionsBlok[];
   component: string;
   _uid: string;
@@ -31,110 +72,16 @@ const proseSizeMap = {
   lg: "prose-lg",
 };
 
-type RichTextVariant = "default" | "article";
+const HEADING_OVERRIDE_KEY_BY_LEVEL = {
+  1: "headingOne",
+  2: "headingTwo",
+  3: "headingThree",
+  4: "headingFour",
+  5: "headingFive",
+  6: "headingSix",
+} as const satisfies Record<RichTextHeadingLevel, keyof RichTextNodeOverrides>;
+
 type ResolverNode = RichTextNode & { children?: React.ReactNode };
-export type RichTextHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-
-export interface RichTextNodeOverrideConfig {
-  component: string;
-  textField: string;
-  mirrorTextFields?: string[];
-  idField?: string;
-  levelField?: string;
-  bodyField?: string;
-  wrapperClassName?: string;
-  staticFields?: Record<string, unknown>;
-}
-export type RichTextHeadingOverrideConfig = RichTextNodeOverrideConfig;
-
-export interface RichTextNodeOverrides {
-  headingOne?: RichTextNodeOverrideConfig;
-  headingTwo?: RichTextNodeOverrideConfig;
-  headingThree?: RichTextNodeOverrideConfig;
-  headingFour?: RichTextNodeOverrideConfig;
-  headingFive?: RichTextNodeOverrideConfig;
-  headingSix?: RichTextNodeOverrideConfig;
-  quote?: RichTextNodeOverrideConfig;
-  paragraph?: RichTextNodeOverrideConfig;
-  unorderedList?: RichTextNodeOverrideConfig;
-  orderedList?: RichTextNodeOverrideConfig;
-  listItem?: RichTextNodeOverrideConfig;
-  table?: RichTextNodeOverrideConfig;
-  tableRow?: RichTextNodeOverrideConfig;
-  tableHeader?: RichTextNodeOverrideConfig;
-  tableCell?: RichTextNodeOverrideConfig;
-  embeddedComponent?: RichTextNodeOverrideConfig;
-}
-
-interface RichTextNode {
-  type?: string;
-  text?: string;
-  attrs?: {
-    key?: string;
-    level?: number;
-    body?: (SbBlokData & { component?: string })[];
-  };
-  content?: RichTextNode[];
-}
-
-export interface RichTextHeading {
-  id: string;
-  text: string;
-  level: number;
-}
-
-interface RenderedHeadingMeta {
-  level: RichTextHeadingLevel;
-  id?: string;
-  text?: string;
-}
-
-interface ArticleSectionNode {
-  kind: "section";
-  heading: RenderedHeadingMeta;
-  children: ArticleSectionChild[];
-}
-
-type ArticleSectionChild = React.ReactNode | ArticleSectionNode;
-
-function slugifyHeading(input: string): string {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-function getNodeText(node: RichTextNode): string {
-  if (node.type === "text") return node.text || "";
-  return (node.content || []).map(getNodeText).join("");
-}
-
-function getHeadingLevelFromClassName(className?: string): number | null {
-  if (!className) return null;
-  const match = className.match(/(?:^|\s)sb-article-heading-([1-6])(?:\s|$)/);
-  if (!match) return null;
-  return Number(match[1]);
-}
-
-function getRenderedHeadingLevel(node: React.ReactNode): number | null {
-  if (!React.isValidElement<{ className?: string }>(node)) return null;
-  const elementType = node.type;
-  if (typeof elementType === "string") {
-    const headingMatch = elementType.match(/^h([1-6])$/i);
-    if (headingMatch) return Number(headingMatch[1]);
-    const className =
-      typeof node.props.className === "string" ? node.props.className : "";
-    return getHeadingLevelFromClassName(className);
-  }
-  return null;
-}
-
-function getRenderedHeadingId(node: React.ReactNode): string | undefined {
-  if (!React.isValidElement<{ id?: string }>(node)) return undefined;
-  return typeof node.props.id === "string" ? node.props.id : undefined;
-}
 
 function normalizeHeadingText(text?: string): string | undefined {
   if (!text) return undefined;
@@ -142,141 +89,19 @@ function normalizeHeadingText(text?: string): string | undefined {
   return normalized.length > 0 ? normalized : undefined;
 }
 
-function isArticleSectionNode(
-  child: ArticleSectionChild,
-): child is ArticleSectionNode {
-  return (
-    typeof child === "object" &&
-    child !== null &&
-    "kind" in child &&
-    (child as ArticleSectionNode).kind === "section"
-  );
-}
-
-function buildArticleSectionTree(
-  renderedNode: React.ReactNode,
-  headingMeta: RenderedHeadingMeta[],
-): ArticleSectionChild[] {
-  const blocks = React.Children.toArray(renderedNode);
-  const rootChildren: ArticleSectionChild[] = [];
-  const sectionStack: ArticleSectionNode[] = [];
-  let headingMetaIndex = 0;
-
-  for (const block of blocks) {
-    const renderedLevel = getRenderedHeadingLevel(block);
-    if (!renderedLevel) {
-      const parentChildren =
-        sectionStack.length > 0
-          ? sectionStack[sectionStack.length - 1]!.children
-          : rootChildren;
-      parentChildren.push(block);
-      continue;
-    }
-
-    const nextMeta = headingMeta[headingMetaIndex++];
-    const level = Math.min(
-      Math.max(Number(nextMeta?.level ?? renderedLevel), 1),
-      6,
-    ) as RichTextHeadingLevel;
-    const sectionNode: ArticleSectionNode = {
-      kind: "section",
-      heading: {
-        level,
-        id: nextMeta?.id ?? getRenderedHeadingId(block),
-        text: normalizeHeadingText(nextMeta?.text),
-      },
-      children: [block],
-    };
-
-    while (
-      sectionStack.length > 0 &&
-      sectionStack[sectionStack.length - 1]!.heading.level >= level
-    ) {
-      sectionStack.pop();
-    }
-
-    const parentChildren =
-      sectionStack.length > 0
-        ? sectionStack[sectionStack.length - 1]!.children
-        : rootChildren;
-    parentChildren.push(sectionNode);
-    sectionStack.push(sectionNode);
-  }
-
-  return rootChildren;
-}
-
-function renderArticleSectionChildren(
-  children: ArticleSectionChild[],
-  keyPrefix = "sb-section",
-): React.ReactNode[] {
-  return children.map((child, index) => {
-    if (!isArticleSectionNode(child)) return child;
-    const sectionKey = child.heading.id
-      ? `${keyPrefix}-${child.heading.id}`
-      : `${keyPrefix}-${index}`;
-    return (
-      <section
-        key={sectionKey}
-        className={cn("sb-heading-section grid gap-4", index > 0 && "pt-4")}
-        data-sb-heading-level={child.heading.level}
-        data-sb-heading-id={child.heading.id}
-        data-sb-heading-text={child.heading.text}
-      >
-        {renderArticleSectionChildren(child.children, sectionKey)}
-      </section>
-    );
-  });
-}
-
-function collectHeadings(
-  node: RichTextNode,
-  ids: Map<string, number>,
-  out: RichTextHeading[],
-): void {
-  if (node.type === "heading") {
-    const level = Math.min(Math.max(Number(node.attrs?.level || 2), 1), 6);
-    const text = getNodeText(node).trim();
-    if (text.length > 0) {
-      const base = slugifyHeading(text) || "section";
-      const count = ids.get(base) ?? 0;
-      ids.set(base, count + 1);
-      out.push({
-        id: count === 0 ? base : `${base}-${count + 1}`,
-        text,
-        level,
-      });
-    }
-  }
-
-  for (const child of node.content || []) {
-    collectHeadings(child, ids, out);
-  }
-}
-
-export function extractRichTextHeadings(
-  content: ISbRichtext,
-): RichTextHeading[] {
-  const root = content as unknown as RichTextNode;
-  const ids = new Map<string, number>();
-  const headings: RichTextHeading[] = [];
-  collectHeadings(root, ids, headings);
-  return headings;
-}
-
 export function ShadcnRichTextContent({
   content,
-  variant = "default",
   headingIds,
   overrides,
+  renderConfig,
 }: {
   content: ISbRichtext;
-  variant?: RichTextVariant;
   headingIds?: string[];
   overrides?: RichTextNodeOverrides;
+  renderConfig?: RichTextRenderConfig;
 }) {
   let headingIndex = 0;
-  const isArticle = variant === "article";
+  const resolvedRenderConfig = renderConfig ?? DEFAULT_RICH_TEXT_RENDER_CONFIG;
   let resolverKeyCounter = 0;
   const renderedHeadingMeta: RenderedHeadingMeta[] = [];
 
@@ -460,23 +285,8 @@ export function ShadcnRichTextContent({
         6,
       ) as RichTextHeadingLevel;
       const id = headingIds?.[headingIndex++];
-      const className = isArticle
-        ? "text-primary font-semibold scroll-mt-24"
-        : undefined;
       const key = getNodeKey(node, `h${level}`);
       const headingText = getNodeText(node).trim();
-      const headingOverride =
-        level === 1
-          ? overrides?.headingOne
-          : level === 2
-            ? overrides?.headingTwo
-            : level === 3
-              ? overrides?.headingThree
-              : level === 4
-                ? overrides?.headingFour
-                : level === 5
-                  ? overrides?.headingFive
-                  : overrides?.headingSix;
       renderedHeadingMeta.push({
         level,
         id,
@@ -485,14 +295,21 @@ export function ShadcnRichTextContent({
 
       return renderOverrideOrFallback(
         `heading${level}`,
-        headingOverride,
+        overrides?.[HEADING_OVERRIDE_KEY_BY_LEVEL[level]],
         key,
         id,
         level,
         headingText,
         undefined,
-        "scroll-mt-24",
-        () => renderDefaultHeading(level, key, id, className, node.children),
+        resolvedRenderConfig.classes.headingWrapper,
+        () =>
+          renderDefaultHeading(
+            level,
+            key,
+            id,
+            cn(resolvedRenderConfig.classes.heading),
+            node.children,
+          ),
       );
     },
     [BlockTypes.PARAGRAPH]: (node: ResolverNode) => {
@@ -509,10 +326,7 @@ export function ShadcnRichTextContent({
         () => (
           <p
             key={key}
-            className={cn(
-              "whitespace-pre-line",
-              isArticle ? "text-primary" : undefined,
-            )}
+            className={cn(resolvedRenderConfig.classes.paragraph)}
           >
             {node.children}
           </p>
@@ -533,10 +347,7 @@ export function ShadcnRichTextContent({
         () => (
           <blockquote
             key={key}
-            className={cn(
-              isArticle &&
-                "border-l-2 border-border pl-4 italic text-muted-foreground",
-            )}
+            className={cn(resolvedRenderConfig.classes.quote)}
           >
             {node.children}
           </blockquote>
@@ -557,11 +368,7 @@ export function ShadcnRichTextContent({
         () => (
           <ul
             key={key}
-            className={
-              isArticle
-                ? "text-muted-foreground list-disc dark:marker:text-[#364152] list-outside pl-6 "
-                : undefined
-            }
+            className={cn(resolvedRenderConfig.classes.unorderedList)}
           >
             {node.children}
           </ul>
@@ -582,11 +389,7 @@ export function ShadcnRichTextContent({
         () => (
           <ol
             key={key}
-            className={
-              isArticle
-                ? "text-muted-foreground list-decimal list-outside pl-6 marker:text-muted-foreground"
-                : undefined
-            }
+            className={cn(resolvedRenderConfig.classes.orderedList)}
           >
             {node.children}
           </ol>
@@ -607,10 +410,7 @@ export function ShadcnRichTextContent({
         () => (
           <li
             key={key}
-            className={cn(
-              "whitespace-pre-line",
-              isArticle ? "text-primary" : undefined,
-            )}
+            className={cn(resolvedRenderConfig.classes.listItem)}
           >
             {normalizeListItemChildren(node.children)}
           </li>
@@ -618,13 +418,11 @@ export function ShadcnRichTextContent({
       );
     },
     [BlockTypes.TABLE]: (node: ResolverNode) =>
-      isArticle
-        ? renderTable(
-            node,
-            "w-full caption-bottom text-sm",
-            "overflow-x-auto rounded-md border-b dark:border-b-[#364152] even:bg-muted border-border/70",
-          )
-        : renderTable(node),
+      renderTable(
+        node,
+        resolvedRenderConfig.classes.table,
+        resolvedRenderConfig.classes.tableWrapper,
+      ),
     [BlockTypes.TABLE_ROW]: (node: ResolverNode) => {
       const key = getNodeKey(node, "tr");
       return renderOverrideOrFallback(
@@ -639,11 +437,7 @@ export function ShadcnRichTextContent({
         () => (
           <tr
             key={key}
-            className={
-              isArticle
-                ? "border-b dark:border-b-[#364152] even:bg-muted border-border/60"
-                : undefined
-            }
+            className={cn(resolvedRenderConfig.classes.tableRow)}
           >
             {node.children}
           </tr>
@@ -664,10 +458,7 @@ export function ShadcnRichTextContent({
         () => (
           <th
             key={key}
-            className={cn(
-              "text-left",
-              isArticle && "h-10 px-3 align-middle font-medium text-primary ",
-            )}
+            className={cn(resolvedRenderConfig.classes.tableHeader)}
           >
             {node.children}
           </th>
@@ -688,9 +479,7 @@ export function ShadcnRichTextContent({
         () => (
           <td
             key={key}
-            className={
-              isArticle ? "p-3 align-middle text-muted-foreground" : undefined
-            }
+            className={cn(resolvedRenderConfig.classes.tableCell)}
           >
             {node.children}
           </td>
@@ -700,11 +489,7 @@ export function ShadcnRichTextContent({
     table_row: (node: ResolverNode) => (
       <tr
         key={getNodeKey(node, "tr")}
-        className={
-          isArticle
-            ? "border-b dark:border-b-[#364152] even:bg-muted border-border/60"
-            : undefined
-        }
+        className={cn(resolvedRenderConfig.classes.tableRow)}
       >
         {node.children}
       </tr>
@@ -712,11 +497,7 @@ export function ShadcnRichTextContent({
     table_header: (node: ResolverNode) => (
       <th
         key={getNodeKey(node, "th")}
-        className={cn(
-          "text-left",
-          isArticle &&
-            "h-10 px-3 align-middle font-medium text-primary bg-muted/30",
-        )}
+        className={cn(resolvedRenderConfig.classes.tableHeaderLegacy)}
       >
         {node.children}
       </th>
@@ -724,9 +505,7 @@ export function ShadcnRichTextContent({
     table_cell: (node: ResolverNode) => (
       <td
         key={getNodeKey(node, "td")}
-        className={
-          isArticle ? "p-3 align-middle text-muted-foreground" : undefined
-        }
+        className={cn(resolvedRenderConfig.classes.tableCell)}
       >
         {node.children}
       </td>
@@ -744,7 +523,10 @@ export function ShadcnRichTextContent({
         body,
         undefined,
         () => (
-          <div key={key} className="sb-richtext-blok">
+          <div
+            key={key}
+            className={cn(resolvedRenderConfig.classes.embeddedComponent)}
+          >
             {body.map((nestedBlok, index) => (
               <StoryblokComponent
                 blok={nestedBlok}
@@ -775,36 +557,46 @@ export function ShadcnRichTextContent({
   const convertedNode = convertAttributesInElement(
     richTextNode as ReactElement,
   );
-  if (!isArticle) return <>{convertedNode}</>;
+  if (!resolvedRenderConfig.behavior.wrapHeadingSections) {
+    return <>{convertedNode}</>;
+  }
 
-  const sectionTree = buildArticleSectionTree(
-    convertedNode,
-    renderedHeadingMeta,
+  const sectionTree = buildHeadingSectionTree(convertedNode, renderedHeadingMeta);
+  return (
+    <>
+      {renderHeadingSectionTree(sectionTree, {
+        section: resolvedRenderConfig.classes.headingSection,
+        spacing: resolvedRenderConfig.classes.headingSectionSpacing,
+      })}
+    </>
   );
-  return <>{renderArticleSectionChildren(sectionTree)}</>;
 }
 
 export function ShadcnRichText({
   blok,
-  variant = "default",
   headingIds,
   overrides,
+  renderConfigInput,
+  renderConfigBase = DEFAULT_RICH_TEXT_RENDER_CONFIG,
 }: {
   blok: ShadcnRichTextBlok;
-  variant?: RichTextVariant;
   headingIds?: string[];
   overrides?: RichTextNodeOverrides;
+  renderConfigInput?: RichTextRenderConfigInput;
+  renderConfigBase?: RichTextRenderConfig;
 }) {
-  const isArticle = variant === "article";
+  const resolvedRenderConfig = resolveRichTextRenderConfig({
+    base: renderConfigBase,
+    blokInputs: blok.render_inputs?.[0],
+    propInputs: renderConfigInput,
+  });
 
   return (
     <div
       {...storyblokEditable(blok as unknown as SbBlokData)}
       className={cn(
         proseSizeMap[blok.prose_size || "base"],
-        "prose-a:text-primary prose-a:underline",
-        isArticle &&
-          "prose-headings:font-semibold prose-headings:text-primary prose-p:text-muted-foreground prose-li:text-muted-foreground prose-strong:text-foreground prose-code:text-foreground",
+        resolvedRenderConfig.classes.prose,
         "max-w-none",
         ...buildStyleClasses(blok.styles),
       )}
@@ -812,9 +604,9 @@ export function ShadcnRichText({
     >
       <ShadcnRichTextContent
         content={blok.content}
-        variant={variant}
         headingIds={headingIds}
         overrides={overrides}
+        renderConfig={resolvedRenderConfig}
       />
     </div>
   );

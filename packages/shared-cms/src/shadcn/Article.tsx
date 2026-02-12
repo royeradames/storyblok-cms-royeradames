@@ -9,6 +9,9 @@ import {
   type StylesBreakpointOptionsBlok,
 } from "../styles";
 import {
+  ARTICLE_RICH_TEXT_RENDER_CONFIG,
+  resolveRichTextRenderConfig,
+  type BuilderRichTextInputsBlok,
   extractRichTextHeadings,
   ShadcnRichTextContent,
   type RichTextNodeOverrides,
@@ -18,6 +21,7 @@ import type { ShadcnArticleAsideBlok } from "./ArticleAside";
 export interface ShadcnArticleBlok extends SbBlokData {
   body: ISbRichtext;
   table_of_contents?: ShadcnArticleAsideBlok[];
+  rich_text_inputs?: BuilderRichTextInputsBlok[];
   styles?: StylesBreakpointOptionsBlok[];
 }
 
@@ -42,6 +46,10 @@ const ARTICLE_RICHTEXT_OVERRIDES = {
 
 export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
   const headings = extractRichTextHeadings(blok.body);
+  const articleRichTextConfig = resolveRichTextRenderConfig({
+    base: ARTICLE_RICH_TEXT_RENDER_CONFIG,
+    blokInputs: blok.rich_text_inputs?.[0],
+  });
   const tableOfContentsBlok = blok.table_of_contents?.[0];
   const asideBlokWithArticleData = tableOfContentsBlok
     ? ({
@@ -83,9 +91,9 @@ export function ShadcnArticle({ blok }: { blok: ShadcnArticleBlok }) {
         >
           <ShadcnRichTextContent
             content={blok.body}
-            variant="article"
             headingIds={headings.map((heading) => heading.id)}
             overrides={ARTICLE_RICHTEXT_OVERRIDES}
+            renderConfig={articleRichTextConfig}
           />
         </div>
       </div>

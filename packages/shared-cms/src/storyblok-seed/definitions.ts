@@ -932,6 +932,109 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
+    name: "builder_rich_text_inputs",
+    display_name: "Rich Text Inputs",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-settings",
+    schema: {
+      wrap_heading_sections: {
+        type: "boolean",
+        pos: 0,
+        default_value: false,
+        description:
+          "Wrap content in heading-based section containers for section-builder metadata",
+      },
+      prose_class_name: {
+        type: "textarea",
+        pos: 1,
+        description: "Additional prose-level class names",
+      },
+      heading_class_name: {
+        type: "textarea",
+        pos: 2,
+        description: "Heading element class names (h1-h6)",
+      },
+      heading_wrapper_class_name: {
+        type: "textarea",
+        pos: 3,
+        description: "Wrapper class names used when heading overrides render custom bloks",
+      },
+      paragraph_class_name: {
+        type: "textarea",
+        pos: 4,
+        description: "Paragraph class names",
+      },
+      quote_class_name: {
+        type: "textarea",
+        pos: 5,
+        description: "Blockquote class names",
+      },
+      unordered_list_class_name: {
+        type: "textarea",
+        pos: 6,
+        description: "Unordered list class names",
+      },
+      ordered_list_class_name: {
+        type: "textarea",
+        pos: 7,
+        description: "Ordered list class names",
+      },
+      list_item_class_name: {
+        type: "textarea",
+        pos: 8,
+        description: "List item class names",
+      },
+      table_class_name: {
+        type: "textarea",
+        pos: 9,
+        description: "Table class names",
+      },
+      table_wrapper_class_name: {
+        type: "textarea",
+        pos: 10,
+        description: "Table wrapper class names",
+      },
+      table_row_class_name: {
+        type: "textarea",
+        pos: 11,
+        description: "Table row class names",
+      },
+      table_header_class_name: {
+        type: "textarea",
+        pos: 12,
+        description: "Table header class names",
+      },
+      table_header_legacy_class_name: {
+        type: "textarea",
+        pos: 13,
+        description: "Legacy table header class names used by fallback nodes",
+      },
+      table_cell_class_name: {
+        type: "textarea",
+        pos: 14,
+        description: "Table cell class names",
+      },
+      embedded_component_class_name: {
+        type: "textarea",
+        pos: 15,
+        description: "Wrapper class names for embedded Storyblok components",
+      },
+      heading_section_class_name: {
+        type: "textarea",
+        pos: 16,
+        description: "Section class names when heading section wrapping is enabled",
+      },
+      heading_section_spacing_class_name: {
+        type: "textarea",
+        pos: 17,
+        description:
+          "Additional class names applied to heading sections after the first section",
+      },
+    },
+  },
+
+  {
     name: "shadcn_rich_text",
     display_name: "Rich Text",
     is_root: false,
@@ -954,9 +1057,17 @@ export const componentDefinitions: StoryblokComponent[] = [
           { value: "lg", name: "Large" },
         ],
       },
-      styles: {
+      render_inputs: {
         type: "bloks",
         pos: 2,
+        description:
+          "Optional rich-text render inputs from element builder (classes and behavior).",
+        restrict_components: true,
+        component_whitelist: ["builder_rich_text_inputs"],
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
@@ -1019,9 +1130,17 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["shadcn_article_aside"],
       },
-      styles: {
+      rich_text_inputs: {
         type: "bloks",
         pos: 2,
+        description:
+          "Optional article-specific rich-text render inputs from element builder.",
+        restrict_components: true,
+        component_whitelist: ["builder_rich_text_inputs"],
+      },
+      styles: {
+        type: "bloks",
+        pos: 3,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
