@@ -57,7 +57,7 @@ function isBuilderRichTextBlok(
   blok: SbBlokData,
 ): blok is SbBlokData & { content: ISbRichtext } {
   const componentName = typeof blok.component === "string" ? blok.component : "";
-  if (!componentName.endsWith("builder_rich_text")) return false;
+  if (!componentName.endsWith("rich_text")) return false;
   return isRichTextDocument((blok as { content?: unknown }).content);
 }
 

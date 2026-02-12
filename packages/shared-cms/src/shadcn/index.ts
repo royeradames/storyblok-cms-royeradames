@@ -12,7 +12,6 @@ export { ShadcnText, type ShadcnTextBlok } from "./Text";
 export { ShadcnRichText, type ShadcnRichTextBlok } from "./rich-text/RichText";
 export { BuilderRichText, type BuilderRichTextBlok } from "./BuilderRichText";
 export { BuilderRichTextInputs } from "./BuilderRichTextInputs";
-export { ShadcnArticle, type ShadcnArticleBlok } from "./Article";
 export {
   ShadcnArticleAside,
   type ShadcnArticleAsideBlok,

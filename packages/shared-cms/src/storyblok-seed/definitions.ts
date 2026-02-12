@@ -1057,8 +1057,8 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
-    name: "builder_rich_text",
-    display_name: "Rich Text",
+    name: "rich_text",
+    display_name: "Shared Rich Text",
     is_root: false,
     is_nestable: true,
     icon: "block-doc",
@@ -1088,9 +1088,39 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["builder_rich_text_inputs"],
       },
-      styles: {
+      aside_left: {
         type: "bloks",
         pos: 3,
+        description: "Optional left aside content",
+        restrict_components: true,
+        component_whitelist: [
+          "shadcn_article_aside",
+          "shadcn_container",
+          "shadcn_alert",
+          "shadcn_card",
+          "shadcn_text",
+          "shadcn_rich_text",
+          "rich_text",
+        ],
+      },
+      aside_right: {
+        type: "bloks",
+        pos: 4,
+        description: "Optional right aside content",
+        restrict_components: true,
+        component_whitelist: [
+          "shadcn_article_aside",
+          "shadcn_container",
+          "shadcn_alert",
+          "shadcn_card",
+          "shadcn_text",
+          "shadcn_rich_text",
+          "rich_text",
+        ],
+      },
+      styles: {
+        type: "bloks",
+        pos: 5,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,
@@ -1160,42 +1190,6 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 1,
         default_value: "No headings yet",
         description: "Message shown when the article has no headings",
-      },
-      styles: {
-        type: "bloks",
-        pos: 2,
-        description:
-          "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
-        restrict_components: true,
-        component_whitelist: ["styles_breakpoint_options"],
-      },
-    },
-  },
-
-  {
-    name: "shadcn_article",
-    display_name: "Article",
-    is_root: false,
-    is_nestable: true,
-    icon: "block-doc",
-    preview_field: "article_content",
-    schema: {
-      article_content: {
-        type: "bloks",
-        pos: 0,
-        required: true,
-        description:
-          "Long-form article content blocks rendered with builder-rich-text components",
-        restrict_components: true,
-        component_whitelist: ["builder_rich_text"],
-      },
-      table_of_contents: {
-        type: "bloks",
-        pos: 1,
-        description:
-          "Optional table of contents aside blok. Receives article heading data at runtime.",
-        restrict_components: true,
-        component_whitelist: ["shadcn_article_aside"],
       },
       styles: {
         type: "bloks",

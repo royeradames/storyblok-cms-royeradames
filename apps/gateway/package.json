@@ -30,6 +30,7 @@
     "storyblok:migrate-styles-gap-to-options": "bun scripts/storyblok/migrate-styles-gap-to-options.ts",
     "storyblok:migrate-flex-to-container": "bun scripts/storyblok/migrate-flex-to-container.ts",
     "storyblok:migrate-article-body-to-builder-rich-text": "bun scripts/storyblok/migrate-article-body-to-builder-rich-text.ts",
+    "storyblok:migrate-rich-text-to-shared": "bun scripts/storyblok/migrate-article-body-to-builder-rich-text.ts",
     "storyblok:delete-component": "bun scripts/storyblok/delete-component.ts",
     "styles:safelist": "STYLES_SAFELIST_PROFILE=dev bun scripts/generate-styles-safelist.ts",
     "styles:safelist:full": "STYLES_SAFELIST_PROFILE=full bun scripts/generate-styles-safelist.ts"

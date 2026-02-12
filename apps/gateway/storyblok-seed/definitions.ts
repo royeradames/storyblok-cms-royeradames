@@ -38,7 +38,7 @@ export interface StoryblokComponentDef {
  */
 export const PAGE_BODY_INITIAL_WHITELIST = [
   "shared_shadcn_container",
-  "shared_shadcn_article",
+  "shared_rich_text",
 ];
 
 export const gatewayComponentDefinitions: StoryblokComponentDef[] = [

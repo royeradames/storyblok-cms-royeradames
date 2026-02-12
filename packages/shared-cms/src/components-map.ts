@@ -12,7 +12,6 @@ import { ShadcnText } from "./shadcn/Text";
 import { ShadcnRichText } from "./shadcn/rich-text/RichText";
 import { BuilderRichText } from "./shadcn/BuilderRichText";
 import { BuilderRichTextInputs } from "./shadcn/BuilderRichTextInputs";
-import { ShadcnArticle } from "./shadcn/Article";
 import { ShadcnArticleAside } from "./shadcn/ArticleAside";
 import { ShadcnAlert } from "./shadcn/Alert";
 import { ShadcnBadge } from "./shadcn/Badge";
@@ -72,9 +71,8 @@ export const components = {
   // === Typography & Content ===
   shadcn_text: ShadcnText,
   shadcn_rich_text: ShadcnRichText,
-  builder_rich_text: BuilderRichText,
+  rich_text: BuilderRichText,
   builder_rich_text_inputs: BuilderRichTextInputs,
-  shadcn_article: ShadcnArticle,
   shadcn_article_aside: ShadcnArticleAside,
   shadcn_alert: ShadcnAlert,
   shadcn_badge: ShadcnBadge,
