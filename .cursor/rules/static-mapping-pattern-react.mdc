@@ -1,0 +1,19 @@
+---
+description: Prefer record lookups over branching for static React mappings.
+alwaysApply: true
+---
+
+# Static Mapping Pattern (React)
+
+When component behavior is a static mapping from a finite key union (for example, `'state' | 'country' | 'time'`) to config objects:
+
+1. Use a typed module-level `Record<KeyUnion, Config>`.
+2. Precompute static option arrays at module scope if they do not depend on props/state.
+3. In component render, resolve via a single lookup:
+   `const config = CONFIG_BY_KEY[key]`.
+
+Avoid:
+- Nested ternaries for 3+ branches.
+- IIFE + `switch` for pure data mapping.
+
+Use `switch` only when each branch contains non-trivial procedural logic.

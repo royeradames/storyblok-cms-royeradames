@@ -1,0 +1,19 @@
+---
+description: Prefer early guard clauses to reduce nesting and clarify happy paths.
+alwaysApply: true
+---
+
+# Early Guards Pattern
+
+Use early guard clauses to handle invalid, empty, or exceptional states first.
+
+- Return early for error or edge cases before main logic.
+- Keep the primary success path at base indentation.
+- Prefer multiple small guards over deep nested `if/else` blocks.
+- Put the cheapest and most decisive checks first.
+
+Avoid:
+- Wrapping the full function body in a top-level `if` when an early return is possible.
+- Long `else if` chains when guard returns can flatten control flow.
+
+Use this pattern in components, hooks, utilities, and server handlers when it improves readability.
