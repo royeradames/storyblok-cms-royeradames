@@ -622,18 +622,37 @@ export const borderClassLabels: Record<keyof typeof borderClassMap, string> =
 
 /** Border color (semantic). */
 export const borderColorMap = {
+  "border-background": "border-background",
   "border-border": "border-border",
+  "border-card": "border-card",
+  "border-card-foreground": "border-card-foreground",
+  "border-popover": "border-popover",
+  "border-popover-foreground": "border-popover-foreground",
+  "border-primary-foreground": "border-primary-foreground",
   "border-input": "border-input",
   "border-primary": "border-primary",
+  "border-secondary": "border-secondary",
+  "border-secondary-foreground": "border-secondary-foreground",
   "border-muted": "border-muted",
+  "border-muted-foreground": "border-muted-foreground",
+  "border-accent": "border-accent",
+  "border-accent-foreground": "border-accent-foreground",
   "border-destructive": "border-destructive",
+  "border-destructive-foreground": "border-destructive-foreground",
   "border-foreground": "border-foreground",
+  "border-ring": "border-ring",
 } as const;
 
 /** Text color (semantic). */
 export const textColorMap = {
+  "text-background": "text-background",
   "text-foreground": "text-foreground",
+  "text-card": "text-card",
+  "text-card-foreground": "text-card-foreground",
+  "text-popover": "text-popover",
+  "text-popover-foreground": "text-popover-foreground",
   "text-muted-foreground": "text-muted-foreground",
+  "text-muted": "text-muted",
   "text-primary": "text-primary",
   "text-primary-foreground": "text-primary-foreground",
   "text-secondary": "text-secondary",
@@ -642,8 +661,9 @@ export const textColorMap = {
   "text-accent-foreground": "text-accent-foreground",
   "text-destructive": "text-destructive",
   "text-destructive-foreground": "text-destructive-foreground",
-  "text-card-foreground": "text-card-foreground",
-  "text-popover-foreground": "text-popover-foreground",
+  "text-border": "text-border",
+  "text-input": "text-input",
+  "text-ring": "text-ring",
   "text-black": "text-black",
   "text-white": "text-white",
 } as const;

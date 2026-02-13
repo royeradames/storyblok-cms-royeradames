@@ -147,44 +147,30 @@ const flexBorderOptions: StoryblokOption[] = (
   name: borderClassLabels[key],
 }));
 
-const borderColorLabels: Record<keyof typeof borderColorMap, string> = {
-  "border-border": "Default",
-  "border-input": "Input",
-  "border-primary": "Primary",
-  "border-muted": "Muted",
-  "border-destructive": "Destructive",
-  "border-foreground": "Foreground",
-};
+function toThemeColorOptionLabel(colorClassName: string): string {
+  const [, ...tokenParts] = colorClassName.split("-");
+  return tokenParts
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+const borderColorLabelOverrides: Partial<Record<keyof typeof borderColorMap, string>> =
+  {
+    "border-border": "Default",
+  };
 
 const flexBorderColorOptions: StoryblokOption[] = (
   Object.keys(borderColorMap) as (keyof typeof borderColorMap)[]
 ).map((key) => ({
   value: key,
-  name: borderColorLabels[key],
+  name: borderColorLabelOverrides[key] ?? toThemeColorOptionLabel(key),
 }));
-
-const textColorLabels: Record<keyof typeof textColorMap, string> = {
-  "text-foreground": "Foreground",
-  "text-muted-foreground": "Muted Foreground",
-  "text-primary": "Primary",
-  "text-primary-foreground": "Primary Foreground",
-  "text-secondary": "Secondary",
-  "text-secondary-foreground": "Secondary Foreground",
-  "text-accent": "Accent",
-  "text-accent-foreground": "Accent Foreground",
-  "text-destructive": "Destructive",
-  "text-destructive-foreground": "Destructive Foreground",
-  "text-card-foreground": "Card Foreground",
-  "text-popover-foreground": "Popover Foreground",
-  "text-black": "Black",
-  "text-white": "White",
-};
 
 const flexTextColorOptions: StoryblokOption[] = (
   Object.keys(textColorMap) as (keyof typeof textColorMap)[]
 ).map((key) => ({
   value: key,
-  name: textColorLabels[key],
+  name: toThemeColorOptionLabel(key),
 }));
 
 const borderStyleLabels: Record<keyof typeof borderStyleMap, string> = {
