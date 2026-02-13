@@ -101,25 +101,41 @@ function createDefaultNodeMappingsBlok(
     _uid: makeUid(),
     component: buildRichTextNodeMappingsComponentName(sourceComponentName),
     heading_1_component: createComponentMapping("shared_article_heading_1"),
+    heading_1_text_field: "title",
     heading_2_component: createComponentMapping("shared_article_heading_2"),
+    heading_2_text_field: "title",
     heading_3_component: createComponentMapping("shared_article_heading_3"),
+    heading_3_text_field: "title",
     heading_4_component: createComponentMapping("shared_article_heading_4"),
+    heading_4_text_field: "title",
     heading_5_component: createComponentMapping("shared_article_heading_5"),
+    heading_5_text_field: "title",
     heading_6_component: createComponentMapping("shared_article_heading_6"),
+    heading_6_text_field: "title",
     paragraph_component: createComponentMapping("shared_article_paragraph"),
+    paragraph_text_field: "content",
     quote_component: createComponentMapping("shared_article_quote"),
+    quote_text_field: "quote",
     unordered_list_component: createComponentMapping(
       "shared_article_unordered_list",
     ),
+    unordered_list_text_field: "content",
     ordered_list_component: createComponentMapping("shared_article_ordered_list"),
+    ordered_list_text_field: "content",
     list_item_component: createComponentMapping("shared_article_list_item"),
+    list_item_text_field: "content",
     table_component: createComponentMapping("shared_article_table"),
+    table_text_field: "content",
     table_row_component: createComponentMapping("shared_article_table_row"),
+    table_row_text_field: "content",
     table_header_component: createComponentMapping("shared_article_table_header"),
+    table_header_text_field: "content",
     table_cell_component: createComponentMapping("shared_article_table_cell"),
+    table_cell_text_field: "content",
     embedded_component_component: createComponentMapping(
       "shared_article_embedded_component",
     ),
+    embedded_component_text_field: "content",
   };
 }
 
@@ -142,6 +158,24 @@ function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): bool
     "table_cell_component",
     "embedded_component_component",
   ] as const;
+  const mappingFieldDefaults = {
+    heading_1_text_field: "title",
+    heading_2_text_field: "title",
+    heading_3_text_field: "title",
+    heading_4_text_field: "title",
+    heading_5_text_field: "title",
+    heading_6_text_field: "title",
+    paragraph_text_field: "content",
+    quote_text_field: "quote",
+    unordered_list_text_field: "content",
+    ordered_list_text_field: "content",
+    list_item_text_field: "content",
+    table_text_field: "content",
+    table_row_text_field: "content",
+    table_header_text_field: "content",
+    table_cell_text_field: "content",
+    embedded_component_text_field: "content",
+  } as const;
 
   let changed = false;
 
@@ -156,6 +190,13 @@ function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): bool
         component: fieldValue.trim(),
       },
     ];
+    changed = true;
+  }
+
+  for (const [fieldName, defaultValue] of Object.entries(mappingFieldDefaults)) {
+    const value = mappingBlok[fieldName];
+    if (typeof value === "string" && value.trim().length > 0) continue;
+    mappingBlok[fieldName] = defaultValue;
     changed = true;
   }
 
