@@ -141,9 +141,18 @@ export function resolveRichTextNodeOverrides(
     mappings.embedded_component_text_field,
     DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.embedded_component_text_field,
   );
+  const linkTextField = normalizeTextFieldName(
+    mappings.link_text_field,
+    DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.link_text_field,
+  );
+  const linkUrlField = normalizeTextFieldName(
+    mappings.link_url_field,
+    DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.link_url_field,
+  );
 
   const quoteBlok = getComponentBlok(mappings.quote_component);
   const embeddedBlok = getComponentBlok(mappings.embedded_component_component);
+  const linkBlok = getComponentBlok(mappings.link_component);
 
   return {
     headingOne: headingOneComponentName
@@ -240,6 +249,14 @@ export function resolveRichTextNodeOverrides(
           textField: embeddedComponentTextField,
           bodyField: "body",
           staticFields: getStaticFieldsFromBlok(embeddedBlok),
+        }
+      : undefined,
+    link: getComponentNameFromBlok(linkBlok)
+      ? {
+          component: getComponentNameFromBlok(linkBlok)!,
+          textField: linkTextField,
+          linkField: linkUrlField,
+          staticFields: getStaticFieldsFromBlok(linkBlok),
         }
       : undefined,
   };

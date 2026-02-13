@@ -5,6 +5,7 @@ export type RichTextHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export interface RichTextNodeOverrideConfig {
   component: string;
   textField: string;
+  linkField?: string;
   mirrorTextFields?: string[];
   idField?: string;
   levelField?: string;
@@ -32,6 +33,7 @@ export interface RichTextNodeOverrides {
   tableHeader?: RichTextNodeOverrideConfig;
   tableCell?: RichTextNodeOverrideConfig;
   embeddedComponent?: RichTextNodeOverrideConfig;
+  link?: RichTextNodeOverrideConfig;
 }
 
 export interface RichTextNodeMappingsBlok extends SbBlokData {
@@ -67,6 +69,9 @@ export interface RichTextNodeMappingsBlok extends SbBlokData {
   table_cell_text_field?: string;
   embedded_component_component?: SbBlokData[];
   embedded_component_text_field?: string;
+  link_component?: SbBlokData[];
+  link_text_field?: string;
+  link_url_field?: string;
 }
 
 export interface RichTextHeading {
@@ -141,6 +146,9 @@ export interface RichTextNode {
   attrs?: {
     key?: string;
     level?: number;
+    href?: string;
+    linktype?: string;
+    target?: string;
     body?: (SbBlokData & { component?: string })[];
   };
   content?: RichTextNode[];

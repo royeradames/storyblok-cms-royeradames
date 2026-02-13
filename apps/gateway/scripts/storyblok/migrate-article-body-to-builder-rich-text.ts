@@ -136,6 +136,9 @@ function createDefaultNodeMappingsBlok(
       "shared_article_embedded_component",
     ),
     embedded_component_text_field: "content",
+    link_component: createComponentMapping("shared_article_link"),
+    link_text_field: "content",
+    link_url_field: "link",
   };
 }
 
@@ -157,6 +160,7 @@ function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): bool
     "table_header_component",
     "table_cell_component",
     "embedded_component_component",
+    "link_component",
   ] as const;
   const mappingFieldDefaults = {
     heading_1_text_field: "title",
@@ -175,6 +179,8 @@ function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): bool
     table_header_text_field: "content",
     table_cell_text_field: "content",
     embedded_component_text_field: "content",
+    link_text_field: "content",
+    link_url_field: "link",
   } as const;
 
   let changed = false;

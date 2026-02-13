@@ -18,13 +18,17 @@ export function PremadeSectionWrapper({ blok }: { blok: any }) {
 
   // Strip "shared_" prefix added by the gateway component map
   const componentName = blok.component.replace(/^shared_/, "");
-  const template = templates[componentName];
+  const template = templates[componentName] ?? templates[`${componentName}_section`];
 
   if (!template) {
     console.error(
       `[PremadeSectionWrapper] No template found for: ${componentName}`,
     );
-    return null;
+    return (
+      <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        Blok not define: {componentName} (missing template)
+      </div>
+    );
   }
 
   return <PremadeSection blok={blok} template={template} />;
@@ -39,14 +43,18 @@ export function PremadeSectionWrapper({ blok }: { blok: any }) {
 export function SharedTemplateResolver({ blok }: { blok: any }) {
   const templates = useTemplates();
   const componentName = blok.component.replace(/^shared_/, "");
-  const template = templates[componentName];
+  const template = templates[componentName] ?? templates[`${componentName}_section`];
 
   if (!template) {
     console.warn(
       `[SharedTemplateResolver] No template found for shared component: ${componentName}. ` +
         `If this is builder-derived, publish its builder story first.`,
     );
-    return null;
+    return (
+      <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+        Blok not define: {componentName} (missing template)
+      </div>
+    );
   }
 
   return <PremadeSection blok={blok} template={template} />;

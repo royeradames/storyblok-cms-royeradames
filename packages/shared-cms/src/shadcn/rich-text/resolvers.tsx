@@ -1,6 +1,6 @@
 "use client";
 
-import { BlockTypes, StoryblokComponent } from "@storyblok/react";
+import { BlockTypes, MarkTypes, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import React, { type ReactElement } from "react";
 import type { SbBlokData } from "@storyblok/react";
@@ -57,10 +57,26 @@ function createWarnOverrideFallback(warnedOverrides: Set<string>) {
     if (warnedOverrides.has(overrideName)) return;
     warnedOverrides.add(overrideName);
     console.warn(
-      `[ShadcnRichTextContent] Invalid "${overrideName}" override; falling back to semantic node. ${message}`,
+      `[ShadcnRichTextContent] Invalid "${overrideName}" override; rendering missing-blok error. ${message}`,
       meta,
     );
   };
+}
+
+function renderMissingBlokError(
+  key: string,
+  overrideName: string,
+  reason: string,
+): React.ReactElement {
+  return (
+    <div
+      key={key}
+      className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+      data-richtext-missing-blok={overrideName}
+    >
+      Blok not define: {overrideName} ({reason})
+    </div>
+  );
 }
 
 function createRenderOverrideOrFallback(
@@ -77,15 +93,23 @@ function createRenderOverrideOrFallback(
     text: string,
     body: (SbBlokData & { component?: string })[] | undefined,
     defaultWrapperClassName: string | undefined,
+    linkHref: string | undefined,
     fallback: () => React.ReactElement,
+    required = true,
   ): React.ReactElement => {
-    if (!override) return fallback();
+    if (!override) {
+      return required
+        ? renderMissingBlokError(key, overrideName, "missing override config")
+        : fallback();
+    }
 
     const componentName =
       typeof override.component === "string" ? override.component.trim() : "";
     if (!componentName) {
       warnOverrideFallback(overrideName, "Missing component name.", override);
-      return fallback();
+      return required
+        ? renderMissingBlokError(key, overrideName, "missing component")
+        : fallback();
     }
 
     const textField =
@@ -96,7 +120,9 @@ function createRenderOverrideOrFallback(
         "Missing textField for text-based richtext node.",
         override,
       );
-      return fallback();
+      return required
+        ? renderMissingBlokError(key, overrideName, "missing text field")
+        : fallback();
     }
 
     const overrideBlok: Record<string, unknown> = {
@@ -115,6 +141,11 @@ function createRenderOverrideOrFallback(
     const bodyField =
       typeof override.bodyField === "string" ? override.bodyField.trim() : "";
     if (bodyField && body) overrideBlok[bodyField] = body;
+    const linkField =
+      typeof override.linkField === "string" ? override.linkField.trim() : "";
+    if (linkField && typeof linkHref === "string" && linkHref.trim().length > 0) {
+      overrideBlok[linkField] = linkHref.trim();
+    }
     for (const mirrorField of override.mirrorTextFields ?? []) {
       const fieldName = mirrorField?.trim();
       if (fieldName && !(fieldName in overrideBlok)) {
@@ -136,7 +167,7 @@ function createRenderOverrideOrFallback(
 
 export function createRichTextResolvers(
   options: RichTextResolversOptions,
-): Record<string, (node: ResolverNode | RichTextNode) => React.ReactNode> {
+): Record<string, (...resolverArgs: any[]) => React.ReactNode> {
   const {
     overrides,
     renderConfig: resolvedRenderConfig,
@@ -207,6 +238,7 @@ export function createRichTextResolvers(
         headingText,
         undefined,
         resolvedRenderConfig.classes.headingWrapper,
+        undefined,
         () =>
           renderDefaultHeading(
             level,
@@ -226,6 +258,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         getNodeText(node).trim(),
+        undefined,
         undefined,
         undefined,
         () => (
@@ -249,6 +282,7 @@ export function createRichTextResolvers(
         getNodeText(node).trim(),
         undefined,
         undefined,
+        undefined,
         () => (
           <blockquote
             key={key}
@@ -268,6 +302,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         getNodeText(node).trim(),
+        undefined,
         undefined,
         undefined,
         () => (
@@ -291,6 +326,7 @@ export function createRichTextResolvers(
         getNodeText(node).trim(),
         undefined,
         undefined,
+        undefined,
         () => (
           <ol
             key={key}
@@ -312,6 +348,7 @@ export function createRichTextResolvers(
         getNodeText(node).trim(),
         undefined,
         undefined,
+        undefined,
         () => (
           <li
             key={key}
@@ -320,14 +357,29 @@ export function createRichTextResolvers(
             {normalizeListItemChildren(node.children)}
           </li>
         ),
+        false,
       );
     },
-    [BlockTypes.TABLE]: (node: ResolverNode) =>
-      renderTable(
-        node,
-        resolvedRenderConfig.classes.table,
-        resolvedRenderConfig.classes.tableWrapper,
-      ),
+    [BlockTypes.TABLE]: (node: ResolverNode) => {
+      const key = getNodeKey(node, "table");
+      return renderOverrideOrFallback(
+        "table",
+        overrides?.table,
+        key,
+        undefined,
+        undefined,
+        getNodeText(node).trim(),
+        undefined,
+        undefined,
+        undefined,
+        () =>
+          renderTable(
+            node,
+            resolvedRenderConfig.classes.table,
+            resolvedRenderConfig.classes.tableWrapper,
+          ),
+      );
+    },
     [BlockTypes.TABLE_ROW]: (node: ResolverNode) => {
       const key = getNodeKey(node, "tr");
       return renderOverrideOrFallback(
@@ -339,6 +391,7 @@ export function createRichTextResolvers(
         getNodeText(node).trim(),
         undefined,
         undefined,
+        undefined,
         () => (
           <tr
             key={key}
@@ -347,6 +400,7 @@ export function createRichTextResolvers(
             {node.children}
           </tr>
         ),
+        false,
       );
     },
     [BlockTypes.TABLE_HEADER]: (node: ResolverNode) => {
@@ -360,6 +414,7 @@ export function createRichTextResolvers(
         getNodeText(node).trim(),
         undefined,
         undefined,
+        undefined,
         () => (
           <th
             key={key}
@@ -368,6 +423,7 @@ export function createRichTextResolvers(
             {node.children}
           </th>
         ),
+        false,
       );
     },
     [BlockTypes.TABLE_CELL]: (node: ResolverNode) => {
@@ -381,6 +437,7 @@ export function createRichTextResolvers(
         getNodeText(node).trim(),
         undefined,
         undefined,
+        undefined,
         () => (
           <td
             key={key}
@@ -389,6 +446,7 @@ export function createRichTextResolvers(
             {node.children}
           </td>
         ),
+        false,
       );
     },
     table_row: (node: ResolverNode) => (
@@ -415,6 +473,26 @@ export function createRichTextResolvers(
         {node.children}
       </td>
     ),
+    [MarkTypes.LINK]: (node: ResolverNode, children: React.ReactNode) => {
+      const key = getNodeKey(node, "link");
+      const href = typeof node.attrs?.href === "string" ? node.attrs.href.trim() : "";
+      return renderOverrideOrFallback(
+        "link",
+        overrides?.link,
+        key,
+        undefined,
+        undefined,
+        getNodeText(node).trim(),
+        undefined,
+        undefined,
+        href.length > 0 ? href : undefined,
+        () => (
+          <a key={key} href={href.length > 0 ? href : undefined}>
+            {children}
+          </a>
+        ),
+      );
+    },
     [BlockTypes.COMPONENT]: (node: RichTextNode) => {
       const key = getNodeKey(node as ResolverNode, "blok");
       const body = node.attrs?.body || [];
@@ -426,6 +504,7 @@ export function createRichTextResolvers(
         undefined,
         getNodeText(node).trim(),
         body,
+        undefined,
         undefined,
         () => (
           <div

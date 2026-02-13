@@ -33,6 +33,7 @@ export const DEFAULT_RICH_TEXT_NODE_COMPONENTS = {
   table_header_component: "shared_article_table_header",
   table_cell_component: "shared_article_table_cell",
   embedded_component_component: "shared_article_embedded_component",
+  link_component: "shared_article_link",
 } as const;
 
 export const DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS = {
@@ -52,6 +53,8 @@ export const DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS = {
   table_header_text_field: "content",
   table_cell_text_field: "content",
   embedded_component_text_field: "content",
+  link_text_field: "content",
+  link_url_field: "link",
 } as const;
 
 function createComponentBlok(componentName: string): SbBlokData {
@@ -101,5 +104,8 @@ export function createDefaultRichTextNodeMappingsBlok(): RichTextNodeMappingsBlo
     ],
     embedded_component_text_field:
       DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.embedded_component_text_field,
+    link_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.link_component)],
+    link_text_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.link_text_field,
+    link_url_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.link_url_field,
   };
 }

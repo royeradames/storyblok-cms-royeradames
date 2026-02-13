@@ -1239,6 +1239,23 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "content",
         description: "Field on embedded component blok to inject rich text content",
       },
+      link_component: {
+        type: "bloks",
+        pos: 32,
+        description: "Blok used for link marks",
+      },
+      link_text_field: {
+        type: "text",
+        pos: 33,
+        default_value: "content",
+        description: "Field on link blok to inject rich text label",
+      },
+      link_url_field: {
+        type: "text",
+        pos: 34,
+        default_value: "link",
+        description: "Field on link blok to inject rich text URL",
+      },
     },
   },
 
