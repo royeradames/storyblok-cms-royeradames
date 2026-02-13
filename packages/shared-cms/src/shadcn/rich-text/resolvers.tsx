@@ -2,10 +2,11 @@
 
 import { BlockTypes, MarkTypes, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
-import React, { type ReactElement } from "react";
+import React from "react";
 import type { SbBlokData } from "@storyblok/react";
 import { getNodeText } from "./heading-utils";
 import { HEADING_OVERRIDE_KEY_BY_LEVEL } from "./node-defaults";
+import { normalizeRichTextInlineText } from "./text-normalization";
 import type {
   RichTextNode,
   RichTextNodeOverrideConfig,
@@ -16,6 +17,10 @@ import type {
 } from "./types";
 
 export type ResolverNode = RichTextNode & { children?: React.ReactNode };
+type RichTextResolver = (
+  node: ResolverNode,
+  ...resolverArgs: React.ReactNode[]
+) => React.ReactNode;
 
 export interface RichTextResolversOptions {
   overrides?: RichTextNodeOverrides;
@@ -25,13 +30,7 @@ export interface RichTextResolversOptions {
   registerRenderedHeading: (meta: RenderedHeadingMeta) => void;
   getNextHeadingId: () => string | undefined;
   getNextListItemParentType: () => "unordered" | "ordered" | undefined;
-  normalizeListItemChildren: (children: React.ReactNode) => React.ReactNode;
-}
-
-function normalizeHeadingText(text?: string): string | undefined {
-  if (!text) return undefined;
-  const normalized = text.replace(/\s+/g, " ").trim();
-  return normalized.length > 0 ? normalized : undefined;
+  unwrapListItemParagraphChildren: (children: React.ReactNode) => React.ReactNode;
 }
 
 function renderDefaultHeading(
@@ -194,7 +193,7 @@ function createRenderOverrideOrFallback(
 
 export function createRichTextResolvers(
   options: RichTextResolversOptions,
-): Record<string, (...resolverArgs: any[]) => React.ReactNode> {
+): Record<string, RichTextResolver> {
   const {
     overrides,
     renderConfig: resolvedRenderConfig,
@@ -202,7 +201,7 @@ export function createRichTextResolvers(
     registerRenderedHeading,
     getNextHeadingId,
     getNextListItemParentType,
-    normalizeListItemChildren,
+    unwrapListItemParagraphChildren,
   } = options;
 
   const warnedOverrides = new Set<string>();
@@ -254,7 +253,7 @@ export function createRichTextResolvers(
       registerRenderedHeading({
         level,
         id,
-        text: normalizeHeadingText(headingText),
+        text: normalizeRichTextInlineText(headingText),
       });
 
       return renderOverrideOrFallback(
@@ -392,7 +391,7 @@ export function createRichTextResolvers(
         parentListType,
         () => (
           <>
-            {normalizeListItemChildren(node.children)}
+            {unwrapListItemParagraphChildren(node.children)}
           </>
         ),
         false,
@@ -522,30 +521,6 @@ export function createRichTextResolvers(
         </td>
       );
     },
-    table_row: (node: ResolverNode) => (
-      <tr
-        key={getNodeKey(node, "tr")}
-        className={cn(resolvedRenderConfig.classes.tableRow)}
-      >
-        {node.children}
-      </tr>
-    ),
-    table_header: (node: ResolverNode) => (
-      <th
-        key={getNodeKey(node, "th")}
-        className={cn(resolvedRenderConfig.classes.tableHeaderLegacy)}
-      >
-        {node.children}
-      </th>
-    ),
-    table_cell: (node: ResolverNode) => (
-      <td
-        key={getNodeKey(node, "td")}
-        className={cn(resolvedRenderConfig.classes.tableCell)}
-      >
-        {node.children}
-      </td>
-    ),
     [MarkTypes.LINK]: (node: ResolverNode, children: React.ReactNode) => {
       const key = getNodeKey(node, "link");
       const href = typeof node.attrs?.href === "string" ? node.attrs.href.trim() : "";
@@ -567,8 +542,8 @@ export function createRichTextResolvers(
         ),
       );
     },
-    [BlockTypes.COMPONENT]: (node: RichTextNode) => {
-      const key = getNodeKey(node as ResolverNode, "blok");
+    [BlockTypes.COMPONENT]: (node: ResolverNode) => {
+      const key = getNodeKey(node, "blok");
       const body = node.attrs?.body || [];
       return renderOverrideOrFallback(
         "embeddedComponent",

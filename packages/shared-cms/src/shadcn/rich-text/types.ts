@@ -99,7 +99,6 @@ export interface RichTextRenderElementClassNames {
   tableWrapper: string;
   tableRow: string;
   tableHeader: string;
-  tableHeaderLegacy: string;
   tableCell: string;
   embeddedComponent: string;
   headingSection: string;
@@ -128,7 +127,6 @@ export interface RichTextRenderElementClassNameInputs {
   table_wrapper_class_name?: string;
   table_row_class_name?: string;
   table_header_class_name?: string;
-  table_header_legacy_class_name?: string;
   table_cell_class_name?: string;
   embedded_component_class_name?: string;
   heading_section_class_name?: string;

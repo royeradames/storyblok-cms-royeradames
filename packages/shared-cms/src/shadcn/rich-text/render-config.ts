@@ -19,7 +19,6 @@ export const DEFAULT_RICH_TEXT_RENDER_CONFIG: RichTextRenderConfig = {
     tableWrapper: "",
     tableRow: "",
     tableHeader: "text-left",
-    tableHeaderLegacy: "text-left",
     tableCell: "",
     embeddedComponent: "sb-richtext-blok",
     headingSection: "sb-heading-section grid gap-4",
@@ -49,8 +48,6 @@ export const ARTICLE_RICH_TEXT_RENDER_CONFIG: RichTextRenderConfig = {
       "overflow-x-auto rounded-md border-b dark:border-b-[#364152] even:bg-muted border-border/70",
     tableRow: "border-b dark:border-b-[#364152] even:bg-muted border-border/60",
     tableHeader: "text-left h-10 px-3 align-middle font-medium text-primary",
-    tableHeaderLegacy:
-      "text-left h-10 px-3 align-middle font-medium text-primary bg-muted/30",
     tableCell: "p-3 align-middle text-muted-foreground",
   },
   behavior: {
@@ -75,7 +72,6 @@ function toConfigInput(
     table_wrapper_class_name: inputs.table_wrapper_class_name,
     table_row_class_name: inputs.table_row_class_name,
     table_header_class_name: inputs.table_header_class_name,
-    table_header_legacy_class_name: inputs.table_header_legacy_class_name,
     table_cell_class_name: inputs.table_cell_class_name,
     embedded_component_class_name: inputs.embedded_component_class_name,
     heading_section_class_name: inputs.heading_section_class_name,
@@ -140,10 +136,6 @@ export function resolveRichTextRenderConfig({
       tableHeader: pickClassName(
         mergedInputs.table_header_class_name,
         base.classes.tableHeader,
-      ),
-      tableHeaderLegacy: pickClassName(
-        mergedInputs.table_header_legacy_class_name,
-        base.classes.tableHeaderLegacy,
       ),
       tableCell: pickClassName(
         mergedInputs.table_cell_class_name,

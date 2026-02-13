@@ -1021,34 +1021,27 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "text-left h-10 px-3 align-middle font-medium text-primary",
         description: "Table header class names",
       },
-      table_header_legacy_class_name: {
-        type: "textarea",
-        pos: 13,
-        default_value:
-          "text-left h-10 px-3 align-middle font-medium text-primary bg-muted/30",
-        description: "Legacy table header class names used by fallback nodes",
-      },
       table_cell_class_name: {
         type: "textarea",
-        pos: 14,
+        pos: 13,
         default_value: "p-3 align-middle text-muted-foreground",
         description: "Table cell class names",
       },
       embedded_component_class_name: {
         type: "textarea",
-        pos: 15,
+        pos: 14,
         default_value: "sb-richtext-blok",
         description: "Wrapper class names for embedded Storyblok components",
       },
       heading_section_class_name: {
         type: "textarea",
-        pos: 16,
+        pos: 15,
         default_value: "sb-heading-section grid gap-4",
         description: "Section class names when heading section wrapping is enabled",
       },
       heading_section_spacing_class_name: {
         type: "textarea",
-        pos: 17,
+        pos: 16,
         default_value: "pt-4",
         description:
           "Additional class names applied to heading sections after the first section",
@@ -2143,7 +2136,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: [
           "shadcn_text",
-          "shadcn_richtext",
+          "shadcn_rich_text",
           "shadcn_icon",
           "shadcn_image",
           "shadcn_badge",
@@ -2212,7 +2205,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: [
           "shadcn_text",
-          "shadcn_richtext",
+          "shadcn_rich_text",
           "shadcn_button",
         ],
       },
@@ -2223,7 +2216,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: [
           "shadcn_text",
-          "shadcn_richtext",
+          "shadcn_rich_text",
           "shadcn_button",
         ],
       },

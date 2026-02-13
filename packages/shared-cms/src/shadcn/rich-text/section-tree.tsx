@@ -3,6 +3,7 @@
 import { cn } from "@repo/ui";
 import React from "react";
 import type { RenderedHeadingMeta, RichTextHeadingLevel } from "./types";
+import { normalizeRichTextInlineText } from "./text-normalization";
 
 interface SectionTreeNode {
   kind: "section";
@@ -11,12 +12,6 @@ interface SectionTreeNode {
 }
 
 type SectionTreeChild = React.ReactNode | SectionTreeNode;
-
-function normalizeHeadingText(text?: string): string | undefined {
-  if (!text) return undefined;
-  const normalized = text.replace(/\s+/g, " ").trim();
-  return normalized.length > 0 ? normalized : undefined;
-}
 
 function getHeadingLevelFromClassName(className?: string): number | null {
   if (!className) return null;
@@ -82,7 +77,7 @@ export function buildHeadingSectionTree(
       heading: {
         level,
         id: nextMeta?.id ?? getRenderedHeadingId(block),
-        text: normalizeHeadingText(nextMeta?.text),
+        text: normalizeRichTextInlineText(nextMeta?.text),
       },
       children: [block],
     };

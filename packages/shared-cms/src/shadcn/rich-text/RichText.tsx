@@ -14,7 +14,7 @@ import {
   buildInlineStyles,
   type StylesBreakpointOptionsBlok,
 } from "../../styles";
-import { createRichTextResolvers, type ResolverNode } from "./resolvers";
+import { createRichTextResolvers } from "./resolvers";
 import {
   buildHeadingSectionTree,
   renderHeadingSectionTree,
@@ -26,14 +26,16 @@ import {
 } from "./render-config";
 import type {
   BuilderRichTextInputsBlok,
-  RenderedHeadingMeta,
-  RichTextNode,
   RichTextRenderConfig,
   RichTextRenderConfigInput,
   RichTextNodeOverrides,
 } from "./types";
 import { PROSE_SIZE_MAP } from "./node-defaults";
 import { resolveRichTextNodeOverrides } from "./node-overrides";
+import {
+  createRichTextResolverState,
+  unwrapListItemParagraphChildren,
+} from "./render-state";
 
 export type {
   BuilderRichTextInputsBlok,
@@ -57,60 +59,11 @@ export {
 export { createDefaultRichTextNodeMappingsBlok } from "./node-defaults";
 export { resolveRichTextNodeOverrides } from "./node-overrides";
 
-export interface ShadcnRichTextBlok extends Omit<SbBlokData, "content"> {
+export interface ShadcnRichTextBlok extends SbBlokData {
   content: ISbRichtext;
   prose_size?: "sm" | "base" | "lg";
   render_inputs?: BuilderRichTextInputsBlok[];
   styles?: StylesBreakpointOptionsBlok[];
-  component: string;
-  _uid: string;
-}
-
-function normalizeListItemChildren(children: React.ReactNode): React.ReactNode {
-  const items = React.Children.toArray(children);
-  if (items.length !== 1) return children;
-  const onlyChild = items[0];
-  if (
-    React.isValidElement(onlyChild) &&
-    typeof onlyChild.type === "string" &&
-    onlyChild.type === "p"
-  ) {
-    return (onlyChild as ReactElement<{ children?: React.ReactNode }>).props.children;
-  }
-  return children;
-}
-
-type ListItemParentType = "unordered" | "ordered";
-
-function extractListItemParentTypes(content: ISbRichtext): ListItemParentType[] {
-  const listItemParentTypes: ListItemParentType[] = [];
-
-  const visitNode = (
-    node: unknown,
-    parentListType: ListItemParentType | undefined,
-  ) => {
-    if (!node || typeof node !== "object") return;
-    const typedNode = node as { type?: string; content?: unknown[] };
-    const nodeType = typeof typedNode.type === "string" ? typedNode.type : undefined;
-    const nextParentListType =
-      nodeType === "bullet_list"
-        ? "unordered"
-        : nodeType === "ordered_list"
-          ? "ordered"
-          : parentListType;
-
-    if (nodeType === "list_item" && nextParentListType) {
-      listItemParentTypes.push(nextParentListType);
-    }
-
-    if (!Array.isArray(typedNode.content)) return;
-    for (const child of typedNode.content) {
-      visitNode(child, nextParentListType);
-    }
-  };
-
-  visitNode(content, undefined);
-  return listItemParentTypes;
 }
 
 export function ShadcnRichTextContent({
@@ -124,25 +77,18 @@ export function ShadcnRichTextContent({
   overrides?: RichTextNodeOverrides;
   renderConfig?: RichTextRenderConfig;
 }) {
-  let headingIndex = 0;
   const resolvedRenderConfig = renderConfig ?? DEFAULT_RICH_TEXT_RENDER_CONFIG;
-  let resolverKeyCounter = 0;
-  const renderedHeadingMeta: RenderedHeadingMeta[] = [];
-  const listItemParentTypes = extractListItemParentTypes(content);
-  let listItemParentTypeIndex = 0;
-
-  const getNodeKey = (node: ResolverNode | RichTextNode, prefix: string) =>
-    node.attrs?.key ?? `${prefix}-${resolverKeyCounter++}`;
+  const resolverState = createRichTextResolverState(content, headingIds);
 
   const resolvers = createRichTextResolvers({
     overrides,
     renderConfig: resolvedRenderConfig,
     headingIds,
-    getNodeKey,
-    registerRenderedHeading: (meta) => renderedHeadingMeta.push(meta),
-    getNextHeadingId: () => headingIds?.[headingIndex++],
-    getNextListItemParentType: () => listItemParentTypes[listItemParentTypeIndex++],
-    normalizeListItemChildren,
+    getNodeKey: resolverState.getNodeKey,
+    registerRenderedHeading: resolverState.registerRenderedHeading,
+    getNextHeadingId: resolverState.getNextHeadingId,
+    getNextListItemParentType: resolverState.getNextListItemParentType,
+    unwrapListItemParagraphChildren,
   });
 
   const { render } = useStoryblokRichText({
@@ -150,14 +96,13 @@ export function ShadcnRichTextContent({
     textFn: (text: string, attrs?: Record<string, unknown>) =>
       React.createElement(
         React.Fragment,
-        { key: (attrs?.key as string) ?? `txt-${resolverKeyCounter++}` },
+        { key: resolverState.getTextNodeKey(attrs) },
         text,
       ),
-    resolvers: resolvers as Parameters<typeof useStoryblokRichText>[0]["resolvers"],
+    resolvers,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Storyblok ISbRichtext vs internal node type
-  const richTextNode = render(content as any);
+  const richTextNode = render(content as unknown as Parameters<typeof render>[0]);
   const convertedNode = convertAttributesInElement(
     richTextNode as ReactElement,
   );
@@ -166,7 +111,10 @@ export function ShadcnRichTextContent({
     return <>{convertedNode}</>;
   }
 
-  const sectionTree = buildHeadingSectionTree(convertedNode, renderedHeadingMeta);
+  const sectionTree = buildHeadingSectionTree(
+    convertedNode,
+    resolverState.renderedHeadingMeta,
+  );
   return (
     <>
       {renderHeadingSectionTree(sectionTree, {
@@ -198,7 +146,7 @@ export function ShadcnRichText({
 
   return (
     <div
-      {...storyblokEditable(blok as unknown as SbBlokData)}
+      {...storyblokEditable(blok)}
       className={cn(
         PROSE_SIZE_MAP[blok.prose_size ?? "base"],
         resolvedRenderConfig.classes.prose,

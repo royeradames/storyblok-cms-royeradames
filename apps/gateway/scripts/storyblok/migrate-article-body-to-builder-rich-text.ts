@@ -87,6 +87,21 @@ function buildRichTextNodeMappingsComponentName(
     : "rich_text_node_mappings";
 }
 
+function isLegacyArticleComponentName(componentName: string): boolean {
+  return componentName === "shadcn_article" || componentName === "shared_shadcn_article";
+}
+
+function isLegacyBuilderRichTextComponentName(componentName: string): boolean {
+  return (
+    componentName === "builder_rich_text" ||
+    componentName === "shared_builder_rich_text"
+  );
+}
+
+function isCurrentRichTextComponentName(componentName: string): boolean {
+  return componentName === "rich_text" || componentName === "shared_rich_text";
+}
+
 function createDefaultNodeMappingsBlok(
   sourceComponentName: string,
 ): Record<string, unknown> {
@@ -277,7 +292,7 @@ function pickRichTextContentNode(articleNode: Record<string, any>) {
   for (const nested of articleContent) {
     const nestedComponent =
       typeof nested.component === "string" ? nested.component : "";
-    if (!nestedComponent.endsWith("rich_text")) continue;
+    if (!isCurrentRichTextComponentName(nestedComponent)) continue;
     if (!isRichTextDocument(nested.content)) continue;
 
     return {
@@ -319,9 +334,10 @@ function migrateInPlace(node: unknown): number {
 
   let changedCount = 0;
   const componentName = typeof node.component === "string" ? node.component : "";
-  const isLegacyArticle = componentName.endsWith("shadcn_article");
-  const isLegacyBuilderRichText = componentName.endsWith("builder_rich_text");
-  const isCurrentSharedRichText = componentName.endsWith("rich_text");
+  const isLegacyArticle = isLegacyArticleComponentName(componentName);
+  const isLegacyBuilderRichText =
+    isLegacyBuilderRichTextComponentName(componentName);
+  const isCurrentSharedRichText = isCurrentRichTextComponentName(componentName);
 
   if (isLegacyArticle || isLegacyBuilderRichText || isCurrentSharedRichText) {
     const nextData = pickRichTextContentNode(node);
