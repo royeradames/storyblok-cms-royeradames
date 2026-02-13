@@ -90,45 +90,91 @@ const HEADING_OVERRIDE_KEY_BY_LEVEL = {
 type ResolverNode = RichTextNode & { children?: React.ReactNode };
 
 const DEFAULT_RICH_TEXT_NODE_COMPONENTS = {
-  heading_1_component: "article_heading_1",
-  heading_2_component: "article_heading_2",
-  heading_3_component: "article_heading_3",
-  heading_4_component: "article_heading_4",
-  heading_5_component: "article_heading_5",
-  heading_6_component: "article_heading_6",
-  paragraph_component: "article_paragraph",
-  quote_component: "article_quote",
-  unordered_list_component: "article_unordered_list",
-  ordered_list_component: "article_ordered_list",
-  list_item_component: "article_list_item",
-  table_component: "article_table",
-  table_row_component: "article_table_row",
-  table_header_component: "article_table_header",
-  table_cell_component: "article_table_cell",
-  embedded_component_component: "article_embedded_component",
-} satisfies Omit<RichTextNodeMappingsBlok, keyof SbBlokData>;
+  heading_1_component: "shared_article_heading_1",
+  heading_2_component: "shared_article_heading_2",
+  heading_3_component: "shared_article_heading_3",
+  heading_4_component: "shared_article_heading_4",
+  heading_5_component: "shared_article_heading_5",
+  heading_6_component: "shared_article_heading_6",
+  paragraph_component: "shared_article_paragraph",
+  quote_component: "shared_article_quote",
+  unordered_list_component: "shared_article_unordered_list",
+  ordered_list_component: "shared_article_ordered_list",
+  list_item_component: "shared_article_list_item",
+  table_component: "shared_article_table",
+  table_row_component: "shared_article_table_row",
+  table_header_component: "shared_article_table_header",
+  table_cell_component: "shared_article_table_cell",
+  embedded_component_component: "shared_article_embedded_component",
+} as const;
 
-function normalizeComponentName(componentName?: string): string | undefined {
-  if (typeof componentName !== "string") return undefined;
-  const normalized = componentName.trim();
-  return normalized.length > 0 ? normalized : undefined;
+function createComponentBlok(componentName: string): SbBlokData {
+  return {
+    _uid: `default-${componentName}`,
+    component: componentName,
+  } as SbBlokData;
+}
+
+function getComponentBlok(
+  mappingBloks: SbBlokData[] | undefined,
+): SbBlokData | undefined {
+  if (!Array.isArray(mappingBloks) || mappingBloks.length === 0) return undefined;
+  const firstBlok = mappingBloks[0];
+  if (!firstBlok || typeof firstBlok !== "object") return undefined;
+  if (typeof firstBlok.component !== "string" || firstBlok.component.length === 0) {
+    return undefined;
+  }
+  return firstBlok;
+}
+
+function getComponentNameFromBlok(blok?: SbBlokData): string | undefined {
+  if (!blok) return undefined;
+  return typeof blok.component === "string" && blok.component.trim().length > 0
+    ? blok.component.trim()
+    : undefined;
+}
+
+function getStaticFieldsFromBlok(blok?: SbBlokData): Record<string, unknown> | undefined {
+  if (!blok) return undefined;
+  const staticFields = { ...(blok as Record<string, unknown>) };
+  delete staticFields._uid;
+  delete staticFields.component;
+  return Object.keys(staticFields).length > 0 ? staticFields : undefined;
 }
 
 export function createDefaultRichTextNodeMappingsBlok(): RichTextNodeMappingsBlok {
   return {
     _uid: "default-rich-text-node-mappings",
     component: "rich_text_node_mappings",
-    ...DEFAULT_RICH_TEXT_NODE_COMPONENTS,
+    heading_1_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.heading_1_component)],
+    heading_2_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.heading_2_component)],
+    heading_3_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.heading_3_component)],
+    heading_4_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.heading_4_component)],
+    heading_5_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.heading_5_component)],
+    heading_6_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.heading_6_component)],
+    paragraph_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.paragraph_component)],
+    quote_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.quote_component)],
+    unordered_list_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.unordered_list_component)],
+    ordered_list_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.ordered_list_component)],
+    list_item_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.list_item_component)],
+    table_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_component)],
+    table_row_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_row_component)],
+    table_header_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_header_component)],
+    table_cell_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_cell_component)],
+    embedded_component_component: [
+      createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.embedded_component_component),
+    ],
   };
 }
 
-function createTextOverride(componentName?: string): RichTextNodeOverrideConfig | undefined {
-  const normalizedComponentName = normalizeComponentName(componentName);
+function createTextOverride(componentBlok?: SbBlokData): RichTextNodeOverrideConfig | undefined {
+  const normalizedComponentName = getComponentNameFromBlok(componentBlok);
   if (!normalizedComponentName) return undefined;
 
   return {
     component: normalizedComponentName,
     textField: "content",
+    staticFields: getStaticFieldsFromBlok(componentBlok),
   };
 }
 
@@ -137,24 +183,19 @@ export function resolveRichTextNodeOverrides(
 ): RichTextNodeOverrides {
   const mappings = nodeMappings ?? createDefaultRichTextNodeMappingsBlok();
 
-  const headingOneComponentName = normalizeComponentName(
-    mappings.heading_1_component,
-  );
-  const headingTwoComponentName = normalizeComponentName(
-    mappings.heading_2_component,
-  );
-  const headingThreeComponentName = normalizeComponentName(
-    mappings.heading_3_component,
-  );
-  const headingFourComponentName = normalizeComponentName(
-    mappings.heading_4_component,
-  );
-  const headingFiveComponentName = normalizeComponentName(
-    mappings.heading_5_component,
-  );
-  const headingSixComponentName = normalizeComponentName(
-    mappings.heading_6_component,
-  );
+  const headingOneBlok = getComponentBlok(mappings.heading_1_component);
+  const headingTwoBlok = getComponentBlok(mappings.heading_2_component);
+  const headingThreeBlok = getComponentBlok(mappings.heading_3_component);
+  const headingFourBlok = getComponentBlok(mappings.heading_4_component);
+  const headingFiveBlok = getComponentBlok(mappings.heading_5_component);
+  const headingSixBlok = getComponentBlok(mappings.heading_6_component);
+
+  const headingOneComponentName = getComponentNameFromBlok(headingOneBlok);
+  const headingTwoComponentName = getComponentNameFromBlok(headingTwoBlok);
+  const headingThreeComponentName = getComponentNameFromBlok(headingThreeBlok);
+  const headingFourComponentName = getComponentNameFromBlok(headingFourBlok);
+  const headingFiveComponentName = getComponentNameFromBlok(headingFiveBlok);
+  const headingSixComponentName = getComponentNameFromBlok(headingSixBlok);
 
   return {
     headingOne: headingOneComponentName
@@ -163,6 +204,7 @@ export function resolveRichTextNodeOverrides(
           textField: "title",
           mirrorTextFields: ["content"],
           wrapperClassName: "sb-article-heading-1",
+          staticFields: getStaticFieldsFromBlok(headingOneBlok),
         }
       : undefined,
     headingTwo: headingTwoComponentName
@@ -170,6 +212,7 @@ export function resolveRichTextNodeOverrides(
           component: headingTwoComponentName,
           textField: "title",
           wrapperClassName: "sb-article-heading-2",
+          staticFields: getStaticFieldsFromBlok(headingTwoBlok),
         }
       : undefined,
     headingThree: headingThreeComponentName
@@ -177,6 +220,7 @@ export function resolveRichTextNodeOverrides(
           component: headingThreeComponentName,
           textField: "title",
           wrapperClassName: "sb-article-heading-3",
+          staticFields: getStaticFieldsFromBlok(headingThreeBlok),
         }
       : undefined,
     headingFour: headingFourComponentName
@@ -184,6 +228,7 @@ export function resolveRichTextNodeOverrides(
           component: headingFourComponentName,
           textField: "title",
           wrapperClassName: "sb-article-heading-4",
+          staticFields: getStaticFieldsFromBlok(headingFourBlok),
         }
       : undefined,
     headingFive: headingFiveComponentName
@@ -191,6 +236,7 @@ export function resolveRichTextNodeOverrides(
           component: headingFiveComponentName,
           textField: "title",
           wrapperClassName: "sb-article-heading-5",
+          staticFields: getStaticFieldsFromBlok(headingFiveBlok),
         }
       : undefined,
     headingSix: headingSixComponentName
@@ -198,27 +244,38 @@ export function resolveRichTextNodeOverrides(
           component: headingSixComponentName,
           textField: "title",
           wrapperClassName: "sb-article-heading-6",
+          staticFields: getStaticFieldsFromBlok(headingSixBlok),
         }
       : undefined,
-    paragraph: createTextOverride(mappings.paragraph_component),
-    quote: normalizeComponentName(mappings.quote_component)
+    paragraph: createTextOverride(getComponentBlok(mappings.paragraph_component)),
+    quote: getComponentNameFromBlok(getComponentBlok(mappings.quote_component))
       ? {
-          component: normalizeComponentName(mappings.quote_component)!,
+          component: getComponentNameFromBlok(getComponentBlok(mappings.quote_component))!,
           textField: "quote",
+          staticFields: getStaticFieldsFromBlok(getComponentBlok(mappings.quote_component)),
         }
       : undefined,
-    unorderedList: createTextOverride(mappings.unordered_list_component),
-    orderedList: createTextOverride(mappings.ordered_list_component),
-    listItem: createTextOverride(mappings.list_item_component),
-    table: createTextOverride(mappings.table_component),
-    tableRow: createTextOverride(mappings.table_row_component),
-    tableHeader: createTextOverride(mappings.table_header_component),
-    tableCell: createTextOverride(mappings.table_cell_component),
-    embeddedComponent: normalizeComponentName(mappings.embedded_component_component)
+    unorderedList: createTextOverride(
+      getComponentBlok(mappings.unordered_list_component),
+    ),
+    orderedList: createTextOverride(getComponentBlok(mappings.ordered_list_component)),
+    listItem: createTextOverride(getComponentBlok(mappings.list_item_component)),
+    table: createTextOverride(getComponentBlok(mappings.table_component)),
+    tableRow: createTextOverride(getComponentBlok(mappings.table_row_component)),
+    tableHeader: createTextOverride(getComponentBlok(mappings.table_header_component)),
+    tableCell: createTextOverride(getComponentBlok(mappings.table_cell_component)),
+    embeddedComponent: getComponentNameFromBlok(
+      getComponentBlok(mappings.embedded_component_component),
+    )
       ? {
-          component: normalizeComponentName(mappings.embedded_component_component)!,
+          component: getComponentNameFromBlok(
+            getComponentBlok(mappings.embedded_component_component),
+          )!,
           textField: "content",
           bodyField: "body",
+          staticFields: getStaticFieldsFromBlok(
+            getComponentBlok(mappings.embedded_component_component),
+          ),
         }
       : undefined,
   };

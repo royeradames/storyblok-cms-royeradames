@@ -90,26 +90,76 @@ function buildRichTextNodeMappingsComponentName(
 function createDefaultNodeMappingsBlok(
   sourceComponentName: string,
 ): Record<string, unknown> {
+  const createComponentMapping = (componentName: string) => [
+    {
+      _uid: makeUid(),
+      component: componentName,
+    },
+  ];
+
   return {
     _uid: makeUid(),
     component: buildRichTextNodeMappingsComponentName(sourceComponentName),
-    heading_1_component: "shared_article_heading_1",
-    heading_2_component: "shared_article_heading_2",
-    heading_3_component: "shared_article_heading_3",
-    heading_4_component: "shared_article_heading_4",
-    heading_5_component: "shared_article_heading_5",
-    heading_6_component: "shared_article_heading_6",
-    paragraph_component: "shared_article_paragraph",
-    quote_component: "shared_article_quote",
-    unordered_list_component: "shared_article_unordered_list",
-    ordered_list_component: "shared_article_ordered_list",
-    list_item_component: "shared_article_list_item",
-    table_component: "shared_article_table",
-    table_row_component: "shared_article_table_row",
-    table_header_component: "shared_article_table_header",
-    table_cell_component: "shared_article_table_cell",
-    embedded_component_component: "shared_article_embedded_component",
+    heading_1_component: createComponentMapping("shared_article_heading_1"),
+    heading_2_component: createComponentMapping("shared_article_heading_2"),
+    heading_3_component: createComponentMapping("shared_article_heading_3"),
+    heading_4_component: createComponentMapping("shared_article_heading_4"),
+    heading_5_component: createComponentMapping("shared_article_heading_5"),
+    heading_6_component: createComponentMapping("shared_article_heading_6"),
+    paragraph_component: createComponentMapping("shared_article_paragraph"),
+    quote_component: createComponentMapping("shared_article_quote"),
+    unordered_list_component: createComponentMapping(
+      "shared_article_unordered_list",
+    ),
+    ordered_list_component: createComponentMapping("shared_article_ordered_list"),
+    list_item_component: createComponentMapping("shared_article_list_item"),
+    table_component: createComponentMapping("shared_article_table"),
+    table_row_component: createComponentMapping("shared_article_table_row"),
+    table_header_component: createComponentMapping("shared_article_table_header"),
+    table_cell_component: createComponentMapping("shared_article_table_cell"),
+    embedded_component_component: createComponentMapping(
+      "shared_article_embedded_component",
+    ),
   };
+}
+
+function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): boolean {
+  const mappingFieldNames = [
+    "heading_1_component",
+    "heading_2_component",
+    "heading_3_component",
+    "heading_4_component",
+    "heading_5_component",
+    "heading_6_component",
+    "paragraph_component",
+    "quote_component",
+    "unordered_list_component",
+    "ordered_list_component",
+    "list_item_component",
+    "table_component",
+    "table_row_component",
+    "table_header_component",
+    "table_cell_component",
+    "embedded_component_component",
+  ] as const;
+
+  let changed = false;
+
+  for (const fieldName of mappingFieldNames) {
+    const fieldValue = mappingBlok[fieldName];
+    if (Array.isArray(fieldValue)) continue;
+    if (typeof fieldValue !== "string" || fieldValue.trim().length === 0) continue;
+
+    mappingBlok[fieldName] = [
+      {
+        _uid: makeUid(),
+        component: fieldValue.trim(),
+      },
+    ];
+    changed = true;
+  }
+
+  return changed;
 }
 
 function asBlokArray(value: unknown): Record<string, any>[] {
@@ -195,6 +245,13 @@ function migrateInPlace(node: unknown): number {
         nextData.nodeMappings.length > 0
           ? nextData.nodeMappings
           : [createDefaultNodeMappingsBlok(componentName)];
+
+      for (const mapping of nodeMappings) {
+        if (!isObject(mapping)) continue;
+        if (normalizeNodeMappingsBlokFields(mapping)) {
+          changedCount++;
+        }
+      }
 
       const nextNode: Record<string, unknown> = {
         _uid: typeof node._uid === "string" ? node._uid : makeUid(),

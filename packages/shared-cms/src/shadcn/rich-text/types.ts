@@ -35,22 +35,22 @@ export interface RichTextNodeOverrides {
 }
 
 export interface RichTextNodeMappingsBlok extends SbBlokData {
-  heading_1_component?: string;
-  heading_2_component?: string;
-  heading_3_component?: string;
-  heading_4_component?: string;
-  heading_5_component?: string;
-  heading_6_component?: string;
-  paragraph_component?: string;
-  quote_component?: string;
-  unordered_list_component?: string;
-  ordered_list_component?: string;
-  list_item_component?: string;
-  table_component?: string;
-  table_row_component?: string;
-  table_header_component?: string;
-  table_cell_component?: string;
-  embedded_component_component?: string;
+  heading_1_component?: SbBlokData[];
+  heading_2_component?: SbBlokData[];
+  heading_3_component?: SbBlokData[];
+  heading_4_component?: SbBlokData[];
+  heading_5_component?: SbBlokData[];
+  heading_6_component?: SbBlokData[];
+  paragraph_component?: SbBlokData[];
+  quote_component?: SbBlokData[];
+  unordered_list_component?: SbBlokData[];
+  ordered_list_component?: SbBlokData[];
+  list_item_component?: SbBlokData[];
+  table_component?: SbBlokData[];
+  table_row_component?: SbBlokData[];
+  table_header_component?: SbBlokData[];
+  table_cell_component?: SbBlokData[];
+  embedded_component_component?: SbBlokData[];
 }
 
 export interface RichTextHeading {
