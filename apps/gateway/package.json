@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "bun run styles:safelist",
+    "prebuild": "bun run styles:safelist:full",
     "dev": "next dev --experimental-https",
     "dev:lite": "bun run styles:safelist && next dev --experimental-https",
     "build": "next build",

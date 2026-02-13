@@ -7,6 +7,8 @@
     "./components-map": "./src/components-map.ts",
     "./flex-maps": "./src/shadcn/flex/maps.ts",
     "./styles": "./src/styles/index.ts",
+    "./styles-options": "./src/styles/styles_options/index.ts",
+    "./styles-safelist": "./src/styles/styles_options/safelist.ts",
     "./shadcn": "./src/shadcn/index.ts",
     "./presets": "./src/presets/index.ts",
     "./dev": "./src/dev/index.ts",
@@ -14,7 +16,12 @@
     "./storyblok-seed": "./src/storyblok-seed/definitions.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "storyblok:definitions:check": "bun scripts/check-storyblok-definition-aggregation.ts",
+    "styles:safelist:generate": "STYLES_SAFELIST_PROFILE=dev bun scripts/generate-styles-safelist.ts",
+    "styles:safelist:generate:full": "STYLES_SAFELIST_PROFILE=full bun scripts/generate-styles-safelist.ts",
+    "styles:safelist:check": "STYLES_SAFELIST_PROFILE=dev bun scripts/check-styles-safelist-artifact.ts",
+    "styles:safelist:check:full": "STYLES_SAFELIST_PROFILE=full bun scripts/check-styles-safelist-artifact.ts"
   },
   "dependencies": {
     "@storyblok/react": "^4.6.0",
