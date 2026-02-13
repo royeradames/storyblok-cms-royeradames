@@ -1088,9 +1088,19 @@ export const componentDefinitions: StoryblokComponent[] = [
         restrict_components: true,
         component_whitelist: ["builder_rich_text_inputs"],
       },
-      aside_left: {
+      intro: {
         type: "bloks",
         pos: 3,
+        description: "Optional intro content rendered above rich text",
+      },
+      footer: {
+        type: "bloks",
+        pos: 4,
+        description: "Optional footer content rendered below rich text",
+      },
+      aside_left: {
+        type: "bloks",
+        pos: 5,
         description: "Optional left aside content",
         restrict_components: true,
         component_whitelist: [
@@ -1105,7 +1115,7 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       aside_right: {
         type: "bloks",
-        pos: 4,
+        pos: 6,
         description: "Optional right aside content",
         restrict_components: true,
         component_whitelist: [
@@ -1120,7 +1130,7 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       styles: {
         type: "bloks",
-        pos: 5,
+        pos: 7,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

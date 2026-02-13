@@ -20,6 +20,8 @@ import type { ShadcnArticleAsideBlok } from "./ArticleAside";
 export interface BuilderRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
   prose_size?: "sm" | "base" | "lg";
+  intro?: SbBlokData[];
+  footer?: SbBlokData[];
   aside_left?: SbBlokData[];
   aside_right?: SbBlokData[];
   render_inputs?: BuilderRichTextInputsBlok[];
@@ -84,6 +86,12 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
           hasAsideRight ? "lg:order-2" : "",
         )}
       >
+      {blok.intro?.map((introBlok, index) => (
+        <StoryblokComponent
+          blok={introBlok}
+          key={introBlok._uid || `${introBlok.component || "intro"}-${index}`}
+        />
+      ))}
       {blok.render_inputs?.length ? (
         <div className="hidden" aria-hidden="true">
           {blok.render_inputs.map((inputBlok) => (
@@ -96,6 +104,12 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
         headingIds={headingIds}
         renderConfig={renderConfig}
       />
+      {blok.footer?.map((footerBlok, index) => (
+        <StoryblokComponent
+          blok={footerBlok}
+          key={footerBlok._uid || `${footerBlok.component || "footer"}-${index}`}
+        />
+      ))}
       </div>
       {asideRightBlok ? (
         <div className="lg:order-3">
