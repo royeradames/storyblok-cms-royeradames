@@ -1057,6 +1057,112 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
+    name: "rich_text_node_mappings",
+    display_name: "Rich Text Node Mappings",
+    is_root: false,
+    is_nestable: true,
+    icon: "block-settings",
+    schema: {
+      heading_1_component: {
+        type: "text",
+        pos: 0,
+        default_value: "shared_article_heading_1",
+        description: "Component used for heading level 1 nodes",
+      },
+      heading_2_component: {
+        type: "text",
+        pos: 1,
+        default_value: "shared_article_heading_2",
+        description: "Component used for heading level 2 nodes",
+      },
+      heading_3_component: {
+        type: "text",
+        pos: 2,
+        default_value: "shared_article_heading_3",
+        description: "Component used for heading level 3 nodes",
+      },
+      heading_4_component: {
+        type: "text",
+        pos: 3,
+        default_value: "shared_article_heading_4",
+        description: "Component used for heading level 4 nodes",
+      },
+      heading_5_component: {
+        type: "text",
+        pos: 4,
+        default_value: "shared_article_heading_5",
+        description: "Component used for heading level 5 nodes",
+      },
+      heading_6_component: {
+        type: "text",
+        pos: 5,
+        default_value: "shared_article_heading_6",
+        description: "Component used for heading level 6 nodes",
+      },
+      paragraph_component: {
+        type: "text",
+        pos: 6,
+        default_value: "shared_article_paragraph",
+        description: "Component used for paragraph nodes",
+      },
+      quote_component: {
+        type: "text",
+        pos: 7,
+        default_value: "shared_article_quote",
+        description: "Component used for quote nodes",
+      },
+      unordered_list_component: {
+        type: "text",
+        pos: 8,
+        default_value: "shared_article_unordered_list",
+        description: "Component used for unordered list nodes",
+      },
+      ordered_list_component: {
+        type: "text",
+        pos: 9,
+        default_value: "shared_article_ordered_list",
+        description: "Component used for ordered list nodes",
+      },
+      list_item_component: {
+        type: "text",
+        pos: 10,
+        default_value: "shared_article_list_item",
+        description: "Component used for list item nodes",
+      },
+      table_component: {
+        type: "text",
+        pos: 11,
+        default_value: "shared_article_table",
+        description: "Component used for table nodes",
+      },
+      table_row_component: {
+        type: "text",
+        pos: 12,
+        default_value: "shared_article_table_row",
+        description: "Component used for table row nodes",
+      },
+      table_header_component: {
+        type: "text",
+        pos: 13,
+        default_value: "shared_article_table_header",
+        description: "Component used for table header nodes",
+      },
+      table_cell_component: {
+        type: "text",
+        pos: 14,
+        default_value: "shared_article_table_cell",
+        description: "Component used for table cell nodes",
+      },
+      embedded_component_component: {
+        type: "text",
+        pos: 15,
+        default_value: "shared_article_embedded_component",
+        description: "Component used for embedded component nodes",
+      },
+    },
+  },
+
+  {
     name: "rich_text",
     display_name: "Shared Rich Text",
     is_root: false,
@@ -1070,37 +1176,27 @@ export const componentDefinitions: StoryblokComponent[] = [
         required: true,
         description: "Rich text content with formatting",
       },
-      prose_size: {
-        type: "option",
-        pos: 1,
-        default_value: "base",
-        options: [
-          { value: "sm", name: "Small" },
-          { value: "base", name: "Base" },
-          { value: "lg", name: "Large" },
-        ],
-      },
-      render_inputs: {
+      node_mappings: {
         type: "bloks",
-        pos: 2,
+        pos: 1,
         description:
-          "Optional rich-text render inputs from element builder (classes and behavior).",
+          "Node to component mappings used when rendering rich text nodes",
         restrict_components: true,
-        component_whitelist: ["builder_rich_text_inputs"],
+        component_whitelist: ["rich_text_node_mappings"],
       },
       intro: {
         type: "bloks",
-        pos: 3,
+        pos: 2,
         description: "Optional intro content rendered above rich text",
       },
       footer: {
         type: "bloks",
-        pos: 4,
+        pos: 3,
         description: "Optional footer content rendered below rich text",
       },
       aside_left: {
         type: "bloks",
-        pos: 5,
+        pos: 4,
         description: "Optional left aside content",
         restrict_components: true,
         component_whitelist: [
@@ -1115,7 +1211,7 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       aside_right: {
         type: "bloks",
-        pos: 6,
+        pos: 5,
         description: "Optional right aside content",
         restrict_components: true,
         component_whitelist: [
@@ -1130,7 +1226,7 @@ export const componentDefinitions: StoryblokComponent[] = [
       },
       styles: {
         type: "bloks",
-        pos: 7,
+        pos: 6,
         description:
           "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
         restrict_components: true,

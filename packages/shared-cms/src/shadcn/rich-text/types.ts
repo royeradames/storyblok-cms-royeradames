@@ -34,6 +34,25 @@ export interface RichTextNodeOverrides {
   embeddedComponent?: RichTextNodeOverrideConfig;
 }
 
+export interface RichTextNodeMappingsBlok extends SbBlokData {
+  heading_1_component?: string;
+  heading_2_component?: string;
+  heading_3_component?: string;
+  heading_4_component?: string;
+  heading_5_component?: string;
+  heading_6_component?: string;
+  paragraph_component?: string;
+  quote_component?: string;
+  unordered_list_component?: string;
+  ordered_list_component?: string;
+  list_item_component?: string;
+  table_component?: string;
+  table_row_component?: string;
+  table_header_component?: string;
+  table_cell_component?: string;
+  embedded_component_component?: string;
+}
+
 export interface RichTextHeading {
   id: string;
   text: string;

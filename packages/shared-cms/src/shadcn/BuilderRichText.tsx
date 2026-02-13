@@ -11,35 +11,31 @@ import {
 import {
   ARTICLE_RICH_TEXT_RENDER_CONFIG,
   ShadcnRichTextContent,
-  type BuilderRichTextInputsBlok,
+  type RichTextNodeMappingsBlok,
+  createDefaultRichTextNodeMappingsBlok,
   extractRichTextHeadings,
+  resolveRichTextNodeOverrides,
   resolveRichTextRenderConfig,
 } from "./rich-text/RichText";
 import type { ShadcnArticleAsideBlok } from "./ArticleAside";
 
 export interface BuilderRichTextBlok extends Omit<SbBlokData, "content"> {
   content: ISbRichtext;
-  prose_size?: "sm" | "base" | "lg";
+  node_mappings?: RichTextNodeMappingsBlok[];
   intro?: SbBlokData[];
   footer?: SbBlokData[];
   aside_left?: SbBlokData[];
   aside_right?: SbBlokData[];
-  render_inputs?: BuilderRichTextInputsBlok[];
   styles?: StylesBreakpointOptionsBlok[];
 }
-
-const PROSE_SIZE_CLASS_BY_OPTION = {
-  sm: "prose-sm",
-  base: "prose",
-  lg: "prose-lg",
-} as const;
 
 export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
   const headings = extractRichTextHeadings(blok.content);
   const headingIds = headings.map((heading) => heading.id);
+  const nodeMappingsBlok = blok.node_mappings?.[0] || createDefaultRichTextNodeMappingsBlok();
+  const richTextOverrides = resolveRichTextNodeOverrides(nodeMappingsBlok);
   const renderConfig = resolveRichTextRenderConfig({
     base: ARTICLE_RICH_TEXT_RENDER_CONFIG,
-    blokInputs: blok.render_inputs?.[0],
   });
   const asideLeftBlok = blok.aside_left?.[0];
   const asideRightBlok = blok.aside_right?.[0];
@@ -79,7 +75,7 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
       <div
         className={cn(
           "min-w-0",
-          PROSE_SIZE_CLASS_BY_OPTION[blok.prose_size || "base"],
+          "prose",
           renderConfig.classes.prose,
           "max-w-none",
           hasAsideLeft ? "lg:order-2" : "",
@@ -92,16 +88,17 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
           key={introBlok._uid || `${introBlok.component || "intro"}-${index}`}
         />
       ))}
-      {blok.render_inputs?.length ? (
+      {blok.node_mappings?.length ? (
         <div className="hidden" aria-hidden="true">
-          {blok.render_inputs.map((inputBlok) => (
-            <StoryblokComponent blok={inputBlok} key={inputBlok._uid} />
+          {blok.node_mappings.map((mappingBlok) => (
+            <StoryblokComponent blok={mappingBlok} key={mappingBlok._uid} />
           ))}
         </div>
       ) : null}
       <ShadcnRichTextContent
         content={blok.content}
         headingIds={headingIds}
+        overrides={richTextOverrides}
         renderConfig={renderConfig}
       />
       {blok.footer?.map((footerBlok, index) => (

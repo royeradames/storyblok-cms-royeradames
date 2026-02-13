@@ -5,6 +5,7 @@
  * Transforms:
  * - shared_shadcn_article -> shared_rich_text
  * - shared_builder_rich_text -> shared_rich_text
+ * - injects default node_mappings when missing
  *
  * Usage (from apps/gateway):
  *   bun run storyblok:migrate-article-body-to-builder-rich-text            # dry-run
@@ -78,43 +79,36 @@ function buildRichTextComponentName(
     : "rich_text";
 }
 
-function buildRichTextInputsComponentName(
+function buildRichTextNodeMappingsComponentName(
   sourceComponentName: string,
-): "builder_rich_text_inputs" | "shared_builder_rich_text_inputs" {
+): "rich_text_node_mappings" | "shared_rich_text_node_mappings" {
   return sourceComponentName.startsWith("shared_")
-    ? "shared_builder_rich_text_inputs"
-    : "builder_rich_text_inputs";
+    ? "shared_rich_text_node_mappings"
+    : "rich_text_node_mappings";
 }
 
-function createDefaultRenderInputsBlok(
+function createDefaultNodeMappingsBlok(
   sourceComponentName: string,
 ): Record<string, unknown> {
   return {
     _uid: makeUid(),
-    component: buildRichTextInputsComponentName(sourceComponentName),
-    wrap_heading_sections: true,
-    prose_class_name:
-      "prose-a:text-primary prose-a:underline prose-headings:font-semibold prose-headings:text-primary prose-p:text-muted-foreground prose-li:text-muted-foreground prose-strong:text-foreground prose-code:text-foreground",
-    heading_class_name: "text-primary font-semibold scroll-mt-24",
-    heading_wrapper_class_name: "scroll-mt-24",
-    paragraph_class_name: "whitespace-pre-line text-primary",
-    quote_class_name: "border-l-2 border-border pl-4 italic text-muted-foreground",
-    unordered_list_class_name:
-      "text-muted-foreground list-disc dark:marker:text-[#364152] list-outside pl-6",
-    ordered_list_class_name:
-      "text-muted-foreground list-decimal list-outside pl-6 marker:text-muted-foreground",
-    list_item_class_name: "whitespace-pre-line text-primary",
-    table_class_name: "w-full caption-bottom text-sm",
-    table_wrapper_class_name:
-      "overflow-x-auto rounded-md border-b dark:border-b-[#364152] even:bg-muted border-border/70",
-    table_row_class_name: "border-b dark:border-b-[#364152] even:bg-muted border-border/60",
-    table_header_class_name: "text-left h-10 px-3 align-middle font-medium text-primary",
-    table_header_legacy_class_name:
-      "text-left h-10 px-3 align-middle font-medium text-primary bg-muted/30",
-    table_cell_class_name: "p-3 align-middle text-muted-foreground",
-    embedded_component_class_name: "sb-richtext-blok",
-    heading_section_class_name: "sb-heading-section grid gap-4",
-    heading_section_spacing_class_name: "pt-4",
+    component: buildRichTextNodeMappingsComponentName(sourceComponentName),
+    heading_1_component: "shared_article_heading_1",
+    heading_2_component: "shared_article_heading_2",
+    heading_3_component: "shared_article_heading_3",
+    heading_4_component: "shared_article_heading_4",
+    heading_5_component: "shared_article_heading_5",
+    heading_6_component: "shared_article_heading_6",
+    paragraph_component: "shared_article_paragraph",
+    quote_component: "shared_article_quote",
+    unordered_list_component: "shared_article_unordered_list",
+    ordered_list_component: "shared_article_ordered_list",
+    list_item_component: "shared_article_list_item",
+    table_component: "shared_article_table",
+    table_row_component: "shared_article_table_row",
+    table_header_component: "shared_article_table_header",
+    table_cell_component: "shared_article_table_cell",
+    embedded_component_component: "shared_article_embedded_component",
   };
 }
 
@@ -126,24 +120,20 @@ function pickRichTextContentNode(articleNode: Record<string, any>) {
   if (isRichTextDocument(articleNode.content)) {
     return {
       content: articleNode.content,
-      renderInputs: asBlokArray(articleNode.render_inputs),
+      nodeMappings: asBlokArray(articleNode.node_mappings),
       asideLeft: asBlokArray(articleNode.aside_left),
       asideRight: asBlokArray(articleNode.aside_right),
       styles: asBlokArray(articleNode.styles),
-      proseSize:
-        typeof articleNode.prose_size === "string" ? articleNode.prose_size : undefined,
     };
   }
 
   if (isRichTextDocument(articleNode.body)) {
     return {
       content: articleNode.body,
-      renderInputs: asBlokArray(articleNode.rich_text_inputs),
+      nodeMappings: asBlokArray(articleNode.node_mappings),
       asideLeft: [] as Record<string, any>[],
       asideRight: asBlokArray(articleNode.table_of_contents),
       styles: asBlokArray(articleNode.styles),
-      proseSize:
-        typeof articleNode.prose_size === "string" ? articleNode.prose_size : undefined,
     };
   }
 
@@ -156,7 +146,7 @@ function pickRichTextContentNode(articleNode: Record<string, any>) {
 
     return {
       content: nested.content,
-      renderInputs: asBlokArray(nested.render_inputs),
+      nodeMappings: asBlokArray(nested.node_mappings),
       asideLeft: asBlokArray(nested.aside_left),
       asideRight: asBlokArray(nested.aside_right).length
         ? asBlokArray(nested.aside_right)
@@ -164,12 +154,6 @@ function pickRichTextContentNode(articleNode: Record<string, any>) {
       styles: asBlokArray(nested.styles).length
         ? asBlokArray(nested.styles)
         : asBlokArray(articleNode.styles),
-      proseSize:
-        typeof nested.prose_size === "string"
-          ? nested.prose_size
-          : typeof articleNode.prose_size === "string"
-            ? articleNode.prose_size
-            : undefined,
     };
   }
 
@@ -201,26 +185,23 @@ function migrateInPlace(node: unknown): number {
   const componentName = typeof node.component === "string" ? node.component : "";
   const isLegacyArticle = componentName.endsWith("shadcn_article");
   const isLegacyBuilderRichText = componentName.endsWith("builder_rich_text");
+  const isCurrentSharedRichText = componentName.endsWith("rich_text");
 
-  if (isLegacyArticle || isLegacyBuilderRichText) {
+  if (isLegacyArticle || isLegacyBuilderRichText || isCurrentSharedRichText) {
     const nextData = pickRichTextContentNode(node);
 
     if (nextData && isRichTextDocument(nextData.content)) {
-      const renderInputs =
-        nextData.renderInputs.length > 0
-          ? nextData.renderInputs
-          : [createDefaultRenderInputsBlok(componentName)];
+      const nodeMappings =
+        nextData.nodeMappings.length > 0
+          ? nextData.nodeMappings
+          : [createDefaultNodeMappingsBlok(componentName)];
 
       const nextNode: Record<string, unknown> = {
         _uid: typeof node._uid === "string" ? node._uid : makeUid(),
         component: buildRichTextComponentName(componentName),
         content: nextData.content,
-        render_inputs: renderInputs,
+        node_mappings: nodeMappings,
       };
-
-      if (nextData.proseSize) {
-        nextNode.prose_size = nextData.proseSize;
-      }
       if (nextData.styles.length > 0) {
         nextNode.styles = nextData.styles;
       }

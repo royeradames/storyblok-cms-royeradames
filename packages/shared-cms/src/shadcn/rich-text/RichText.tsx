@@ -35,6 +35,7 @@ import type {
   RenderedHeadingMeta,
   RichTextHeading,
   RichTextHeadingLevel,
+  RichTextNodeMappingsBlok,
   RichTextNode,
   RichTextNodeOverrideConfig,
   RichTextNodeOverrides,
@@ -47,6 +48,7 @@ export type {
   RichTextHeading,
   RichTextHeadingLevel,
   RichTextHeadingOverrideConfig,
+  RichTextNodeMappingsBlok,
   RichTextNodeOverrideConfig,
   RichTextNodeOverrides,
   RichTextRenderBehavior,
@@ -86,6 +88,141 @@ const HEADING_OVERRIDE_KEY_BY_LEVEL = {
 } as const satisfies Record<RichTextHeadingLevel, keyof RichTextNodeOverrides>;
 
 type ResolverNode = RichTextNode & { children?: React.ReactNode };
+
+const DEFAULT_RICH_TEXT_NODE_COMPONENTS = {
+  heading_1_component: "article_heading_1",
+  heading_2_component: "article_heading_2",
+  heading_3_component: "article_heading_3",
+  heading_4_component: "article_heading_4",
+  heading_5_component: "article_heading_5",
+  heading_6_component: "article_heading_6",
+  paragraph_component: "article_paragraph",
+  quote_component: "article_quote",
+  unordered_list_component: "article_unordered_list",
+  ordered_list_component: "article_ordered_list",
+  list_item_component: "article_list_item",
+  table_component: "article_table",
+  table_row_component: "article_table_row",
+  table_header_component: "article_table_header",
+  table_cell_component: "article_table_cell",
+  embedded_component_component: "article_embedded_component",
+} satisfies Omit<RichTextNodeMappingsBlok, keyof SbBlokData>;
+
+function normalizeComponentName(componentName?: string): string | undefined {
+  if (typeof componentName !== "string") return undefined;
+  const normalized = componentName.trim();
+  return normalized.length > 0 ? normalized : undefined;
+}
+
+export function createDefaultRichTextNodeMappingsBlok(): RichTextNodeMappingsBlok {
+  return {
+    _uid: "default-rich-text-node-mappings",
+    component: "rich_text_node_mappings",
+    ...DEFAULT_RICH_TEXT_NODE_COMPONENTS,
+  };
+}
+
+function createTextOverride(componentName?: string): RichTextNodeOverrideConfig | undefined {
+  const normalizedComponentName = normalizeComponentName(componentName);
+  if (!normalizedComponentName) return undefined;
+
+  return {
+    component: normalizedComponentName,
+    textField: "content",
+  };
+}
+
+export function resolveRichTextNodeOverrides(
+  nodeMappings?: RichTextNodeMappingsBlok,
+): RichTextNodeOverrides {
+  const mappings = nodeMappings ?? createDefaultRichTextNodeMappingsBlok();
+
+  const headingOneComponentName = normalizeComponentName(
+    mappings.heading_1_component,
+  );
+  const headingTwoComponentName = normalizeComponentName(
+    mappings.heading_2_component,
+  );
+  const headingThreeComponentName = normalizeComponentName(
+    mappings.heading_3_component,
+  );
+  const headingFourComponentName = normalizeComponentName(
+    mappings.heading_4_component,
+  );
+  const headingFiveComponentName = normalizeComponentName(
+    mappings.heading_5_component,
+  );
+  const headingSixComponentName = normalizeComponentName(
+    mappings.heading_6_component,
+  );
+
+  return {
+    headingOne: headingOneComponentName
+      ? {
+          component: headingOneComponentName,
+          textField: "title",
+          mirrorTextFields: ["content"],
+          wrapperClassName: "sb-article-heading-1",
+        }
+      : undefined,
+    headingTwo: headingTwoComponentName
+      ? {
+          component: headingTwoComponentName,
+          textField: "title",
+          wrapperClassName: "sb-article-heading-2",
+        }
+      : undefined,
+    headingThree: headingThreeComponentName
+      ? {
+          component: headingThreeComponentName,
+          textField: "title",
+          wrapperClassName: "sb-article-heading-3",
+        }
+      : undefined,
+    headingFour: headingFourComponentName
+      ? {
+          component: headingFourComponentName,
+          textField: "title",
+          wrapperClassName: "sb-article-heading-4",
+        }
+      : undefined,
+    headingFive: headingFiveComponentName
+      ? {
+          component: headingFiveComponentName,
+          textField: "title",
+          wrapperClassName: "sb-article-heading-5",
+        }
+      : undefined,
+    headingSix: headingSixComponentName
+      ? {
+          component: headingSixComponentName,
+          textField: "title",
+          wrapperClassName: "sb-article-heading-6",
+        }
+      : undefined,
+    paragraph: createTextOverride(mappings.paragraph_component),
+    quote: normalizeComponentName(mappings.quote_component)
+      ? {
+          component: normalizeComponentName(mappings.quote_component)!,
+          textField: "quote",
+        }
+      : undefined,
+    unorderedList: createTextOverride(mappings.unordered_list_component),
+    orderedList: createTextOverride(mappings.ordered_list_component),
+    listItem: createTextOverride(mappings.list_item_component),
+    table: createTextOverride(mappings.table_component),
+    tableRow: createTextOverride(mappings.table_row_component),
+    tableHeader: createTextOverride(mappings.table_header_component),
+    tableCell: createTextOverride(mappings.table_cell_component),
+    embeddedComponent: normalizeComponentName(mappings.embedded_component_component)
+      ? {
+          component: normalizeComponentName(mappings.embedded_component_component)!,
+          textField: "content",
+          bodyField: "body",
+        }
+      : undefined,
+  };
+}
 
 function normalizeHeadingText(text?: string): string | undefined {
   if (!text) return undefined;
