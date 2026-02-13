@@ -1162,6 +1162,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "content",
         description: "Field on unordered list blok to inject rich text content",
       },
+      unordered_list_children_field: {
+        type: "text",
+        pos: 36,
+        default_value: "",
+        description: "Optional field on unordered list blok to inject rendered child nodes",
+      },
       ordered_list_component: {
         type: "bloks",
         pos: 9,
@@ -1172,6 +1178,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 25,
         default_value: "content",
         description: "Field on ordered list blok to inject rich text content",
+      },
+      ordered_list_children_field: {
+        type: "text",
+        pos: 37,
+        default_value: "",
+        description: "Optional field on ordered list blok to inject rendered child nodes",
       },
       list_item_component: {
         type: "bloks",
@@ -1184,6 +1196,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         default_value: "content",
         description: "Field on list item blok to inject rich text content",
       },
+      list_item_parent_list_type_field: {
+        type: "text",
+        pos: 35,
+        default_value: "parent_list_type",
+        description: "Field on list item blok to inject parent list type (unordered or ordered)",
+      },
       table_component: {
         type: "bloks",
         pos: 11,
@@ -1194,6 +1212,12 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 27,
         default_value: "content",
         description: "Field on table blok to inject rich text content",
+      },
+      table_children_field: {
+        type: "text",
+        pos: 38,
+        default_value: "",
+        description: "Optional field on table blok to inject rendered child nodes",
       },
       table_row_component: {
         type: "bloks",

@@ -6,6 +6,8 @@ export interface RichTextNodeOverrideConfig {
   component: string;
   textField: string;
   linkField?: string;
+  parentListTypeField?: string;
+  childrenField?: string;
   mirrorTextFields?: string[];
   idField?: string;
   levelField?: string;
@@ -55,12 +57,16 @@ export interface RichTextNodeMappingsBlok extends SbBlokData {
   quote_text_field?: string;
   unordered_list_component?: SbBlokData[];
   unordered_list_text_field?: string;
+  unordered_list_children_field?: string;
   ordered_list_component?: SbBlokData[];
   ordered_list_text_field?: string;
+  ordered_list_children_field?: string;
   list_item_component?: SbBlokData[];
   list_item_text_field?: string;
+  list_item_parent_list_type_field?: string;
   table_component?: SbBlokData[];
   table_text_field?: string;
+  table_children_field?: string;
   table_row_component?: SbBlokData[];
   table_row_text_field?: string;
   table_header_component?: SbBlokData[];

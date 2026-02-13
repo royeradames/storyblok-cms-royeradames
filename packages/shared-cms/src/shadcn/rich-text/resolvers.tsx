@@ -24,6 +24,7 @@ export interface RichTextResolversOptions {
   getNodeKey: (node: ResolverNode | RichTextNode, prefix: string) => string;
   registerRenderedHeading: (meta: RenderedHeadingMeta) => void;
   getNextHeadingId: () => string | undefined;
+  getNextListItemParentType: () => "unordered" | "ordered" | undefined;
   normalizeListItemChildren: (children: React.ReactNode) => React.ReactNode;
 }
 
@@ -94,8 +95,11 @@ function createRenderOverrideOrFallback(
     body: (SbBlokData & { component?: string })[] | undefined,
     defaultWrapperClassName: string | undefined,
     linkHref: string | undefined,
+    parentListType: "unordered" | "ordered" | undefined,
     fallback: () => React.ReactElement,
     required = true,
+    wrapWithContainer = true,
+    childrenSlot?: React.ReactNode,
   ): React.ReactElement => {
     if (!override) {
       return required
@@ -146,6 +150,24 @@ function createRenderOverrideOrFallback(
     if (linkField && typeof linkHref === "string" && linkHref.trim().length > 0) {
       overrideBlok[linkField] = linkHref.trim();
     }
+    const childrenField =
+      typeof override.childrenField === "string" ? override.childrenField.trim() : "";
+    if (childrenSlot !== undefined && !childrenField) {
+      return fallback();
+    }
+    if (childrenField && childrenSlot !== undefined) {
+      overrideBlok[childrenField] = childrenSlot;
+    }
+    const parentListTypeField =
+      typeof override.parentListTypeField === "string"
+        ? override.parentListTypeField.trim()
+        : "";
+    if (
+      parentListTypeField &&
+      (parentListType === "unordered" || parentListType === "ordered")
+    ) {
+      overrideBlok[parentListTypeField] = parentListType;
+    }
     for (const mirrorField of override.mirrorTextFields ?? []) {
       const fieldName = mirrorField?.trim();
       if (fieldName && !(fieldName in overrideBlok)) {
@@ -153,12 +175,17 @@ function createRenderOverrideOrFallback(
       }
     }
 
+    if (!wrapWithContainer) {
+      return (
+        <StoryblokComponent
+          blok={overrideBlok as SbBlokData}
+          key={key}
+        />
+      );
+    }
+
     return (
-      <div
-        key={key}
-        id={id}
-        className={cn(defaultWrapperClassName, override.wrapperClassName)}
-      >
+      <div key={key} id={id} className={cn(defaultWrapperClassName, override.wrapperClassName)}>
         <StoryblokComponent blok={overrideBlok as SbBlokData} />
       </div>
     );
@@ -174,6 +201,7 @@ export function createRichTextResolvers(
     getNodeKey,
     registerRenderedHeading,
     getNextHeadingId,
+    getNextListItemParentType,
     normalizeListItemChildren,
   } = options;
 
@@ -239,6 +267,7 @@ export function createRichTextResolvers(
         undefined,
         resolvedRenderConfig.classes.headingWrapper,
         undefined,
+        undefined,
         () =>
           renderDefaultHeading(
             level,
@@ -258,6 +287,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         getNodeText(node).trim(),
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -283,6 +313,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        undefined,
         () => (
           <blockquote
             key={key}
@@ -305,6 +336,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        undefined,
         () => (
           <ul
             key={key}
@@ -313,6 +345,9 @@ export function createRichTextResolvers(
             {node.children}
           </ul>
         ),
+        false,
+        true,
+        node.children,
       );
     },
     [BlockTypes.OL_LIST]: (node: ResolverNode) => {
@@ -327,6 +362,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        undefined,
         () => (
           <ol
             key={key}
@@ -335,10 +371,33 @@ export function createRichTextResolvers(
             {node.children}
           </ol>
         ),
+        false,
+        true,
+        node.children,
       );
     },
     [BlockTypes.LIST_ITEM]: (node: ResolverNode) => {
       const key = getNodeKey(node, "li");
+      const parentListType = getNextListItemParentType();
+      const renderedListItemContent = renderOverrideOrFallback(
+        "listItemContent",
+        overrides?.listItem,
+        key,
+        undefined,
+        undefined,
+        getNodeText(node).trim(),
+        undefined,
+        undefined,
+        undefined,
+        parentListType,
+        () => (
+          <>
+            {normalizeListItemChildren(node.children)}
+          </>
+        ),
+        false,
+        false,
+      );
       return renderOverrideOrFallback(
         "listItem",
         undefined,
@@ -349,12 +408,13 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        parentListType,
         () => (
           <li
             key={key}
             className={cn(resolvedRenderConfig.classes.listItem)}
           >
-            {normalizeListItemChildren(node.children)}
+            {renderedListItemContent}
           </li>
         ),
         false,
@@ -372,12 +432,16 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        undefined,
         () =>
           renderTable(
             node,
             resolvedRenderConfig.classes.table,
             resolvedRenderConfig.classes.tableWrapper,
           ),
+        false,
+        true,
+        node.children,
       );
     },
     [BlockTypes.TABLE_ROW]: (node: ResolverNode) => {
@@ -389,6 +453,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         getNodeText(node).trim(),
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -405,9 +470,9 @@ export function createRichTextResolvers(
     },
     [BlockTypes.TABLE_HEADER]: (node: ResolverNode) => {
       const key = getNodeKey(node, "th");
-      return renderOverrideOrFallback(
-        "tableHeader",
-        undefined,
+      const renderedHeaderContent = renderOverrideOrFallback(
+        "tableHeaderContent",
+        overrides?.tableHeader,
         key,
         undefined,
         undefined,
@@ -415,22 +480,26 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        undefined,
         () => (
-          <th
-            key={key}
-            className={cn(resolvedRenderConfig.classes.tableHeader)}
-          >
+          <>
             {node.children}
-          </th>
+          </>
         ),
         false,
+        false,
+      );
+      return (
+        <th key={key} className={cn(resolvedRenderConfig.classes.tableHeader)}>
+          {renderedHeaderContent}
+        </th>
       );
     },
     [BlockTypes.TABLE_CELL]: (node: ResolverNode) => {
       const key = getNodeKey(node, "td");
-      return renderOverrideOrFallback(
-        "tableCell",
-        undefined,
+      const renderedCellContent = renderOverrideOrFallback(
+        "tableCellContent",
+        overrides?.tableCell,
         key,
         undefined,
         undefined,
@@ -438,15 +507,19 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         undefined,
+        undefined,
         () => (
-          <td
-            key={key}
-            className={cn(resolvedRenderConfig.classes.tableCell)}
-          >
+          <>
             {node.children}
-          </td>
+          </>
         ),
         false,
+        false,
+      );
+      return (
+        <td key={key} className={cn(resolvedRenderConfig.classes.tableCell)}>
+          {renderedCellContent}
+        </td>
       );
     },
     table_row: (node: ResolverNode) => (
@@ -486,6 +559,7 @@ export function createRichTextResolvers(
         undefined,
         undefined,
         href.length > 0 ? href : undefined,
+        undefined,
         () => (
           <a key={key} href={href.length > 0 ? href : undefined}>
             {children}
@@ -504,6 +578,7 @@ export function createRichTextResolvers(
         undefined,
         getNodeText(node).trim(),
         body,
+        undefined,
         undefined,
         undefined,
         () => (

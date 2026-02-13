@@ -46,9 +46,13 @@ export const DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS = {
   paragraph_text_field: "content",
   quote_text_field: "quote",
   unordered_list_text_field: "content",
+  unordered_list_children_field: "",
   ordered_list_text_field: "content",
+  ordered_list_children_field: "",
   list_item_text_field: "content",
+  list_item_parent_list_type_field: "parent_list_type",
   table_text_field: "content",
+  table_children_field: "",
   table_row_text_field: "content",
   table_header_text_field: "content",
   table_cell_text_field: "content",
@@ -87,12 +91,19 @@ export function createDefaultRichTextNodeMappingsBlok(): RichTextNodeMappingsBlo
     unordered_list_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.unordered_list_component)],
     unordered_list_text_field:
       DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.unordered_list_text_field,
+    unordered_list_children_field:
+      DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.unordered_list_children_field,
     ordered_list_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.ordered_list_component)],
     ordered_list_text_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.ordered_list_text_field,
+    ordered_list_children_field:
+      DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.ordered_list_children_field,
     list_item_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.list_item_component)],
     list_item_text_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.list_item_text_field,
+    list_item_parent_list_type_field:
+      DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.list_item_parent_list_type_field,
     table_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_component)],
     table_text_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.table_text_field,
+    table_children_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.table_children_field,
     table_row_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_row_component)],
     table_row_text_field: DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.table_row_text_field,
     table_header_component: [createComponentBlok(DEFAULT_RICH_TEXT_NODE_COMPONENTS.table_header_component)],

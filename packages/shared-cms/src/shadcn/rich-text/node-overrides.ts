@@ -45,6 +45,12 @@ function normalizeTextFieldName(
   return normalized.length > 0 ? normalized : fallbackTextField;
 }
 
+function normalizeOptionalFieldName(configuredField: string | undefined): string | undefined {
+  if (typeof configuredField !== "string") return undefined;
+  const normalized = configuredField.trim();
+  return normalized.length > 0 ? normalized : undefined;
+}
+
 function createTextOverride(
   componentBlok: SbBlokData | undefined,
   textField: string,
@@ -126,17 +132,30 @@ export function resolveRichTextNodeOverrides(
     mappings.unordered_list_text_field,
     DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.unordered_list_text_field,
   );
+  const unorderedListChildrenField = normalizeOptionalFieldName(
+    mappings.unordered_list_children_field,
+  );
   const orderedListTextField = normalizeTextFieldName(
     mappings.ordered_list_text_field,
     DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.ordered_list_text_field,
+  );
+  const orderedListChildrenField = normalizeOptionalFieldName(
+    mappings.ordered_list_children_field,
   );
   const listItemTextField = normalizeTextFieldName(
     mappings.list_item_text_field,
     DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.list_item_text_field,
   );
+  const listItemParentListTypeField = normalizeTextFieldName(
+    mappings.list_item_parent_list_type_field,
+    DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.list_item_parent_list_type_field,
+  );
   const tableTextField = normalizeTextFieldName(
     mappings.table_text_field,
     DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.table_text_field,
+  );
+  const tableChildrenField = normalizeOptionalFieldName(
+    mappings.table_children_field,
   );
   const tableRowTextField = normalizeTextFieldName(
     mappings.table_row_text_field,
@@ -239,22 +258,58 @@ export function resolveRichTextNodeOverrides(
       getComponentBlok(mappings.unordered_list_component) ??
         getComponentBlok(defaultMappings.unordered_list_component),
       unorderedListTextField,
-    ),
+    )
+      ? {
+          ...createTextOverride(
+            getComponentBlok(mappings.unordered_list_component) ??
+              getComponentBlok(defaultMappings.unordered_list_component),
+            unorderedListTextField,
+          )!,
+          childrenField: unorderedListChildrenField,
+        }
+      : undefined,
     orderedList: createTextOverride(
       getComponentBlok(mappings.ordered_list_component) ??
         getComponentBlok(defaultMappings.ordered_list_component),
       orderedListTextField,
-    ),
+    )
+      ? {
+          ...createTextOverride(
+            getComponentBlok(mappings.ordered_list_component) ??
+              getComponentBlok(defaultMappings.ordered_list_component),
+            orderedListTextField,
+          )!,
+          childrenField: orderedListChildrenField,
+        }
+      : undefined,
     listItem: createTextOverride(
       getComponentBlok(mappings.list_item_component) ??
         getComponentBlok(defaultMappings.list_item_component),
       listItemTextField,
-    ),
+    )
+      ? {
+          ...createTextOverride(
+            getComponentBlok(mappings.list_item_component) ??
+              getComponentBlok(defaultMappings.list_item_component),
+            listItemTextField,
+          )!,
+          parentListTypeField: listItemParentListTypeField,
+        }
+      : undefined,
     table: createTextOverride(
       getComponentBlok(mappings.table_component) ??
         getComponentBlok(defaultMappings.table_component),
       tableTextField,
-    ),
+    )
+      ? {
+          ...createTextOverride(
+            getComponentBlok(mappings.table_component) ??
+              getComponentBlok(defaultMappings.table_component),
+            tableTextField,
+          )!,
+          childrenField: tableChildrenField,
+        }
+      : undefined,
     tableRow: createTextOverride(
       getComponentBlok(mappings.table_row_component) ??
         getComponentBlok(defaultMappings.table_row_component),

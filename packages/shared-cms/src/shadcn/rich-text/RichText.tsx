@@ -80,6 +80,39 @@ function normalizeListItemChildren(children: React.ReactNode): React.ReactNode {
   return children;
 }
 
+type ListItemParentType = "unordered" | "ordered";
+
+function extractListItemParentTypes(content: ISbRichtext): ListItemParentType[] {
+  const listItemParentTypes: ListItemParentType[] = [];
+
+  const visitNode = (
+    node: unknown,
+    parentListType: ListItemParentType | undefined,
+  ) => {
+    if (!node || typeof node !== "object") return;
+    const typedNode = node as { type?: string; content?: unknown[] };
+    const nodeType = typeof typedNode.type === "string" ? typedNode.type : undefined;
+    const nextParentListType =
+      nodeType === "bullet_list"
+        ? "unordered"
+        : nodeType === "ordered_list"
+          ? "ordered"
+          : parentListType;
+
+    if (nodeType === "list_item" && nextParentListType) {
+      listItemParentTypes.push(nextParentListType);
+    }
+
+    if (!Array.isArray(typedNode.content)) return;
+    for (const child of typedNode.content) {
+      visitNode(child, nextParentListType);
+    }
+  };
+
+  visitNode(content, undefined);
+  return listItemParentTypes;
+}
+
 export function ShadcnRichTextContent({
   content,
   headingIds,
@@ -95,6 +128,8 @@ export function ShadcnRichTextContent({
   const resolvedRenderConfig = renderConfig ?? DEFAULT_RICH_TEXT_RENDER_CONFIG;
   let resolverKeyCounter = 0;
   const renderedHeadingMeta: RenderedHeadingMeta[] = [];
+  const listItemParentTypes = extractListItemParentTypes(content);
+  let listItemParentTypeIndex = 0;
 
   const getNodeKey = (node: ResolverNode | RichTextNode, prefix: string) =>
     node.attrs?.key ?? `${prefix}-${resolverKeyCounter++}`;
@@ -106,6 +141,7 @@ export function ShadcnRichTextContent({
     getNodeKey,
     registerRenderedHeading: (meta) => renderedHeadingMeta.push(meta),
     getNextHeadingId: () => headingIds?.[headingIndex++],
+    getNextListItemParentType: () => listItemParentTypes[listItemParentTypeIndex++],
     normalizeListItemChildren,
   });
 
