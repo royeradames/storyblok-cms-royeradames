@@ -101,6 +101,7 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
   const Element = blok.element || "p";
   const themeColor = useThemeColor(blok.color_light, blok.color_dark);
   const mounted = useMounted();
+  const isBlockquote = blok.element === "blockquote";
   // Apply theme color only after mount to avoid hydration mismatch (server has no theme).
   const useThemeColorStyle = mounted && themeColor;
 
@@ -116,6 +117,9 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         !blok.sr_only && fontStyleMap[blok.font_style ?? "normal"],
         !blok.sr_only && lineHeightMap[blok.line_height ?? "normal"],
         !blok.sr_only && letterSpacingMap[blok.letter_spacing ?? "normal"],
+        !blok.sr_only &&
+          isBlockquote &&
+          "relative pl-6 pr-6 before:absolute before:left-0 before:top-0 before:text-2xl before:leading-none before:content-['“'] after:absolute after:right-0 after:bottom-0 after:text-2xl after:leading-none after:content-['”']",
         ...buildStyleClasses(blok.styles)
       )}
       style={{ ...buildInlineStyles(blok.styles), ...(useThemeColorStyle ? { color: themeColor } : undefined) }}
