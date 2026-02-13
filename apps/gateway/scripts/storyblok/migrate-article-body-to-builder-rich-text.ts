@@ -162,6 +162,25 @@ function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): bool
     "embedded_component_component",
     "link_component",
   ] as const;
+  const componentFieldDefaults = {
+    heading_1_component: "shared_article_heading_1",
+    heading_2_component: "shared_article_heading_2",
+    heading_3_component: "shared_article_heading_3",
+    heading_4_component: "shared_article_heading_4",
+    heading_5_component: "shared_article_heading_5",
+    heading_6_component: "shared_article_heading_6",
+    paragraph_component: "shared_article_paragraph",
+    quote_component: "shared_article_quote",
+    unordered_list_component: "shared_article_unordered_list",
+    ordered_list_component: "shared_article_ordered_list",
+    list_item_component: "shared_article_list_item",
+    table_component: "shared_article_table",
+    table_row_component: "shared_article_table_row",
+    table_header_component: "shared_article_table_header",
+    table_cell_component: "shared_article_table_cell",
+    embedded_component_component: "shared_article_embedded_component",
+    link_component: "shared_article_link",
+  } as const;
   const mappingFieldDefaults = {
     heading_1_text_field: "title",
     heading_2_text_field: "title",
@@ -194,6 +213,18 @@ function normalizeNodeMappingsBlokFields(mappingBlok: Record<string, any>): bool
       {
         _uid: makeUid(),
         component: fieldValue.trim(),
+      },
+    ];
+    changed = true;
+  }
+
+  for (const [fieldName, componentName] of Object.entries(componentFieldDefaults)) {
+    const value = mappingBlok[fieldName];
+    if (Array.isArray(value) && value.length > 0) continue;
+    mappingBlok[fieldName] = [
+      {
+        _uid: makeUid(),
+        component: componentName,
       },
     ];
     changed = true;

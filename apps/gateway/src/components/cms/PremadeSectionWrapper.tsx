@@ -43,7 +43,10 @@ export function PremadeSectionWrapper({ blok }: { blok: any }) {
 export function SharedTemplateResolver({ blok }: { blok: any }) {
   const templates = useTemplates();
   const componentName = blok.component.replace(/^shared_/, "");
-  const template = templates[componentName] ?? templates[`${componentName}_section`];
+  const isRichTextNodeTemplate = componentName.startsWith("article_");
+  const template = isRichTextNodeTemplate
+    ? templates[componentName]
+    : templates[componentName] ?? templates[`${componentName}_section`];
 
   if (!template) {
     console.warn(

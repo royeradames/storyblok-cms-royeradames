@@ -62,14 +62,27 @@ function createTextOverride(
 export function resolveRichTextNodeOverrides(
   nodeMappings?: RichTextNodeMappingsBlok,
 ): RichTextNodeOverrides {
-  const mappings = nodeMappings ?? createDefaultRichTextNodeMappingsBlok();
+  const defaultMappings = createDefaultRichTextNodeMappingsBlok();
+  const mappings = nodeMappings ?? defaultMappings;
 
-  const headingOneBlok = getComponentBlok(mappings.heading_1_component);
-  const headingTwoBlok = getComponentBlok(mappings.heading_2_component);
-  const headingThreeBlok = getComponentBlok(mappings.heading_3_component);
-  const headingFourBlok = getComponentBlok(mappings.heading_4_component);
-  const headingFiveBlok = getComponentBlok(mappings.heading_5_component);
-  const headingSixBlok = getComponentBlok(mappings.heading_6_component);
+  const headingOneBlok =
+    getComponentBlok(mappings.heading_1_component) ??
+    getComponentBlok(defaultMappings.heading_1_component);
+  const headingTwoBlok =
+    getComponentBlok(mappings.heading_2_component) ??
+    getComponentBlok(defaultMappings.heading_2_component);
+  const headingThreeBlok =
+    getComponentBlok(mappings.heading_3_component) ??
+    getComponentBlok(defaultMappings.heading_3_component);
+  const headingFourBlok =
+    getComponentBlok(mappings.heading_4_component) ??
+    getComponentBlok(defaultMappings.heading_4_component);
+  const headingFiveBlok =
+    getComponentBlok(mappings.heading_5_component) ??
+    getComponentBlok(defaultMappings.heading_5_component);
+  const headingSixBlok =
+    getComponentBlok(mappings.heading_6_component) ??
+    getComponentBlok(defaultMappings.heading_6_component);
 
   const headingOneComponentName = getComponentNameFromBlok(headingOneBlok);
   const headingTwoComponentName = getComponentNameFromBlok(headingTwoBlok);
@@ -150,9 +163,15 @@ export function resolveRichTextNodeOverrides(
     DEFAULT_RICH_TEXT_NODE_TEXT_FIELDS.link_url_field,
   );
 
-  const quoteBlok = getComponentBlok(mappings.quote_component);
-  const embeddedBlok = getComponentBlok(mappings.embedded_component_component);
-  const linkBlok = getComponentBlok(mappings.link_component);
+  const quoteBlok =
+    getComponentBlok(mappings.quote_component) ??
+    getComponentBlok(defaultMappings.quote_component);
+  const embeddedBlok =
+    getComponentBlok(mappings.embedded_component_component) ??
+    getComponentBlok(defaultMappings.embedded_component_component);
+  const linkBlok =
+    getComponentBlok(mappings.link_component) ??
+    getComponentBlok(defaultMappings.link_component);
 
   return {
     headingOne: headingOneComponentName
@@ -205,7 +224,8 @@ export function resolveRichTextNodeOverrides(
         }
       : undefined,
     paragraph: createTextOverride(
-      getComponentBlok(mappings.paragraph_component),
+      getComponentBlok(mappings.paragraph_component) ??
+        getComponentBlok(defaultMappings.paragraph_component),
       paragraphTextField,
     ),
     quote: getComponentNameFromBlok(quoteBlok)
@@ -216,31 +236,38 @@ export function resolveRichTextNodeOverrides(
         }
       : undefined,
     unorderedList: createTextOverride(
-      getComponentBlok(mappings.unordered_list_component),
+      getComponentBlok(mappings.unordered_list_component) ??
+        getComponentBlok(defaultMappings.unordered_list_component),
       unorderedListTextField,
     ),
     orderedList: createTextOverride(
-      getComponentBlok(mappings.ordered_list_component),
+      getComponentBlok(mappings.ordered_list_component) ??
+        getComponentBlok(defaultMappings.ordered_list_component),
       orderedListTextField,
     ),
     listItem: createTextOverride(
-      getComponentBlok(mappings.list_item_component),
+      getComponentBlok(mappings.list_item_component) ??
+        getComponentBlok(defaultMappings.list_item_component),
       listItemTextField,
     ),
     table: createTextOverride(
-      getComponentBlok(mappings.table_component),
+      getComponentBlok(mappings.table_component) ??
+        getComponentBlok(defaultMappings.table_component),
       tableTextField,
     ),
     tableRow: createTextOverride(
-      getComponentBlok(mappings.table_row_component),
+      getComponentBlok(mappings.table_row_component) ??
+        getComponentBlok(defaultMappings.table_row_component),
       tableRowTextField,
     ),
     tableHeader: createTextOverride(
-      getComponentBlok(mappings.table_header_component),
+      getComponentBlok(mappings.table_header_component) ??
+        getComponentBlok(defaultMappings.table_header_component),
       tableHeaderTextField,
     ),
     tableCell: createTextOverride(
-      getComponentBlok(mappings.table_cell_component),
+      getComponentBlok(mappings.table_cell_component) ??
+        getComponentBlok(defaultMappings.table_cell_component),
       tableCellTextField,
     ),
     embeddedComponent: getComponentNameFromBlok(embeddedBlok)
