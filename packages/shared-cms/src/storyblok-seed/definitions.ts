@@ -37,7 +37,7 @@ const buttonSizeOptions: StoryblokOption[] = [
   { value: "icon-xs", name: "Icon XS" },
   { value: "icon-sm", name: "Icon SM" },
   { value: "icon-lg", name: "Icon LG" },
-  { value: "dynamic", name: "Dynamic" },
+  { value: "auto", name: "Auto (content-based)" },
 ];
 
 const sideOptions: StoryblokOption[] = [

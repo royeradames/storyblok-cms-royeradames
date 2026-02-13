@@ -304,7 +304,7 @@ export function blog7Template() {
                   cached_url:
                     "https://app.storyblok.com/#/me/spaces/290156609668258/stories/0/0/139645479539719/blok/8276f68f-7c13-45f6-8801-15d23e3983b5#dbfecb4f-5b9e-4c40-be9d-34c5eb4ae88f",
                 },
-                size: "dynamic",
+                size: "auto",
                 label: [
                   {
                     _uid: "7a227f6a-4e48-4835-88f0-3664165caea3",
@@ -535,7 +535,7 @@ export function blog7Template() {
                   cached_url:
                     "https://app.storyblok.com/#/me/spaces/290156609668258/stories/0/0/139645479539719/blok/8276f68f-7c13-45f6-8801-15d23e3983b5#dbfecb4f-5b9e-4c40-be9d-34c5eb4ae88f",
                 },
-                size: "dynamic",
+                size: "auto",
                 label: [
                   {
                     _uid: "92e63f9d-c32c-44e1-ab99-b4b72cf2cbef",
@@ -743,7 +743,7 @@ export function blog7Template() {
                   cached_url:
                     "https://app.storyblok.com/#/me/spaces/290156609668258/stories/0/0/139645479539719/blok/8276f68f-7c13-45f6-8801-15d23e3983b5#dbfecb4f-5b9e-4c40-be9d-34c5eb4ae88f",
                 },
-                size: "dynamic",
+                size: "auto",
                 label: [
                   {
                     _uid: "4cdb4cdc-2a7f-40cd-b8fc-5f5dbb29f9cd",
