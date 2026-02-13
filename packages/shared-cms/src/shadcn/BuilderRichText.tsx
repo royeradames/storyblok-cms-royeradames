@@ -65,7 +65,7 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
       style={buildInlineStyles(blok.styles)}
     >
       {asideLeftBlok ? (
-        <div className="lg:order-1">
+        <div className="order-1 lg:order-1">
           <StoryblokComponent
             blok={withHeadingData(asideLeftBlok)}
             key={asideLeftBlok._uid || "aside-left"}
@@ -78,8 +78,11 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
           "prose",
           renderConfig.classes.prose,
           "max-w-none",
-          hasAsideLeft ? "lg:order-2" : "",
-          hasAsideRight ? "lg:order-2" : "",
+          hasAsideRight
+            ? "order-3 lg:order-2"
+            : hasAsideLeft
+              ? "order-2 lg:order-2"
+              : "",
         )}
       >
       {blok.intro?.map((introBlok, index) => (
@@ -109,7 +112,7 @@ export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
       ))}
       </div>
       {asideRightBlok ? (
-        <div className="lg:order-3">
+        <div className="order-2 lg:order-3">
           <StoryblokComponent
             blok={withHeadingData(asideRightBlok)}
             key={asideRightBlok._uid || "aside-right"}

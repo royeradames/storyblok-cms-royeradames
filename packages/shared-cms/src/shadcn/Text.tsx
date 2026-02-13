@@ -119,7 +119,7 @@ export function ShadcnText({ blok }: { blok: ShadcnTextBlok }) {
         !blok.sr_only && letterSpacingMap[blok.letter_spacing ?? "normal"],
         !blok.sr_only &&
           isBlockquote &&
-          "relative pl-6 pr-6 before:absolute before:left-0 before:top-0 before:text-2xl before:leading-none before:content-['“'] after:absolute after:right-0 after:bottom-0 after:text-2xl after:leading-none after:content-['”']",
+          "before:mr-1 before:content-[open-quote] after:ml-1 after:content-[close-quote]",
         ...buildStyleClasses(blok.styles)
       )}
       style={{ ...buildInlineStyles(blok.styles), ...(useThemeColorStyle ? { color: themeColor } : undefined) }}
