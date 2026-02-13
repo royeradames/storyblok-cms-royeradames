@@ -55,6 +55,12 @@ type ComponentDef = {
   icon?: string;
 };
 
+function normalizeWhitelistComponentName(name: string): string {
+  if (name === "styles_breakpoint_options") return "styles_options";
+  if (name === "shared_styles_breakpoint_options") return "shared_styles_options";
+  return name;
+}
+
 function transformToStoryblokFormat(
   definitions: ComponentDef[],
   namePrefix = "",
@@ -92,7 +98,7 @@ function transformToStoryblokFormat(
         field.restrict_components = true;
         if (fieldDef.component_whitelist?.length) {
           field.component_whitelist = fieldDef.component_whitelist.map(
-            (name) => `${whitelistPrefix}${name}`,
+            (name) => `${whitelistPrefix}${normalizeWhitelistComponentName(name)}`,
           );
         }
       }

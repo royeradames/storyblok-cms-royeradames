@@ -32,6 +32,7 @@ import {
   topMap,
   borderClassMap,
   borderColorMap,
+  textColorMap,
   borderStyleMap,
   boxShadowMap,
   roundedMap,
@@ -50,13 +51,26 @@ const BREAKPOINTS =
 const OUT_PATH = path.join(process.cwd(), "src/app/styles-safelist.txt");
 const BORDER_CUSTOM_LIGHT_VAR_PREFIX = "--sb-border-color-light-";
 const BORDER_CUSTOM_DARK_VAR_PREFIX = "--sb-border-color-dark-";
+const TEXT_CUSTOM_LIGHT_VAR_PREFIX = "--sb-text-color-light-";
+const TEXT_CUSTOM_DARK_VAR_PREFIX = "--sb-text-color-dark-";
 
 const VARIANTS =
   SAFELIST_PROFILE === "full"
     ? (Object.keys(variantMap) as (keyof typeof variantMap)[]).filter(
         (k) => k !== "none",
       )
-    : (["hover", "focus"] as (keyof typeof variantMap)[]);
+    : ([
+        "hover",
+        "focus",
+        "active",
+        "disabled",
+        "visited",
+        "group_hover",
+        "group_focus",
+        "group_active",
+        "group_disabled",
+        "group_visited",
+      ] as (keyof typeof variantMap)[]);
 
 const DEV_SPACING_TOKENS = new Set([
   "0",
@@ -171,6 +185,7 @@ function main() {
     safeMarginMap,
     borderClassMap,
     borderColorMap,
+    textColorMap,
     borderStyleMap,
     boxShadowMap,
     roundedMap,
@@ -240,6 +255,12 @@ function main() {
       );
       all.push(
         `${bpPrefix}dark:${variantPrefix}border-[var(${BORDER_CUSTOM_DARK_VAR_PREFIX}${key})]`,
+      );
+      all.push(
+        `${bpPrefix}${variantPrefix}text-[var(${TEXT_CUSTOM_LIGHT_VAR_PREFIX}${key})]`,
+      );
+      all.push(
+        `${bpPrefix}dark:${variantPrefix}text-[var(${TEXT_CUSTOM_DARK_VAR_PREFIX}${key})]`,
       );
     }
   }

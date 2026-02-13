@@ -28,6 +28,7 @@ import {
   borderClassMap,
   borderClassLabels,
   borderColorMap,
+  textColorMap,
   borderStyleMap,
   boxShadowMap,
   roundedMap,
@@ -274,6 +275,30 @@ const flexBorderColorOptions: StoryblokOption[] = (
   name: borderColorLabels[key],
 }));
 
+const textColorLabels: Record<keyof typeof textColorMap, string> = {
+  "text-foreground": "Foreground",
+  "text-muted-foreground": "Muted Foreground",
+  "text-primary": "Primary",
+  "text-primary-foreground": "Primary Foreground",
+  "text-secondary": "Secondary",
+  "text-secondary-foreground": "Secondary Foreground",
+  "text-accent": "Accent",
+  "text-accent-foreground": "Accent Foreground",
+  "text-destructive": "Destructive",
+  "text-destructive-foreground": "Destructive Foreground",
+  "text-card-foreground": "Card Foreground",
+  "text-popover-foreground": "Popover Foreground",
+  "text-black": "Black",
+  "text-white": "White",
+};
+
+const flexTextColorOptions: StoryblokOption[] = (
+  Object.keys(textColorMap) as (keyof typeof textColorMap)[]
+).map((key) => ({
+  value: key,
+  name: textColorLabels[key],
+}));
+
 const borderStyleLabels: Record<keyof typeof borderStyleMap, string> = {
   "border-solid": "Solid",
   "border-dashed": "Dashed",
@@ -343,10 +368,16 @@ const variantOptionLabels: Record<keyof typeof variantMap, string> = {
   odd: "Odd",
   even: "Even",
   hover: "Hover",
+  active: "Active",
+  disabled: "Disabled",
+  visited: "Visited",
   focus: "Focus",
   focus_visible: "Focus visible",
   group_hover: "Group hover",
   group_focus: "Group focus",
+  group_active: "Group active",
+  group_disabled: "Group disabled",
+  group_visited: "Group visited",
 };
 const flexVariantOptions: StoryblokOption[] = (
   Object.keys(variantMap) as (keyof typeof variantMap)[]
@@ -525,8 +556,8 @@ export const componentDefinitions: StoryblokComponent[] = [
   },
 
   {
-    name: "styles_breakpoint_options",
-    display_name: "Styles Breakpoint Options",
+    name: "styles_options",
+    display_name: "Styles Options",
     is_root: false,
     is_nestable: false,
     schema: {
@@ -550,7 +581,7 @@ export const componentDefinitions: StoryblokComponent[] = [
         pos: 0.6,
         default_value: false,
         description:
-          "Add 'group' class on container so children can use group-hover:, group-focus:",
+          "Add 'group' class on container so children can use group-* variants (group-hover, group-focus, etc.).",
       },
       padding: {
         type: "options",
@@ -740,6 +771,34 @@ export const componentDefinitions: StoryblokComponent[] = [
         options: textSizeOptionsWithPx,
         description:
           "Text size (font-size) per breakpoint. Options show px (e.g. Base (16px)).",
+      },
+      text_color_light: {
+        type: "option",
+        pos: 20.2,
+        options: flexTextColorOptions,
+        description: "Text color in light theme (semantic).",
+      },
+      text_color_dark: {
+        type: "option",
+        pos: 20.3,
+        options: flexTextColorOptions,
+        description: "Text color in dark theme (semantic).",
+      },
+      text_color_light_custom: {
+        type: "custom",
+        pos: 20.4,
+        default_value: "",
+        description:
+          "Text color in light theme (custom). Overrides semantic light text color when set.",
+        field_type: "native-color-picker",
+      },
+      text_color_dark_custom: {
+        type: "custom",
+        pos: 20.5,
+        default_value: "",
+        description:
+          "Text color in dark theme (custom). Overrides semantic dark text color when set.",
+        field_type: "native-color-picker",
       },
     },
   },

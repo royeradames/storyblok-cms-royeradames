@@ -7,8 +7,8 @@
  *
  * Usage (from apps/gateway):
  *   bun run storyblok:seed:push                    # push all components
- *   bun run storyblok:seed:push -- shared_shadcn_container,shared_styles_breakpoint_options  # push only these
- *   STORYBLOK_SEED_FILTER=shared_shadcn_container,shared_styles_breakpoint_options bun run storyblok:seed:push
+ *   bun run storyblok:seed:push -- shared_shadcn_container,shared_styles_options  # push only these
+ *   STORYBLOK_SEED_FILTER=shared_shadcn_container,shared_styles_options bun run storyblok:seed:push
  *
  * Filter: env STORYBLOK_SEED_FILTER or CLI args (comma-separated component names). If set, only those components are created/updated.
  * Reads: apps/gateway/.storyblok-seed.json

@@ -1,12 +1,12 @@
 #!/usr/bin/env bun
 /**
  * Migrate story content: replace component "shared_flex_breakpoint_options"
- * with "shared_styles_breakpoint_options" in every blok.
+ * with "shared_styles_options" in every blok.
  *
  * After renaming Flex Breakpoint Options to Styles Breakpoint Options,
  * existing stories still reference the old component. This script walks
  * all stories, finds any blok with component === "shared_flex_breakpoint_options",
- * sets component to "shared_styles_breakpoint_options", and saves the story.
+ * sets component to "shared_styles_options", and saves the story.
  *
  * Loads STORYBLOK_SPACE_ID and STORYBLOK_PERSONAL_ACCESS_TOKEN from apps/gateway/.env
  *
@@ -23,7 +23,7 @@ const SPACE_ID = process.env.STORYBLOK_SPACE_ID;
 const TOKEN = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
 const API_BASE = "https://mapi.storyblok.com/v1";
 const OLD_COMPONENT = "shared_flex_breakpoint_options";
-const NEW_COMPONENT = "shared_styles_breakpoint_options";
+const NEW_COMPONENT = "shared_styles_options";
 const DELAY_MS = 400;
 
 interface Story {

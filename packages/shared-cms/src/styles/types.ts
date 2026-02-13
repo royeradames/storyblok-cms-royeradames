@@ -24,6 +24,7 @@ import {
   boxShadowMap,
   roundedMap,
   textSizeMap,
+  textColorMap,
   type VariantKey,
 } from "./maps";
 
@@ -44,7 +45,7 @@ export type BreakpointKey = (typeof BREAKPOINT_ORDER)[number];
  * Variant: Tailwind variant prefix (e.g. last:, hover:) applied to all utilities in this block.
  * Group: add "group" utility on container (for group-hover/group-focus on children).
  */
-export interface StylesBreakpointOptionsBlok extends SbBlokData {
+export interface StylesOptionsBlok extends SbBlokData {
   breakpoint?: BreakpointKey;
   /** Tailwind variant (last:, first:, hover:, etc.). Applied to all utilities in this block. */
   variant?: VariantKey;
@@ -87,6 +88,16 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   border_color_dark_custom?: NativeColorPickerValue;
   /** Border color (semantic, legacy single value). */
   border_color?: keyof typeof borderColorMap;
+  /** Text color in light theme (semantic). */
+  text_color_light?: keyof typeof textColorMap;
+  /** Text color in dark theme (semantic). */
+  text_color_dark?: keyof typeof textColorMap;
+  /** Text color in light theme (custom). Overrides semantic color when set. */
+  text_color_light_custom?: NativeColorPickerValue;
+  /** Text color in dark theme (custom). Overrides semantic color when set. */
+  text_color_dark_custom?: NativeColorPickerValue;
+  /** Text color (semantic, legacy single value). */
+  text_color?: keyof typeof textColorMap;
   /** Border style (solid, dashed, dotted, etc.) */
   border_style?: keyof typeof borderStyleMap;
   /** Box shadow */
@@ -96,3 +107,6 @@ export interface StylesBreakpointOptionsBlok extends SbBlokData {
   /** Text size (font-size) per breakpoint */
   text_size?: keyof typeof textSizeMap;
 }
+
+/** @deprecated Prefer StylesOptionsBlok. */
+export type StylesBreakpointOptionsBlok = StylesOptionsBlok;

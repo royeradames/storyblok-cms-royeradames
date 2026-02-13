@@ -2,7 +2,7 @@ import type React from "react";
 import {
   BREAKPOINT_ORDER,
   type BreakpointKey,
-  type StylesBreakpointOptionsBlok,
+  type StylesOptionsBlok,
 } from "./types";
 import { getColorValue } from "../storyblok/plugins";
 import {
@@ -29,13 +29,14 @@ import {
   boxShadowMap,
   roundedMap,
   textSizeMap,
+  textColorMap,
   variantMap,
   GROUP_CLASS,
 } from "./maps";
 
 function sortStyles(
-  styles: StylesBreakpointOptionsBlok[] | null | undefined
-): StylesBreakpointOptionsBlok[] {
+  styles: StylesOptionsBlok[] | null | undefined
+): StylesOptionsBlok[] {
   const list = styles ?? [];
   if (!Array.isArray(list) || list.length === 0) return [];
   return [...list].sort(
@@ -45,7 +46,7 @@ function sortStyles(
   );
 }
 
-function toThemeKey(opt: StylesBreakpointOptionsBlok): string {
+function toThemeKey(opt: StylesOptionsBlok): string {
   const bp = opt.breakpoint ?? "base";
   const variant = opt.variant ?? "none";
   return `${bp}-${variant}`.replace(/[^a-zA-Z0-9_-]/g, "-");
@@ -56,7 +57,7 @@ function getBreakpointPrefix(breakpoint: BreakpointKey): string {
 }
 
 function getVariantPrefix(
-  variant: StylesBreakpointOptionsBlok["variant"]
+  variant: StylesOptionsBlok["variant"]
 ): string {
   if (!variant || variant === "none") return "";
   return variantMap[variant] ?? "";
@@ -67,7 +68,7 @@ function getVariantPrefix(
  * Handles undefined/null/empty: returns [] so callers can pass blok.styles directly.
  */
 export function buildStyleClasses(
-  styles: StylesBreakpointOptionsBlok[] | null | undefined
+  styles: StylesOptionsBlok[] | null | undefined
 ): string[] {
   const sorted = sortStyles(styles);
   if (sorted.length === 0) return [];
@@ -156,8 +157,12 @@ export function buildStyleClasses(
     const themeKey = toThemeKey(opt);
     const lightCustomColor = getColorValue(opt.border_color_light_custom);
     const darkCustomColor = getColorValue(opt.border_color_dark_custom);
+    const lightCustomTextColor = getColorValue(opt.text_color_light_custom);
+    const darkCustomTextColor = getColorValue(opt.text_color_dark_custom);
     const lightColorVar = `--sb-border-color-light-${themeKey}`;
     const darkColorVar = `--sb-border-color-dark-${themeKey}`;
+    const lightTextColorVar = `--sb-text-color-light-${themeKey}`;
+    const darkTextColorVar = `--sb-text-color-dark-${themeKey}`;
 
     if (lightCustomColor) {
       classes.push(prefix + `border-[var(${lightColorVar})]`);
@@ -181,6 +186,31 @@ export function buildStyleClasses(
           "dark:" +
           variantPrefix +
           borderColorMap[opt.border_color_dark]
+      );
+    }
+
+    if (lightCustomTextColor) {
+      classes.push(prefix + `text-[var(${lightTextColorVar})]`);
+    } else {
+      const lightTextColor = opt.text_color_light ?? opt.text_color;
+      if (lightTextColor && textColorMap[lightTextColor]) {
+        classes.push(prefix + textColorMap[lightTextColor]);
+      }
+    }
+
+    if (darkCustomTextColor) {
+      classes.push(
+        breakpointPrefix +
+          "dark:" +
+          variantPrefix +
+          `text-[var(${darkTextColorVar})]`
+      );
+    } else if (opt.text_color_dark && textColorMap[opt.text_color_dark]) {
+      classes.push(
+        breakpointPrefix +
+          "dark:" +
+          variantPrefix +
+          textColorMap[opt.text_color_dark]
       );
     }
     if (opt.border_style && opt.border_style in borderStyleMap)
@@ -209,7 +239,7 @@ export function buildStyleClasses(
  * Returns a CSSProperties object to spread onto the element's `style` prop.
  */
 export function buildInlineStyles(
-  styles: StylesBreakpointOptionsBlok[] | null | undefined,
+  styles: StylesOptionsBlok[] | null | undefined,
 ): React.CSSProperties {
   const sorted = sortStyles(styles);
   if (sorted.length === 0) return {};
@@ -221,12 +251,20 @@ export function buildInlineStyles(
     const themeKey = toThemeKey(opt);
     const lightCustomColor = getColorValue(opt.border_color_light_custom);
     const darkCustomColor = getColorValue(opt.border_color_dark_custom);
+    const lightCustomTextColor = getColorValue(opt.text_color_light_custom);
+    const darkCustomTextColor = getColorValue(opt.text_color_dark_custom);
 
     if (lightCustomColor) {
       cssVars[`--sb-border-color-light-${themeKey}`] = lightCustomColor;
     }
     if (darkCustomColor) {
       cssVars[`--sb-border-color-dark-${themeKey}`] = darkCustomColor;
+    }
+    if (lightCustomTextColor) {
+      cssVars[`--sb-text-color-light-${themeKey}`] = lightCustomTextColor;
+    }
+    if (darkCustomTextColor) {
+      cssVars[`--sb-text-color-dark-${themeKey}`] = darkCustomTextColor;
     }
 
     // Only base breakpoint supports non-variable inline custom values.

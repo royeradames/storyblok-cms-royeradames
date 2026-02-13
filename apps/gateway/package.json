@@ -27,6 +27,7 @@
     "storyblok:migrate:border-color-theme": "bun run scripts/storyblok/migrate-border-color-to-theme-fields.ts",
     "storyblok:migrate-flex-options-to-styles": "bun scripts/storyblok/migrate-flex-options-to-styles.ts",
     "storyblok:migrate-flex-breakpoint-to-styles-breakpoint": "bun scripts/storyblok/migrate-flex-breakpoint-to-styles-breakpoint.ts",
+    "storyblok:migrate-styles-breakpoint-to-styles-options": "bun scripts/storyblok/migrate-styles-breakpoint-to-styles-options.ts",
     "storyblok:migrate-styles-gap-to-options": "bun scripts/storyblok/migrate-styles-gap-to-options.ts",
     "storyblok:migrate-flex-to-container": "bun scripts/storyblok/migrate-flex-to-container.ts",
     "storyblok:migrate-article-body-to-builder-rich-text": "bun scripts/storyblok/migrate-article-body-to-builder-rich-text.ts",

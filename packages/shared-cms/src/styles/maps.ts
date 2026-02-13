@@ -630,6 +630,24 @@ export const borderColorMap = {
   "border-foreground": "border-foreground",
 } as const;
 
+/** Text color (semantic). */
+export const textColorMap = {
+  "text-foreground": "text-foreground",
+  "text-muted-foreground": "text-muted-foreground",
+  "text-primary": "text-primary",
+  "text-primary-foreground": "text-primary-foreground",
+  "text-secondary": "text-secondary",
+  "text-secondary-foreground": "text-secondary-foreground",
+  "text-accent": "text-accent",
+  "text-accent-foreground": "text-accent-foreground",
+  "text-destructive": "text-destructive",
+  "text-destructive-foreground": "text-destructive-foreground",
+  "text-card-foreground": "text-card-foreground",
+  "text-popover-foreground": "text-popover-foreground",
+  "text-black": "text-black",
+  "text-white": "text-white",
+} as const;
+
 /** Border style (solid, dashed, dotted, etc.). */
 export const borderStyleMap = {
   "border-solid": "border-solid",
@@ -676,10 +694,16 @@ export const variantMap = {
   odd: "odd:",
   even: "even:",
   hover: "hover:",
+  active: "active:",
+  disabled: "disabled:",
+  visited: "visited:",
   focus: "focus:",
   focus_visible: "focus-visible:",
   group_hover: "group-hover:",
   group_focus: "group-focus:",
+  group_active: "group-active:",
+  group_disabled: "group-disabled:",
+  group_visited: "group-visited:",
 } as const;
 
 export type VariantKey = keyof typeof variantMap;

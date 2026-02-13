@@ -50,6 +50,8 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
   const variant = blok.variant || "default";
   const size = blok.size || "default";
   const labelContent = <ButtonLabel blok={blok} />;
+  const resolvedStyleClasses = cn(...buildStyleClasses(blok.styles));
+  const resolvedInlineStyles = buildInlineStyles(blok.styles);
 
   if (blok.link?.url) {
     const href = blok.link.url;
@@ -63,6 +65,8 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
           {...storyblokEditable(blok)}
           variant={variant}
           size={size}
+          className={resolvedStyleClasses}
+          style={resolvedInlineStyles}
           asChild
         >
           <Link href={href}>{labelContent}</Link>
@@ -75,6 +79,8 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
         {...storyblokEditable(blok)}
         variant={variant}
         size={size}
+        className={resolvedStyleClasses}
+        style={resolvedInlineStyles}
         asChild
       >
         <a href={href} target={target} rel={rel}>
@@ -89,8 +95,8 @@ export function ShadcnButton({ blok }: { blok: ShadcnButtonBlok }) {
       {...storyblokEditable(blok)}
       variant={variant}
       size={size}
-      className={cn(...buildStyleClasses(blok.styles))}
-      style={buildInlineStyles(blok.styles)}
+      className={resolvedStyleClasses}
+      style={resolvedInlineStyles}
     >
       {labelContent}
     </Button>

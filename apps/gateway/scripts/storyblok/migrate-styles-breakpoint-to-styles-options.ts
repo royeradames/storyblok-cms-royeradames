@@ -1,18 +1,12 @@
 #!/usr/bin/env bun
 /**
- * Migrate Styles Breakpoint Options content:
- *   gap: "gap-4" -> gap: ["gap-4"]
- *
- * Also normalizes empty string gaps:
- *   gap: "" -> (removed)
- *
- * This is needed after changing the Storyblok field type from "option" to
- * "options" for `shared_styles_options.gap` (and legacy `shared_styles_breakpoint_options.gap`).
+ * Migrate story content: replace component "shared_styles_breakpoint_options"
+ * with "shared_styles_options" in every blok.
  *
  * Loads STORYBLOK_SPACE_ID and STORYBLOK_PERSONAL_ACCESS_TOKEN from apps/gateway/.env
  *
  * Usage (from apps/gateway):
- *   bun run storyblok:migrate-styles-gap-to-options
+ *   bun run storyblok:migrate-styles-breakpoint-to-styles-options
  */
 
 import { config } from "dotenv";
@@ -23,10 +17,8 @@ config({ path: path.join(process.cwd(), ".env") });
 const SPACE_ID = process.env.STORYBLOK_SPACE_ID;
 const TOKEN = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
 const API_BASE = "https://mapi.storyblok.com/v1";
-const TARGET_COMPONENTS = new Set([
-  "shared_styles_options",
-  "shared_styles_breakpoint_options",
-]);
+const OLD_COMPONENT = "shared_styles_breakpoint_options";
+const NEW_COMPONENT = "shared_styles_options";
 const DELAY_MS = 400;
 
 interface Story {
@@ -37,13 +29,6 @@ interface Story {
   [key: string]: unknown;
 }
 
-/**
- * Recursively walks content and migrates:
- * - If component is TARGET_COMPONENT and gap is string:
- *   - non-empty => [gap]
- *   - empty => remove field
- * Returns true if any change was made.
- */
 function migrateInPlace(obj: unknown): boolean {
   if (obj === null || typeof obj !== "object") return false;
   let changed = false;
@@ -54,14 +39,8 @@ function migrateInPlace(obj: unknown): boolean {
   }
 
   const o = obj as Record<string, unknown>;
-
-  if (TARGET_COMPONENTS.has(String(o.component)) && typeof o.gap === "string") {
-    const value = o.gap.trim();
-    if (value.length > 0) {
-      o.gap = [value];
-    } else {
-      delete o.gap;
-    }
+  if (o.component === OLD_COMPONENT) {
+    o.component = NEW_COMPONENT;
     changed = true;
   }
 
@@ -117,7 +96,7 @@ async function updateStory(id: number, story: Story): Promise<void> {
 }
 
 async function main() {
-  console.log("🚀 Migrate Styles: gap option -> options array\n");
+  console.log(`🚀 Migrate: ${OLD_COMPONENT} → ${NEW_COMPONENT}\n`);
 
   if (!SPACE_ID) {
     console.error("❌ STORYBLOK_SPACE_ID not set in .env");
