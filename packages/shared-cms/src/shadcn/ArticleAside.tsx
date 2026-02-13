@@ -6,7 +6,7 @@ import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
   buildInlineStyles,
-  type StylesBreakpointOptionsBlok,
+  type StylesOptionsBlok,
 } from "../styles";
 import type { RichTextHeading } from "./rich-text/RichText";
 
@@ -14,7 +14,7 @@ export interface ShadcnArticleAsideBlok extends SbBlokData {
   title?: string;
   empty_message?: string;
   headings?: RichTextHeading[];
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnArticleAside({ blok }: { blok: ShadcnArticleAsideBlok }) {

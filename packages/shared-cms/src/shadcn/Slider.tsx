@@ -4,7 +4,7 @@ import { useState } from "react";
 import { storyblokEditable } from "@storyblok/react";
 import { Slider, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnSliderBlok extends SbBlokData {
   name: string;
@@ -15,7 +15,7 @@ export interface ShadcnSliderBlok extends SbBlokData {
   default_value?: number;
   show_value?: boolean;
   disabled?: boolean;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnSlider({ blok }: { blok: ShadcnSliderBlok }) {

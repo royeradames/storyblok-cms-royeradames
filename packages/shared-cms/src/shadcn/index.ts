@@ -4,7 +4,7 @@ export { ShadcnGrid, type ShadcnGridBlok } from "./Grid";
 export {
   ShadcnContainer,
   type ShadcnContainerBlok,
-  type StylesBreakpointOptionsBlok,
+  type StylesOptionsBlok,
 } from "./container/Container";
 
 // Typography & Content

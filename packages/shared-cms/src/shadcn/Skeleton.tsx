@@ -3,14 +3,14 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Skeleton, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnSkeletonBlok extends SbBlokData {
   variant?: "text" | "circular" | "rectangular" | "card";
   width?: string;
   height?: string;
   lines?: number;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnSkeleton({ blok }: { blok: ShadcnSkeletonBlok }) {

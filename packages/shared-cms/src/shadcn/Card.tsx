@@ -11,7 +11,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnCardBlok extends SbBlokData {
   image?: SbBlokData[];
@@ -19,7 +19,7 @@ export interface ShadcnCardBlok extends SbBlokData {
   description?: SbBlokData[];
   content?: SbBlokData[];
   footer?: SbBlokData[];
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnCard({ blok }: { blok: ShadcnCardBlok }) {

@@ -6,10 +6,10 @@ import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
   buildInlineStyles,
-  type StylesBreakpointOptionsBlok,
+  type StylesOptionsBlok,
 } from "../../styles";
 
-export type { StylesBreakpointOptionsBlok } from "../../styles";
+export type { StylesOptionsBlok } from "../../styles";
 
 export type ContainerElement =
   | "div"
@@ -27,7 +27,7 @@ export interface ShadcnContainerBlok extends SbBlokData {
   name?: string;
   container_as?: ContainerElement;
   items?: SbBlokData[];
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
   sectionBlok?: SbBlokData;
   premade_field: string;
   premade_section: string;

@@ -33,6 +33,14 @@ export const shadcnIconDefinition = {
   icon: "block-image",
   preview_field: "name",
   schema: {
+    data_mapping: {
+      type: "bloks",
+      pos: 0,
+      restrict_components: true,
+      component_whitelist: ["builder_data_mapping"],
+      description:
+        "Section builder: maps premade data fields to this component (e.g. image + dark_image)",
+    },
     name: {
       type: "option",
       pos: 0,
@@ -66,11 +74,6 @@ export const shadcnIconDefinition = {
       pos: 4,
       description: "Stroke width",
     },
-    class_name: {
-      type: "text",
-      pos: 5,
-      description: "Optional CSS class (e.g. Tailwind)",
-    },
-    styles: createStylesBlokField(6, "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)"),
+    styles: createStylesBlokField(5, "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)"),
   },
 } satisfies StoryblokComponent;

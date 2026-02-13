@@ -10,7 +10,7 @@ import {
   cn,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnCarouselBlok extends SbBlokData {
   items?: SbBlokData[];
@@ -20,7 +20,7 @@ export interface ShadcnCarouselBlok extends SbBlokData {
   autoplay_delay?: number;
   orientation?: "horizontal" | "vertical";
   items_per_view?: "1" | "2" | "3" | "4";
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 const itemsPerViewMap = {

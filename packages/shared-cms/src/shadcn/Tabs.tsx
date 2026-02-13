@@ -3,20 +3,20 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnTabItemBlok extends SbBlokData {
   label: string;
   value: string;
   content?: SbBlokData[];
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export interface ShadcnTabsBlok extends SbBlokData {
   tabs: ShadcnTabItemBlok[];
   default_value?: string;
   orientation?: "horizontal" | "vertical";
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnTabs({ blok }: { blok: ShadcnTabsBlok }) {

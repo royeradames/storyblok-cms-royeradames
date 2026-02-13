@@ -4,7 +4,7 @@ import { storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 import {
   type NativeColorPickerValue,
   useThemeColor,
@@ -30,8 +30,7 @@ export interface ShadcnIconBlok extends SbBlokData {
   /** Dark theme color (native-color-picker plugin) */
   color_dark?: NativeColorPickerValue;
   stroke_width?: number;
-  class_name?: string;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnIcon({ blok }: { blok: ShadcnIconBlok }) {
@@ -45,7 +44,7 @@ export function ShadcnIcon({ blok }: { blok: ShadcnIconBlok }) {
       size={sizeNum}
       color={color}
       strokeWidth={blok.stroke_width}
-      className={cn(blok.class_name, ...buildStyleClasses(blok.styles))}
+      className={cn(...buildStyleClasses(blok.styles))}
       style={buildInlineStyles(blok.styles)}
     />
   );

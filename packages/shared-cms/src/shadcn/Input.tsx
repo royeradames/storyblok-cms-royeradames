@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Input, Label, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnInputBlok extends SbBlokData {
   name: string;
@@ -13,7 +13,7 @@ export interface ShadcnInputBlok extends SbBlokData {
   required?: boolean;
   disabled?: boolean;
   helper_text?: string;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnInput({ blok }: { blok: ShadcnInputBlok }) {

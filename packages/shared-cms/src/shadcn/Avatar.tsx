@@ -3,7 +3,7 @@
 import { storyblokEditable } from "@storyblok/react";
 import { Avatar, AvatarFallback, AvatarImage, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnAvatarBlok extends SbBlokData {
   image?: {
@@ -12,7 +12,7 @@ export interface ShadcnAvatarBlok extends SbBlokData {
   };
   fallback?: string;
   size?: "sm" | "md" | "lg" | "xl";
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 const sizeMap = {

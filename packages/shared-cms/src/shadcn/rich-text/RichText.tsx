@@ -12,7 +12,7 @@ import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
   buildInlineStyles,
-  type StylesBreakpointOptionsBlok,
+  type StylesOptionsBlok,
 } from "../../styles";
 import { createRichTextResolvers } from "./resolvers";
 import {
@@ -63,7 +63,7 @@ export interface ShadcnRichTextBlok extends SbBlokData {
   content: ISbRichtext;
   prose_size?: "sm" | "base" | "lg";
   render_inputs?: BuilderRichTextInputsBlok[];
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnRichTextContent({

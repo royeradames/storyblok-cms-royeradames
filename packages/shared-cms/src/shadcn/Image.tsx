@@ -4,7 +4,7 @@ import { storyblokEditable } from "@storyblok/react";
 import { AspectRatio, Skeleton, cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
 import { useTheme } from "next-themes";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 import { useMounted } from "../storyblok/plugins";
 
 interface ImageAsset {
@@ -28,7 +28,7 @@ export interface ShadcnImageBlok extends SbBlokData {
   object_fit?: "cover" | "contain" | "fill" | "none";
   rounded?: "none" | "sm" | "md" | "lg" | "full";
   caption?: string;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 const ratioMap = {

@@ -3,14 +3,14 @@
 import { storyblokEditable, StoryblokComponent } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnGridBlok extends SbBlokData {
   items?: SbBlokData[];
   columns?: "1" | "2" | "3" | "4" | "5" | "6";
   columns_mobile?: "1" | "2";
   gap?: "none" | "sm" | "md" | "lg";
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 const columnsMap = {

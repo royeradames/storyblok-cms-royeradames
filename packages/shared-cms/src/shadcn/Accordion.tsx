@@ -9,13 +9,13 @@ import {
   AccordionTrigger,
 } from "@repo/ui";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnAccordionItemBlok extends SbBlokData {
   title: string;
   content: string;
   value?: string;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export interface ShadcnAccordionBlok extends SbBlokData {
@@ -23,7 +23,7 @@ export interface ShadcnAccordionBlok extends SbBlokData {
   type?: "single" | "multiple";
   collapsible?: boolean;
   default_value?: string;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnAccordion({ blok }: { blok: ShadcnAccordionBlok }) {

@@ -11,13 +11,13 @@ import {
 } from "@repo/ui";
 import { ChevronsUpDown } from "lucide-react";
 import type { SbBlokData } from "@storyblok/react";
-import { buildStyleClasses, buildInlineStyles, type StylesBreakpointOptionsBlok } from "../styles";
+import { buildStyleClasses, buildInlineStyles, type StylesOptionsBlok } from "../styles";
 
 export interface ShadcnCollapsibleBlok extends SbBlokData {
   trigger_text: string;
   content?: SbBlokData[];
   default_open?: boolean;
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function ShadcnCollapsible({ blok }: { blok: ShadcnCollapsibleBlok }) {

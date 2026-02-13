@@ -6,7 +6,7 @@ import type { SbBlokData } from "@storyblok/react";
 import {
   buildStyleClasses,
   buildInlineStyles,
-  type StylesBreakpointOptionsBlok,
+  type StylesOptionsBlok,
 } from "../styles";
 import {
   ARTICLE_RICH_TEXT_RENDER_CONFIG,
@@ -26,7 +26,7 @@ export interface BuilderRichTextBlok extends Omit<SbBlokData, "content"> {
   footer?: SbBlokData[];
   aside_left?: SbBlokData[];
   aside_right?: SbBlokData[];
-  styles?: StylesBreakpointOptionsBlok[];
+  styles?: StylesOptionsBlok[];
 }
 
 export function BuilderRichText({ blok }: { blok: BuilderRichTextBlok }) {
