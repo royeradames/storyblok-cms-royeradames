@@ -16,7 +16,11 @@ import {
   shadcnSectionDefinition,
   stylesOptionsStoryblokDefinition,
 } from "./definitions/co-located";
-import type { StoryblokComponent, StoryblokOption } from "./types";
+import type {
+  StoryblokComponent,
+  StoryblokComponentSchema,
+  StoryblokOption,
+} from "./types";
 
 // Reusable option sets
 const buttonVariantOptions: StoryblokOption[] = [
@@ -2614,6 +2618,27 @@ export const componentDefinitions: StoryblokComponent[] = [
   // See: apps/gateway/src/lib/derive-premade-schemas.ts
   // They are managed via the webhook and storyblok:migrate:data-mapping script.
 ];
+
+const componentSchemaByName = new Map<string, StoryblokComponentSchema>();
+for (const def of componentDefinitions) {
+  componentSchemaByName.set(def.name, def.schema);
+  if (!def.name.startsWith("shared_")) {
+    componentSchemaByName.set(`shared_${def.name}`, def.schema);
+  } else {
+    componentSchemaByName.set(def.name.replace(/^shared_/, ""), def.schema);
+  }
+}
+
+/**
+ * Returns the schema for a component by name. Accepts with or without "shared_" prefix
+ * (e.g. "shadcn_icon" or "shared_shadcn_icon"). Used when deriving premade section
+ * schemas so mapped fields can copy the target builder field's type and options.
+ */
+export function getComponentSchema(
+  componentName: string,
+): StoryblokComponentSchema | undefined {
+  return componentSchemaByName.get(componentName);
+}
 
 for (const definition of coLocatedComponentDefinitions) {
   if (!componentDefinitions.some((item) => item.name === definition.name)) {

@@ -15,14 +15,14 @@ const lucideIconNameOptions: StoryblokOption[] = Object.keys(lucideIcons)
   .map((name) => ({ value: name, name }));
 
 const iconSizeOptions: StoryblokOption[] = [
-  { value: "xs", name: "XS" },
-  { value: "sm", name: "SM" },
-  { value: "default", name: "Default" },
-  { value: "lg", name: "LG" },
-  { value: "xl", name: "XL" },
-  { value: "2xl", name: "2XL" },
-  { value: "3xl", name: "3XL" },
-  { value: "4xl", name: "4XL" },
+  { value: "xs", name: "XS (16px)" },
+  { value: "sm", name: "SM (20px)" },
+  { value: "default", name: "Default (24px)" },
+  { value: "lg", name: "LG (32px)" },
+  { value: "xl", name: "XL (40px)" },
+  { value: "2xl", name: "2XL (48px)" },
+  { value: "3xl", name: "3XL (64px)" },
+  { value: "4xl", name: "4XL (80px)" },
 ];
 
 export const shadcnIconDefinition = {

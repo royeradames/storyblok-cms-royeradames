@@ -1,3 +1,4 @@
+import { getComponentSchema } from "@repo/shared-cms/storyblok-seed";
 import { slugToBuilderPrefix } from "./builder-template";
 
 /**
@@ -24,9 +25,16 @@ export interface DerivedField {
   pos: number;
   description?: string;
   filetypes?: string[];
+  options?: { value: string; name: string }[];
+  default_value?: string | number | boolean;
+  required?: boolean;
+  max_choices?: number;
   restrict_components?: boolean;
   component_whitelist?: string[];
   allow_target_blank?: boolean;
+  min_value?: number;
+  max_value?: number;
+  field_type?: string;
 }
 
 export interface DerivedComponent {
@@ -116,10 +124,59 @@ function toDisplayName(name: string): string {
 
 // ── Template walking ──────────────────────────────────────────────────
 
+/** Builder-only schema keys we never copy to premade fields. */
+const BUILDER_ONLY_FIELD_KEYS = new Set(["data_mapping"]);
+
+/**
+ * Copies the target builder field from the host component schema so the premade
+ * field gets the same type and options. Returns null if host or field not found.
+ */
+function copyFieldFromHost(
+  hostComponent: string,
+  builderField: string,
+  premadeField: string,
+): Omit<FieldInfo, "premadeField"> | null {
+  const schema = getComponentSchema(hostComponent);
+  if (!schema) return null;
+  const source = schema[builderField];
+  if (!source || BUILDER_ONLY_FIELD_KEYS.has(builderField)) return null;
+
+  const copied: Omit<FieldInfo, "premadeField"> = {
+    type: source.type,
+  };
+  if (source.description) copied.description = source.description;
+  if (source.filetypes) copied.filetypes = source.filetypes;
+  if (source.options) copied.options = source.options;
+  if (source.default_value !== undefined) copied.default_value = source.default_value;
+  if (source.required !== undefined) copied.required = source.required;
+  if (source.max_choices !== undefined) copied.max_choices = source.max_choices;
+  if (source.allow_target_blank !== undefined)
+    copied.allow_target_blank = source.allow_target_blank;
+  if (source.restrict_components !== undefined)
+    copied.restrict_components = source.restrict_components;
+  if (source.component_whitelist) copied.component_whitelist = source.component_whitelist;
+  if (source.min_value !== undefined) copied.min_value = source.min_value;
+  if (source.max_value !== undefined) copied.max_value = source.max_value;
+  if (source.field_type) copied.field_type = source.field_type;
+
+  return copied;
+}
+
 interface FieldInfo {
   premadeField: string;
   type: string;
+  description?: string;
   filetypes?: string[];
+  options?: { value: string; name: string }[];
+  default_value?: string | number | boolean;
+  required?: boolean;
+  max_choices?: number;
+  allow_target_blank?: boolean;
+  restrict_components?: boolean;
+  component_whitelist?: string[];
+  min_value?: number;
+  max_value?: number;
+  field_type?: string;
 }
 
 interface SectionInfo {
@@ -181,11 +238,11 @@ function collectSections(
       if (premadeField && builderField) {
         const section = sections.get(builderSection);
         if (section && !section.fields.has(premadeField)) {
-          const fieldType = inferFieldType(hostComponent, builderField);
-          section.fields.set(premadeField, {
-            premadeField,
-            ...fieldType,
-          });
+          const copied = copyFieldFromHost(hostComponent, builderField, premadeField);
+          const fieldInfo: FieldInfo = copied
+            ? { premadeField, ...copied }
+            : { premadeField, ...inferFieldType(hostComponent, builderField) };
+          section.fields.set(premadeField, fieldInfo);
         }
       }
     }
@@ -238,14 +295,27 @@ export function derivePremadeBlokSchemas(
     const schema: Record<string, DerivedField> = {};
     let pos = 0;
 
-    // Add data fields
+    // Add data fields (copy full field so option/options etc. carry through)
     for (const field of section.fields.values()) {
       const fieldDef: DerivedField = {
         name: field.premadeField,
         type: field.type,
         pos: pos++,
       };
+      if (field.description) fieldDef.description = field.description;
       if (field.filetypes) fieldDef.filetypes = field.filetypes;
+      if (field.options) fieldDef.options = field.options;
+      if (field.default_value !== undefined) fieldDef.default_value = field.default_value;
+      if (field.required !== undefined) fieldDef.required = field.required;
+      if (field.max_choices !== undefined) fieldDef.max_choices = field.max_choices;
+      if (field.allow_target_blank !== undefined)
+        fieldDef.allow_target_blank = field.allow_target_blank;
+      if (field.restrict_components !== undefined)
+        fieldDef.restrict_components = field.restrict_components;
+      if (field.component_whitelist) fieldDef.component_whitelist = field.component_whitelist;
+      if (field.min_value !== undefined) fieldDef.min_value = field.min_value;
+      if (field.max_value !== undefined) fieldDef.max_value = field.max_value;
+      if (field.field_type) fieldDef.field_type = field.field_type;
       schema[field.premadeField] = fieldDef;
     }
 
@@ -411,6 +481,42 @@ async function fetchExistingComponents(
   return map;
 }
 
+/** Compare options arrays (order-independent by value). */
+function optionsEqual(
+  a: { value: string; name: string }[] | undefined,
+  b: { value: string; name: string }[] | undefined,
+): boolean {
+  if (a === b) return true;
+  if (!a || !b || a.length !== b.length) return false;
+  const aMap = new Map(a.map((o) => [o.value, o.name]));
+  for (const o of b) {
+    if (aMap.get(o.value) !== o.name) return false;
+  }
+  return true;
+}
+
+/** Compare two Storyblok field payloads so we detect option/default_value changes. */
+function fieldPropsEqual(
+  cur: Record<string, any> | undefined,
+  des: Record<string, any> | undefined,
+): boolean {
+  if (!cur || !des) return !cur && !des;
+  if (cur.description !== des.description) return false;
+  const cf = cur.filetypes ?? [];
+  const df = des.filetypes ?? [];
+  if (cf.length !== df.length || cf.some((f: string, i: number) => f !== df[i]))
+    return false;
+  if (!optionsEqual(cur.options, des.options)) return false;
+  if (cur.default_value !== des.default_value) return false;
+  if (cur.required !== des.required) return false;
+  if (cur.max_choices !== des.max_choices) return false;
+  if (cur.allow_target_blank !== des.allow_target_blank) return false;
+  if (cur.min_value !== des.min_value) return false;
+  if (cur.max_value !== des.max_value) return false;
+  if (cur.field_type !== des.field_type) return false;
+  return true;
+}
+
 function derivedToStoryblokSchema(
   comp: DerivedComponent,
 ): Record<string, any> {
@@ -422,6 +528,18 @@ function derivedToStoryblokSchema(
     };
     if (fieldDef.description) field.description = fieldDef.description;
     if (fieldDef.filetypes) field.filetypes = fieldDef.filetypes;
+    if (fieldDef.options) field.options = fieldDef.options;
+    if (fieldDef.default_value !== undefined)
+      field.default_value = fieldDef.default_value;
+    if (fieldDef.required !== undefined) field.required = fieldDef.required;
+    if (fieldDef.max_choices !== undefined)
+      field.max_choices = fieldDef.max_choices;
+    if (fieldDef.min_value !== undefined) field.min_value = fieldDef.min_value;
+    if (fieldDef.max_value !== undefined) field.max_value = fieldDef.max_value;
+    if (fieldDef.field_type) field.field_type = fieldDef.field_type;
+    if (fieldDef.allow_target_blank !== undefined)
+      field.allow_target_blank = fieldDef.allow_target_blank;
+    else if (fieldDef.type === "multilink") field.allow_target_blank = true;
     if (fieldDef.type === "bloks" && fieldDef.restrict_components) {
       field.restrict_type = "";
       field.restrict_components = true;
@@ -430,9 +548,6 @@ function derivedToStoryblokSchema(
           n.startsWith(SHARED_PREFIX) ? n : `${SHARED_PREFIX}${n}`,
         );
       }
-    }
-    if (fieldDef.type === "multilink") {
-      field.allow_target_blank = true;
     }
     schema[fieldName] = field;
   }
@@ -635,10 +750,16 @@ export async function ensureDerivedComponents(
       desiredKeys.some((k) => !currentSchemaKeys.includes(k)) ||
       currentSchemaKeys.some((k) => !desiredKeys.includes(k));
 
-    // Also check if field types differ for matching keys
+    // Compare field type and copied props (options, default_value, etc.) for matching keys
     if (!needsUpdate) {
       for (const key of desiredKeys) {
-        if (currentSchema[key]?.type !== desiredSchema[key]?.type) {
+        const cur = currentSchema[key];
+        const des = desiredSchema[key];
+        if (cur?.type !== des?.type) {
+          needsUpdate = true;
+          break;
+        }
+        if (!fieldPropsEqual(cur, des)) {
           needsUpdate = true;
           break;
         }
