@@ -3,7 +3,7 @@
 import { PremadeSection } from "@repo/shared-cms";
 import { useTemplates } from "./TemplateContext";
 
-type TemplateProviderStatus = "ok" | "db_unavailable" | "query_failed";
+type TemplateProviderStatus = "ok" | "artifact_missing";
 
 const TEMPLATE_META_STATUS_KEY = "__template_meta_status__";
 const TEMPLATE_META_DETAIL_KEY = "__template_meta_detail__";
@@ -14,8 +14,7 @@ function getTemplateProviderStatus(
   const status = templates[TEMPLATE_META_STATUS_KEY];
   if (
     status === "ok" ||
-    status === "db_unavailable" ||
-    status === "query_failed"
+    status === "artifact_missing"
   ) {
     return status;
   }
@@ -45,16 +44,14 @@ function renderTemplateFailureCard(
   detail: string,
 ) {
   const messageByStatus = {
-    db_unavailable: detail || "Template database is unavailable.",
-    query_failed: detail || "Template query failed.",
+    artifact_missing: detail || "Generated template artifacts are unavailable.",
     ok: `Template missing for component: ${componentName}.`,
   } as const satisfies Record<TemplateProviderStatus, string>;
 
   const guidanceByStatus = {
-    db_unavailable: "Start Postgres, verify DATABASE_URL, then refresh preview.",
-    query_failed:
-      "Check DB connectivity/migrations, then retry fetching templates.",
-    ok: `Run "bun run storyblok:seed:templates", then republish "element-builder/${componentName}" (or "section-builder/${componentName}") in Storyblok.`,
+    artifact_missing:
+      'Run "bun run storyblok:seed:templates", commit generated files, and redeploy.',
+    ok: `Template not found in generated artifacts for "${componentName}". Run "bun run storyblok:seed:templates", commit generated files, and deploy.`,
   } as const satisfies Record<TemplateProviderStatus, string>;
 
   return (
@@ -73,7 +70,7 @@ function renderTemplateFailureCard(
  * generation and rendering.
  *
  * This is a client component so it can live in the Storyblok component map
- * without pulling Node.js-only modules (postgres) into the client bundle.
+ * without pulling server-only template sources into the client bundle.
  */
 export function PremadeSectionWrapper({ blok }: { blok: any }) {
   const templates = useTemplates();

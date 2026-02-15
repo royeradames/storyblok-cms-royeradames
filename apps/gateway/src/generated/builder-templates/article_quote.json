@@ -1,0 +1,82 @@
+{
+  "slug": "element-builder/article-quote",
+  "component": "article_quote",
+  "template": {
+    "_uid": "4ecd7e1d-4cce-4010-bb1c-cc61d3208a42",
+    "size": "base",
+    "align": "left",
+    "color": "primary",
+    "styles": [
+      {
+        "_uid": "59396a97-b17b-46a8-aa5b-46cdab2690c2",
+        "wrap": false,
+        "align": "",
+        "group": false,
+        "width": "",
+        "border": [
+          "border-l-4"
+        ],
+        "height": "",
+        "margin": [],
+        "shadow": "",
+        "display": "",
+        "justify": "",
+        "padding": [
+          "pl-4"
+        ],
+        "variant": "none",
+        "component": "shared_styles_options",
+        "direction": "",
+        "max_width": "",
+        "min_width": "",
+        "text_size": "",
+        "breakpoint": "base",
+        "max_height": "",
+        "min_height": "",
+        "border_style": "",
+        "custom_max_width": "",
+        "border_color_dark": "",
+        "border_color_light": "border-muted",
+        "border_color_dark_custom": {
+          "_uid": "16e3f836-b209-4e26-89b1-5d4cf8a23f15",
+          "color": "#364152",
+          "plugin": "native-color-picker"
+        },
+        "border_color_light_custom": {
+          "_uid": "59dcc398-2ae1-4a88-b806-2f0c5c191823",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        }
+      }
+    ],
+    "weight": "medium",
+    "content": "After all,” he said, “everyone enjoys a good joke, so it's only fair that they should pay for the privilege.",
+    "element": "blockquote",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "color_dark": {
+      "_uid": "b37765e9-3a2e-436d-aa02-1c0e0eaa7f51",
+      "color": "#f3f4f6",
+      "plugin": "native-color-picker"
+    },
+    "font_style": "italic",
+    "color_light": {
+      "_uid": "97e8b56c-bd61-4adb-950e-029fecba83ed",
+      "color": "",
+      "plugin": "native-color-picker"
+    },
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "_uid": "9c7ad99d-38cb-4846-b7b0-c9231b96f845",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "content",
+        "premade_field": "quote",
+        "builder_section": "article_quote"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_quote"
+  },
+  "updatedAt": "2026-02-13T03:44:32.502Z"
+}

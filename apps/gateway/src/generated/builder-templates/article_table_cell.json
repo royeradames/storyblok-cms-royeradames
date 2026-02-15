@@ -1,0 +1,29 @@
+{
+  "slug": "element-builder/article-table-cell",
+  "component": "article_table_cell",
+  "template": {
+    "_uid": "df988f5c-7e6b-4ae4-af02-e813e25d5250",
+    "size": "sm",
+    "align": "left",
+    "color": "default",
+    "weight": "normal",
+    "content": "Table cell text",
+    "element": "p",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "_uid": "066a6816-a4ce-448e-9dac-b675fa7a2745",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "content",
+        "premade_field": "content",
+        "builder_section": "article_table_cell"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_table_cell"
+  },
+  "updatedAt": "2026-02-13T03:01:06.524Z"
+}

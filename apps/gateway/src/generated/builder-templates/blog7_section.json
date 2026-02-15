@@ -1,0 +1,587 @@
+{
+  "slug": "section-builder/blog7",
+  "component": "blog7_section",
+  "template": {
+    "_uid": "6743b233-dca8-4baa-9ccc-90321b36cbfb",
+    "name": "blog",
+    "items": [
+      {
+        "_uid": "9d3bb648-e880-4341-b296-de0a3b88d097",
+        "name": "hero",
+        "items": [
+          {
+            "_uid": "fc0d8198-ad36-4987-9d84-8d319a93d482",
+            "name": "content-wrapper",
+            "items": [
+              {
+                "_uid": "53bc3135-b580-4372-b2e7-ce5d7ffad08d",
+                "text": "Latest Updates",
+                "styles": [],
+                "variant": "secondary",
+                "component": "shared_shadcn_badge",
+                "data_mapping": [
+                  {
+                    "_uid": "9ed35904-24d4-4d82-884a-3fb34cce802c",
+                    "component": "shared_builder_data_mapping",
+                    "builder_field": "text",
+                    "premade_field": "badge_text",
+                    "builder_section": "blog7_section"
+                  }
+                ]
+              },
+              {
+                "_uid": "03240877-e000-4fab-a67b-7c22d8dbc410",
+                "size": "4xl",
+                "align": "center",
+                "color": "primary",
+                "styles": [
+                  {
+                    "_uid": "d9cce83a-aa40-4b60-8734-6b594f1345f5",
+                    "wrap": false,
+                    "align": "",
+                    "width": "",
+                    "height": "",
+                    "margin": "",
+                    "display": "",
+                    "justify": "",
+                    "padding": "",
+                    "component": "shared_styles_options",
+                    "direction": "",
+                    "max_width": "",
+                    "min_width": "",
+                    "breakpoint": "base",
+                    "max_height": "",
+                    "min_height": ""
+                  }
+                ],
+                "weight": "semibold",
+                "content": "Blog Posts",
+                "element": "h2",
+                "component": "shared_shadcn_text",
+                "color_dark": {
+                  "_uid": "8a472224-3051-4403-b13c-fb449d6675b2",
+                  "color": "#f40000",
+                  "plugin": "native-color-picker"
+                },
+                "color_light": {
+                  "_uid": "b91e3c50-e1ea-4299-a901-d3de79ccfe83",
+                  "color": "#f40000",
+                  "plugin": "native-color-picker"
+                },
+                "line_height": "",
+                "data_mapping": [
+                  {
+                    "_uid": "d4eb3cfb-e4ce-429d-bdc8-1e48f022e3ef",
+                    "component": "shared_builder_data_mapping",
+                    "builder_field": "content",
+                    "premade_field": "title",
+                    "builder_section": "blog7_section"
+                  }
+                ],
+                "letter_spacing": ""
+              },
+              {
+                "_uid": "fa50f563-7c78-4f59-bba7-92d23a668db2",
+                "size": "lg",
+                "align": "center",
+                "color": "primary",
+                "styles": [],
+                "weight": "normal",
+                "content": "Discover the latest trends, tips, and best practices in modern web development. From UI components to design systems, stay updated with our expert insights.",
+                "element": "p",
+                "component": "shared_shadcn_text",
+                "color_dark": {
+                  "_uid": "1dc19d40-7dfb-4dca-8f42-f923c83e0b79",
+                  "color": "#f40000",
+                  "plugin": "native-color-picker"
+                },
+                "color_light": {
+                  "_uid": "4fb8f4fc-e467-43cb-8bb9-c5c83533f549",
+                  "color": "#404040",
+                  "plugin": "native-color-picker"
+                },
+                "line_height": "normal",
+                "data_mapping": [
+                  {
+                    "_uid": "c364de0b-abf5-4a44-8928-fb99da31e357",
+                    "component": "shared_builder_data_mapping",
+                    "builder_field": "content",
+                    "premade_field": "description",
+                    "builder_section": "blog7_section"
+                  }
+                ],
+                "letter_spacing": "wide"
+              },
+              {
+                "_uid": "4d8394c7-f5ab-491c-9667-0f30eeaa70dd",
+                "link": {
+                  "id": "",
+                  "url": "",
+                  "linktype": "story",
+                  "fieldtype": "multilink",
+                  "cached_url": ""
+                },
+                "size": "default",
+                "label": [
+                  {
+                    "_uid": "f8e53d48-752e-49bd-850b-3205d649f1b2",
+                    "size": "base",
+                    "align": "left",
+                    "color": "default",
+                    "styles": [],
+                    "weight": "normal",
+                    "content": "View all articles",
+                    "element": "p",
+                    "component": "shared_shadcn_text",
+                    "color_dark": {
+                      "_uid": "9abc5553-0998-406a-8c50-4f5a7ac1b04c",
+                      "color": "#f40000",
+                      "plugin": "native-color-picker"
+                    },
+                    "color_light": {
+                      "_uid": "a3e66d14-02a1-49c4-b0ae-a64aa1a83691",
+                      "color": "#f40000",
+                      "plugin": "native-color-picker"
+                    },
+                    "line_height": "",
+                    "data_mapping": [
+                      {
+                        "_uid": "b1d837e8-3cc6-4557-ab5d-3a7d88f46785",
+                        "component": "shared_builder_data_mapping",
+                        "builder_field": "content",
+                        "premade_field": "action_text",
+                        "builder_section": "blog7_section"
+                      }
+                    ],
+                    "letter_spacing": ""
+                  },
+                  {
+                    "_uid": "f28c1bf1-69f2-4b40-baed-df75265ffb4d",
+                    "name": "arrow-right",
+                    "size": "24",
+                    "color": "#000",
+                    "styles": [],
+                    "component": "shared_shadcn_icon",
+                    "class_name": "",
+                    "stroke_width": "2"
+                  }
+                ],
+                "styles": [],
+                "variant": "link",
+                "component": "shared_shadcn_button"
+              }
+            ],
+            "styles": [
+              {
+                "gap": [
+                  "gap-4"
+                ],
+                "_uid": "af655582-93ed-4e83-88ba-694e7e1f380f",
+                "wrap": false,
+                "align": "items-center",
+                "width": "",
+                "height": "",
+                "margin": "",
+                "display": "",
+                "justify": "justify-start",
+                "padding": [],
+                "component": "shared_styles_options",
+                "direction": "flex-col",
+                "max_width": "max-w-2xl",
+                "min_width": "",
+                "breakpoint": "base",
+                "max_height": "",
+                "min_height": ""
+              }
+            ],
+            "component": "shared_shadcn_container",
+            "container_as": "section"
+          }
+        ],
+        "styles": [
+          {
+            "_uid": "18bb2080-ac81-4e17-a467-854542a992a0",
+            "wrap": false,
+            "align": "items-center",
+            "width": "w-full",
+            "height": "",
+            "justify": "justify-center",
+            "component": "shared_styles_options",
+            "direction": "flex-row",
+            "max_width": "",
+            "min_width": "",
+            "breakpoint": "base",
+            "max_height": "",
+            "min_height": ""
+          }
+        ],
+        "component": "shared_shadcn_container",
+        "container_as": "header"
+      },
+      {
+        "_uid": "1ebbca67-e309-4591-b97a-5276247eabab",
+        "name": "card-wrapper",
+        "items": [
+          {
+            "_uid": "617f30e0-bbd5-40d8-aedb-74aae1c814ed",
+            "name": "",
+            "items": [
+              {
+                "_uid": "95d27baf-7f1d-4d91-a9cb-699ba90d6f9e",
+                "image": [
+                  {
+                    "_uid": "df25252f-9baf-4634-afda-482b53432561",
+                    "styles": [
+                      {
+                        "_uid": "964f8673-aebc-4955-a50e-941bb6b8a6a9",
+                        "wrap": false,
+                        "align": "",
+                        "width": "",
+                        "height": "",
+                        "margin": "",
+                        "shadow": "",
+                        "display": "",
+                        "justify": "",
+                        "padding": "",
+                        "component": "shared_styles_options",
+                        "direction": "",
+                        "max_width": "",
+                        "min_width": "",
+                        "text_size": "",
+                        "breakpoint": "base",
+                        "max_height": "",
+                        "min_height": ""
+                      }
+                    ],
+                    "caption": "",
+                    "rounded": "none",
+                    "component": "shared_shadcn_image",
+                    "object_fit": "cover",
+                    "image_light": {
+                      "id": 139832891234640,
+                      "alt": "",
+                      "name": "",
+                      "focus": "",
+                      "title": "",
+                      "source": "",
+                      "filename": "https://a.storyblok.com/f/290156609668258/1200x1200/32e178fd4f/placeholder-dark-1.svg",
+                      "copyright": "",
+                      "fieldtype": "asset",
+                      "meta_data": {},
+                      "is_external_url": false
+                    },
+                    "aspect_ratio": "video",
+                    "data_mapping": [
+                      {
+                        "_uid": "47740af5-eb02-4e68-b8a7-a85ac61d1639",
+                        "component": "shared_builder_data_mapping",
+                        "builder_field": "image_light",
+                        "premade_field": "image",
+                        "builder_section": "blog7_section_articles"
+                      }
+                    ]
+                  }
+                ],
+                "title": [
+                  {
+                    "_uid": "8fe0d443-b932-4f2f-8a3a-5d935615a6c5",
+                    "link": {
+                      "id": "",
+                      "url": "https://app.storyblok.com/#/me/spaces/290156609668258/stories/0/0/139645479539719/blok/8276f68f-7c13-45f6-8801-15d23e3983b5#dbfecb4f-5b9e-4c40-be9d-34c5eb4ae88f",
+                      "linktype": "url",
+                      "fieldtype": "multilink",
+                      "cached_url": "https://app.storyblok.com/#/me/spaces/290156609668258/stories/0/0/139645479539719/blok/8276f68f-7c13-45f6-8801-15d23e3983b5#dbfecb4f-5b9e-4c40-be9d-34c5eb4ae88f"
+                    },
+                    "size": "auto",
+                    "label": [
+                      {
+                        "_uid": "1c07fec6-1143-4f40-b1b8-6e1302ebf5de",
+                        "size": "xl",
+                        "align": "left",
+                        "color": "default",
+                        "styles": [
+                          {
+                            "_uid": "79034ae0-14b4-4165-8024-76a641c84fe8",
+                            "wrap": false,
+                            "align": "",
+                            "width": "w-full",
+                            "height": "h-full",
+                            "margin": "",
+                            "display": "",
+                            "justify": "",
+                            "padding": "",
+                            "component": "shared_styles_options",
+                            "direction": "",
+                            "max_width": "",
+                            "min_width": "",
+                            "breakpoint": "base",
+                            "max_height": "",
+                            "min_height": ""
+                          }
+                        ],
+                        "weight": "semibold",
+                        "content": "Getting Started with shadcn/ui Components",
+                        "element": "h3",
+                        "component": "shared_shadcn_text",
+                        "color_dark": {
+                          "_uid": "37b034c4-4f02-4256-96e0-703c28793e49",
+                          "color": "#f40000",
+                          "plugin": "native-color-picker"
+                        },
+                        "color_light": {
+                          "_uid": "9f3705fb-ca7e-446a-bcab-8e849ccf5a88",
+                          "color": "#f40000",
+                          "plugin": "native-color-picker"
+                        },
+                        "line_height": "",
+                        "data_mapping": [
+                          {
+                            "_uid": "29f49d3c-c9f2-4497-94cb-a7604d2c1155",
+                            "component": "shared_builder_data_mapping",
+                            "builder_field": "content",
+                            "premade_field": "title",
+                            "builder_section": "blog7_section_articles"
+                          }
+                        ],
+                        "letter_spacing": ""
+                      }
+                    ],
+                    "styles": [],
+                    "variant": "link",
+                    "component": "shared_shadcn_button"
+                  }
+                ],
+                "footer": [
+                  {
+                    "_uid": "1098c94f-a558-4e29-bd1b-5898ea4793b2",
+                    "link": {
+                      "id": "",
+                      "url": "",
+                      "linktype": "story",
+                      "fieldtype": "multilink",
+                      "cached_url": ""
+                    },
+                    "size": "default",
+                    "label": [
+                      {
+                        "_uid": "cb68925e-f2d1-4728-872e-a1a7d4eacdf0",
+                        "size": "base",
+                        "align": "left",
+                        "color": "default",
+                        "styles": [],
+                        "weight": "normal",
+                        "content": "Read more",
+                        "element": "p",
+                        "component": "shared_shadcn_text",
+                        "color_dark": {
+                          "_uid": "a7c90bca-aec5-4217-8b31-d1656ef57e21",
+                          "color": "#f40000",
+                          "plugin": "native-color-picker"
+                        },
+                        "color_light": {
+                          "_uid": "8d2b3667-dd18-4624-aa05-03dead37e2d6",
+                          "color": "#f40000",
+                          "plugin": "native-color-picker"
+                        },
+                        "line_height": "",
+                        "data_mapping": [
+                          {
+                            "_uid": "61c1c646-0c77-480f-b4c2-540467724daf",
+                            "component": "shared_builder_data_mapping",
+                            "builder_field": "content",
+                            "premade_field": "action_label",
+                            "builder_section": "blog7_section_articles"
+                          }
+                        ],
+                        "letter_spacing": ""
+                      },
+                      {
+                        "_uid": "fc40c657-7cab-40d4-a49f-51c556152fb5",
+                        "name": "arrow-right",
+                        "size": "",
+                        "color": "#000",
+                        "styles": [],
+                        "component": "shared_shadcn_icon",
+                        "class_name": "",
+                        "color_dark": {
+                          "_uid": "6dd4bbb3-027c-452b-8a4b-1a5fbf04e779",
+                          "color": "#ffffff",
+                          "plugin": "native-color-picker"
+                        },
+                        "color_light": {
+                          "_uid": "9b4f50c6-12d3-4c0a-b3b6-0827b213a9b0",
+                          "color": "#000000",
+                          "plugin": "native-color-picker"
+                        },
+                        "stroke_width": "2"
+                      }
+                    ],
+                    "styles": [],
+                    "variant": "link",
+                    "component": "shared_shadcn_button",
+                    "data_mapping": [
+                      {
+                        "_uid": "d9121302-7d3b-49c0-a5d6-412da5c6f5cc",
+                        "component": "shared_builder_data_mapping",
+                        "builder_field": "link",
+                        "premade_field": "link",
+                        "builder_section": "blog7_section_articles"
+                      }
+                    ]
+                  }
+                ],
+                "header": [
+                  {
+                    "_uid": "778cba4e-e03b-4c02-8708-9ffbfd1a2cba",
+                    "size": "xl",
+                    "align": "left",
+                    "color": "default",
+                    "weight": "bold",
+                    "content": "Getting Started with shadcn/ui Components",
+                    "element": "h2",
+                    "component": "shared_shadcn_text"
+                  }
+                ],
+                "styles": [
+                  {
+                    "gap": [
+                      "gap-4"
+                    ],
+                    "_uid": "c5f86072-6bd7-4fb7-b2a0-2e73c5ef6af2",
+                    "wrap": false,
+                    "align": "items-stretch",
+                    "width": "",
+                    "height": "",
+                    "margin": "",
+                    "justify": "justify-start",
+                    "component": "shared_styles_options",
+                    "direction": "flex-row",
+                    "max_width": "max-w-sm",
+                    "min_width": "",
+                    "breakpoint": "base",
+                    "max_height": "",
+                    "min_height": ""
+                  }
+                ],
+                "content": [
+                  {
+                    "_uid": "2e726c43-aa98-4676-9f39-ebafb8aade9b",
+                    "size": "base",
+                    "align": "left",
+                    "color": "default",
+                    "weight": "normal",
+                    "content": "Learn how to quickly integrate and customize shadcn/ui components in your Next.js projects. We'll cover installation, theming, and best practices for building modern interfaces.",
+                    "element": "p",
+                    "component": "shared_shadcn_text",
+                    "color_dark": {
+                      "_uid": "6bcef76f-1651-4f38-bb4e-5048a3616266",
+                      "color": "#f40000",
+                      "plugin": "native-color-picker"
+                    },
+                    "color_light": {
+                      "_uid": "572788db-75d3-4bc7-8eaa-c5febcd970d8",
+                      "color": "#f40000",
+                      "plugin": "native-color-picker"
+                    },
+                    "line_height": "",
+                    "data_mapping": [
+                      {
+                        "_uid": "b8e1cde8-c832-4c08-8c28-9b0d21ea7d2c",
+                        "component": "shared_builder_data_mapping",
+                        "builder_field": "content",
+                        "premade_field": "content",
+                        "builder_section": "blog7_section_articles"
+                      }
+                    ],
+                    "letter_spacing": ""
+                  }
+                ],
+                "component": "shared_shadcn_card",
+                "description": ""
+              }
+            ],
+            "styles": [],
+            "component": "shared_shadcn_container",
+            "container_as": "li",
+            "data_section_name": ""
+          }
+        ],
+        "styles": [
+          {
+            "gap": [
+              "gap-6"
+            ],
+            "_uid": "842cc976-6965-42f1-928d-1d6baa98cafd",
+            "wrap": true,
+            "align": "items-start",
+            "width": "",
+            "height": "",
+            "margin": "",
+            "display": "flex",
+            "justify": "justify-center",
+            "component": "shared_styles_options",
+            "direction": "flex-row",
+            "max_width": "",
+            "min_width": "",
+            "text_size": "",
+            "breakpoint": "base",
+            "max_height": "",
+            "min_height": ""
+          },
+          {
+            "gap": [
+              "gap-8"
+            ],
+            "_uid": "4987e994-6d5e-4772-b39c-a063d4127e85",
+            "wrap": false,
+            "align": "",
+            "width": "",
+            "height": "",
+            "margin": "",
+            "justify": "",
+            "component": "shared_styles_options",
+            "direction": "",
+            "max_width": "",
+            "min_width": "",
+            "breakpoint": "md",
+            "max_height": "",
+            "min_height": ""
+          }
+        ],
+        "component": "shared_shadcn_container",
+        "container_as": "ul",
+        "data_section_name": "blog7_section_articles"
+      }
+    ],
+    "styles": [
+      {
+        "gap": [
+          "gap-12"
+        ],
+        "_uid": "07503667-bf15-4829-ad91-924d5124a511",
+        "wrap": false,
+        "align": "items-stretch",
+        "width": "",
+        "height": "",
+        "margin": "",
+        "display": "flex",
+        "justify": "justify-start",
+        "padding": [
+          "px-4",
+          "py-32"
+        ],
+        "component": "shared_styles_options",
+        "direction": "flex-col",
+        "max_width": "",
+        "min_width": "",
+        "breakpoint": "base",
+        "max_height": "",
+        "min_height": ""
+      }
+    ],
+    "component": "shared_shadcn_container",
+    "container_as": "section",
+    "data_section_name": "blog7_section"
+  },
+  "updatedAt": "2026-02-08T17:05:56.151Z"
+}

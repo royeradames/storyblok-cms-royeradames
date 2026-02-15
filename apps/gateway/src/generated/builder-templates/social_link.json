@@ -1,0 +1,264 @@
+{
+  "slug": "element-builder/social-link",
+  "component": "social_link",
+  "template": {
+    "_uid": "640ab532-8bf8-45b0-b99e-399593f45568",
+    "link": {
+      "id": "",
+      "url": "https://www.linkedin.com/feed/",
+      "target": "_blank",
+      "linktype": "url",
+      "fieldtype": "multilink",
+      "cached_url": "https://www.linkedin.com/feed/"
+    },
+    "size": "auto",
+    "label": [
+      {
+        "_uid": "06464ad8-5931-498a-a08b-b90d81a0636c",
+        "size": "base",
+        "align": "left",
+        "color": "default",
+        "styles": [],
+        "weight": "normal",
+        "content": "LinedIn",
+        "element": "p",
+        "sr_only": true,
+        "component": "shared_shadcn_text",
+        "color_dark": {
+          "_uid": "a9347eeb-10da-4fe9-a2e6-7ccc0f1e9d9c",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "font_style": "",
+        "color_light": {
+          "_uid": "9285e2ac-6193-4056-adcd-85f7e54143f3",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "line_height": "normal",
+        "data_mapping": [
+          {
+            "_uid": "9fee1f98-4f0b-450f-a39f-6f6ef2d13c7e",
+            "component": "shared_builder_data_mapping",
+            "builder_field": "content",
+            "premade_field": "icon_title",
+            "builder_section": "social_link"
+          }
+        ],
+        "letter_spacing": "normal"
+      },
+      {
+        "_uid": "e5842559-3141-44fb-8da4-2048d2bd8d50",
+        "name": "twitter",
+        "size": "default",
+        "styles": [
+          {
+            "gap": [],
+            "top": "",
+            "_uid": "69c6e7cf-080a-471c-b002-2ac44e385f1f",
+            "wrap": false,
+            "align": "",
+            "group": false,
+            "width": "",
+            "border": [],
+            "height": "",
+            "margin": [],
+            "shadow": "",
+            "display": "",
+            "justify": "",
+            "padding": [],
+            "rounded": "",
+            "variant": "group_hover",
+            "position": "",
+            "component": "shared_styles_options",
+            "direction": "",
+            "max_width": "",
+            "min_width": "",
+            "text_size": "",
+            "breakpoint": "base",
+            "max_height": "",
+            "min_height": "",
+            "flex_shrink": "",
+            "border_style": "",
+            "grid_columns": "",
+            "text_color_dark": "",
+            "custom_max_width": "",
+            "text_color_light": "text-primary",
+            "border_color_dark": "",
+            "custom_max_height": "",
+            "border_color_light": "",
+            "text_color_dark_custom": {
+              "_uid": "5ec85b49-3d60-438f-86ac-5a1c95e8c2c7",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            },
+            "text_color_light_custom": {
+              "_uid": "40f24718-f177-417c-be43-c6783a106b46",
+              "color": "",
+              "plugin": "native-color-picker"
+            },
+            "border_color_dark_custom": {
+              "_uid": "d955f534-7063-4327-850d-18f7547c63f4",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            },
+            "border_color_light_custom": {
+              "_uid": "1ae1f818-7fde-4e8b-9cb0-1d93faa3ac7d",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            }
+          },
+          {
+            "gap": [],
+            "top": "",
+            "_uid": "eceff22b-6b52-4bdb-9232-964c0e91fa46",
+            "wrap": false,
+            "align": "",
+            "group": false,
+            "width": "",
+            "border": [],
+            "height": "",
+            "margin": [],
+            "shadow": "",
+            "display": "",
+            "justify": "",
+            "padding": [],
+            "rounded": "",
+            "variant": "none",
+            "position": "",
+            "component": "shared_styles_options",
+            "direction": "",
+            "max_width": "",
+            "min_width": "",
+            "text_size": "",
+            "breakpoint": "base",
+            "max_height": "",
+            "min_height": "",
+            "flex_shrink": "",
+            "border_style": "",
+            "grid_columns": "",
+            "text_color_dark": "",
+            "custom_max_width": "",
+            "text_color_light": "text-muted-foreground",
+            "border_color_dark": "",
+            "custom_max_height": "",
+            "border_color_light": "",
+            "text_color_dark_custom": {
+              "_uid": "7d1c3a7e-9e73-492b-b57b-8e45b2cd8c6c",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            },
+            "text_color_light_custom": {
+              "_uid": "1118d052-9b9a-4471-820c-43d25ed72ff7",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            },
+            "border_color_dark_custom": {
+              "_uid": "b24ba3f1-1a7e-417d-90bf-1a8f56db9390",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            },
+            "border_color_light_custom": {
+              "_uid": "e04e778c-d123-4257-8e6b-67bec2822b83",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            }
+          }
+        ],
+        "component": "shared_shadcn_icon",
+        "class_name": "",
+        "color_dark": {
+          "_uid": "c6adc8fd-9ef0-42e3-b097-c01accad5e4d",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "color_light": {
+          "_uid": "e4aa764e-b52e-4596-be7f-a9cf99517040",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "data_mapping": [
+          {
+            "_uid": "b5748b62-23eb-4ef1-afe5-fb8846e75c0c",
+            "component": "shared_builder_data_mapping",
+            "builder_field": "name",
+            "premade_field": "icon_name",
+            "builder_section": "social_link"
+          }
+        ],
+        "stroke_width": ""
+      }
+    ],
+    "styles": [
+      {
+        "gap": [],
+        "top": "",
+        "_uid": "08ae92d1-60dc-4ed1-8769-ed6ba2fd6cb9",
+        "wrap": false,
+        "align": "",
+        "group": true,
+        "width": "",
+        "border": [],
+        "height": "",
+        "margin": [],
+        "shadow": "",
+        "display": "",
+        "justify": "",
+        "padding": [],
+        "rounded": "",
+        "variant": "none",
+        "position": "",
+        "component": "shared_styles_options",
+        "direction": "",
+        "max_width": "",
+        "min_width": "",
+        "text_size": "",
+        "breakpoint": "base",
+        "max_height": "",
+        "min_height": "",
+        "flex_shrink": "",
+        "border_style": "",
+        "grid_columns": "",
+        "text_color_dark": "",
+        "custom_max_width": "",
+        "text_color_light": "",
+        "border_color_dark": "",
+        "custom_max_height": "",
+        "border_color_light": "",
+        "text_color_dark_custom": {
+          "_uid": "a6baf24f-6d40-4524-9fb5-a9d65d51b438",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "text_color_light_custom": {
+          "_uid": "2888da3f-d659-4517-9b56-2f2466505200",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "border_color_dark_custom": {
+          "_uid": "62e3669c-2347-444c-8e9e-12e4b52f00ad",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "border_color_light_custom": {
+          "_uid": "d9de740c-0872-470a-8432-1196b56b0f4e",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        }
+      }
+    ],
+    "variant": "link",
+    "component": "shared_shadcn_button",
+    "data_mapping": [
+      {
+        "_uid": "4c320abc-418c-4db6-8efc-d4dbc3835ae1",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "link",
+        "premade_field": "link",
+        "builder_section": "social_link"
+      }
+    ],
+    "data_section_name": "social_link"
+  },
+  "updatedAt": "2026-02-13T22:44:19.409Z"
+}

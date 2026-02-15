@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
-import { db } from "@/db/client";
-import { sectionTemplates } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { fetchStory } from "@/lib/storyblok";
+import { builderTemplateRegistry } from "@/generated/builder-template-registry";
 import {
   normalizeBuilderTemplate,
   resolveTemplateComponentName,
   derivePrefixFromComponentName,
   slugToBuilderPrefix,
 } from "@/lib/builder-template";
+import { buildTemplateSnapshotBySlug } from "@/lib/template-artifacts";
 import {
   derivePremadeBlokSchemas,
   diffSchemas,
@@ -35,18 +33,20 @@ const BUILDER_SLUG_PREFIXES = [
   "element-builder/",
   "form-builder/",
 ];
+const generatedTemplateSnapshotBySlug = buildTemplateSnapshotBySlug(
+  builderTemplateRegistry.templates,
+);
 
 /**
  * Storyblok webhook handler.
  *
  * Receives `story.published` events for section-builder stories and:
- * 1. Extracts the template and compares with DB -- skips if unchanged
+ * 1. Extracts the template and compares with generated template snapshot
  * 2. Derives premade blok schemas from the new template
  * 3. Diffs against previous schemas to detect field renames/deletions/additions
  * 4. Pushes changed component definitions to Storyblok (create/update/delete)
  * 5. Migrates existing story data for renames/deletions
- * 6. Upserts the template into the section_templates table
- * 7. Invalidates the Vercel data cache
+ * 6. Reports that template artifact regeneration is required for repo sync
  *
  * Progress is tracked in the webhook_jobs table and displayed by BuildStatusBanner.
  */
@@ -110,16 +110,10 @@ export async function POST(request: NextRequest) {
     const componentName = resolveTemplateComponentName(template, slugPrefix);
     const derivationPrefix = derivePrefixFromComponentName(componentName);
 
-    await updateBuild(jobId, "Comparing with existing template...");
+    await updateBuild(jobId, "Comparing with generated template snapshot...");
 
-    // Load existing template from DB for comparison
-    const existing = await db
-      .select()
-      .from(sectionTemplates)
-      .where(eq(sectionTemplates.slug, slug))
-      .limit(1);
-
-    const existingTemplate = existing[0]?.template;
+    const existingSnapshot = generatedTemplateSnapshotBySlug[slug];
+    const existingTemplate = existingSnapshot?.template;
 
     // Skip if template unchanged
     if (
@@ -127,8 +121,8 @@ export async function POST(request: NextRequest) {
       JSON.stringify(existingTemplate) === JSON.stringify(template)
     ) {
       console.log(`[webhook] No changes for ${slug}, skipping`);
-      await completeBuild(jobId, "No changes detected");
-      return NextResponse.json({ ok: true, unchanged: true });
+      await completeBuild(jobId, "No changes detected vs generated snapshot");
+      return NextResponse.json({ ok: true, unchanged: true, templateSyncRequired: false });
     }
 
     // ── Derive and diff premade blok schemas ──
@@ -142,11 +136,11 @@ export async function POST(request: NextRequest) {
       const newSchemas = derivePremadeBlokSchemas(template, derivationPrefix);
 
       let oldSchemas: typeof newSchemas = [];
-      let oldRootComponentName: string | null = existing[0]?.component ?? null;
+      let oldRootComponentName: string | null = existingSnapshot?.component ?? null;
       if (existingTemplate) {
         try {
           const existingComponentName =
-            existing[0]?.component ??
+            existingSnapshot?.component ??
             resolveTemplateComponentName(existingTemplate as any, slugPrefix);
           oldRootComponentName = existingComponentName;
           const oldDerivationPrefix =
@@ -232,40 +226,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ── Upsert template into DB ──
-
-    await updateBuild(jobId, "Saving template...");
-
-    if (existing.length > 0) {
-      await db
-        .update(sectionTemplates)
-        .set({
-          component: componentName,
-          template,
-          updatedAt: new Date(),
-        })
-        .where(eq(sectionTemplates.slug, slug));
-    } else {
-      await db.insert(sectionTemplates).values({
-        slug,
-        component: componentName,
-        template,
-      });
-    }
-
-    // Invalidate cached templates so next read fetches fresh data
-    revalidateTag("section-templates");
-
-    console.log(
-      `[webhook] Upserted template: ${slug} → ${componentName}`,
+    await updateBuild(
+      jobId,
+      "Template changed. Run storyblok:seed:templates and commit generated artifacts.",
     );
 
-    await completeBuild(jobId, "Section builder updated");
+    console.log(`[webhook] Template changed: ${slug} → ${componentName}`);
+
+    await completeBuild(jobId, "Template sync required (run storyblok:seed:templates)");
 
     return NextResponse.json({
       ok: true,
       slug,
       component: componentName,
+      templateSyncRequired: true,
+      nextStep:
+        "Run bun run storyblok:seed:templates, commit generated template artifacts, and deploy.",
     });
   } catch (error) {
     console.error("[webhook] Error processing Storyblok webhook:", error);

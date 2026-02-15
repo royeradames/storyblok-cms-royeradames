@@ -1,0 +1,48 @@
+{
+  "slug": "section-builder/article-paragraph",
+  "component": "article_paragraph_section",
+  "template": {
+    "_uid": "f88e5182-01d3-47e0-8608-ddf28bdb8ae9",
+    "name": "",
+    "items": [
+      {
+        "_uid": "74222378-8cfa-45b5-9827-d656c2000b46",
+        "size": "base",
+        "align": "left",
+        "color": "default",
+        "styles": [],
+        "weight": "normal",
+        "content": "The king thought long and hard, and finally came up with a brilliant plan: he would tax the jokes in the kingdom.",
+        "element": "p",
+        "sr_only": false,
+        "component": "shared_shadcn_text",
+        "color_dark": {
+          "_uid": "222a5364-1b27-42f4-9293-9d2d62a15d6d",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "color_light": {
+          "_uid": "abfeb22e-ab78-43ea-baa2-9adce19b3884",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "line_height": "normal",
+        "data_mapping": [],
+        "letter_spacing": "normal"
+      }
+    ],
+    "styles": [],
+    "component": "shared_shadcn_container",
+    "container_as": "div",
+    "rich_text_test": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph"
+        }
+      ]
+    },
+    "data_section_name": ""
+  },
+  "updatedAt": "2026-02-10T00:18:21.033Z"
+}

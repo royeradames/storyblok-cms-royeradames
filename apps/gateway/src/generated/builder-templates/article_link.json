@@ -1,0 +1,29 @@
+{
+  "slug": "element-builder/article-link",
+  "component": "article_link",
+  "template": {
+    "_uid": "e38dda4d-85ae-464f-961e-a37df4dcb46b",
+    "size": "default",
+    "text": "Read more",
+    "variant": "link",
+    "component": "shared_shadcn_button",
+    "data_mapping": [
+      {
+        "_uid": "5fcb7251-22be-4221-88e0-b70b3e663fcb",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "text",
+        "premade_field": "content",
+        "builder_section": "article_link"
+      },
+      {
+        "_uid": "f94d79c7-16f5-4400-ac30-c3b1d7514d8b",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "link",
+        "premade_field": "link",
+        "builder_section": "article_link"
+      }
+    ],
+    "data_section_name": "article_link"
+  },
+  "updatedAt": "2026-02-13T03:22:54.228Z"
+}

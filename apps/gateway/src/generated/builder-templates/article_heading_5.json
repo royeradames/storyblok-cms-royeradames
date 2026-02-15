@@ -1,0 +1,29 @@
+{
+  "slug": "element-builder/article-heading-5",
+  "component": "article_heading_5",
+  "template": {
+    "_uid": "741cbe15-f561-4155-9eb9-2159aa292635",
+    "size": "base",
+    "align": "left",
+    "color": "default",
+    "weight": "semibold",
+    "content": "Subheading level 5",
+    "element": "h5",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "_uid": "98e8e1c3-c84a-4af9-a856-c9488050bcbf",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "content",
+        "premade_field": "title",
+        "builder_section": "article_heading_5"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_heading_5"
+  },
+  "updatedAt": "2026-02-13T03:01:13.741Z"
+}

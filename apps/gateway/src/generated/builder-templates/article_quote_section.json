@@ -1,0 +1,91 @@
+{
+  "slug": "section-builder/article-quote",
+  "component": "article_quote_section",
+  "template": {
+    "_uid": "19ec5491-6f69-42f7-a976-4a07d4266ff0",
+    "name": "",
+    "items": [
+      {
+        "_uid": "c87523de-e7ed-43c2-af31-95da0e91f7e3",
+        "size": "base",
+        "align": "left",
+        "color": "primary",
+        "styles": [
+          {
+            "_uid": "3cfbdc6c-b527-4cab-a178-5672afad9b97",
+            "wrap": false,
+            "align": "",
+            "group": false,
+            "width": "",
+            "border": [
+              "border-l-4"
+            ],
+            "height": "",
+            "margin": [],
+            "shadow": "",
+            "display": "",
+            "justify": "",
+            "padding": [
+              "pl-4"
+            ],
+            "variant": "none",
+            "component": "shared_styles_options",
+            "direction": "",
+            "max_width": "",
+            "min_width": "",
+            "text_size": "",
+            "breakpoint": "base",
+            "max_height": "",
+            "min_height": "",
+            "border_style": "",
+            "custom_max_width": "",
+            "border_color_dark": "",
+            "border_color_light": "border-muted",
+            "border_color_dark_custom": {
+              "_uid": "16e3f836-b209-4e26-89b1-5d4cf8a23f15",
+              "color": "#364152",
+              "plugin": "native-color-picker"
+            },
+            "border_color_light_custom": {
+              "_uid": "59dcc398-2ae1-4a88-b806-2f0c5c191823",
+              "color": "#f40000",
+              "plugin": "native-color-picker"
+            }
+          }
+        ],
+        "weight": "medium",
+        "content": "After all,” he said, “everyone enjoys a good joke, so it's only fair that they should pay for the privilege.",
+        "element": "q",
+        "sr_only": false,
+        "component": "shared_shadcn_text",
+        "color_dark": {
+          "_uid": "b37765e9-3a2e-436d-aa02-1c0e0eaa7f51",
+          "color": "#f3f4f6",
+          "plugin": "native-color-picker"
+        },
+        "font_style": "italic",
+        "color_light": {
+          "_uid": "97e8b56c-bd61-4adb-950e-029fecba83ed",
+          "color": "",
+          "plugin": "native-color-picker"
+        },
+        "line_height": "normal",
+        "data_mapping": [],
+        "letter_spacing": "normal"
+      }
+    ],
+    "styles": [],
+    "component": "shared_shadcn_container",
+    "container_as": "div",
+    "rich_text_test": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph"
+        }
+      ]
+    },
+    "data_section_name": ""
+  },
+  "updatedAt": "2026-02-10T17:29:42.101Z"
+}

@@ -1,0 +1,77 @@
+{
+  "slug": "element-builder/article-heading-2",
+  "component": "article_heading_2",
+  "template": {
+    "_uid": "336f87ba-8a7f-4ffd-ba0c-5b6bde2996eb",
+    "size": "2xl",
+    "align": "left",
+    "color": "default",
+    "styles": [
+      {
+        "_uid": "5c1a10eb-5190-4151-a5e3-09183f3ebee9",
+        "wrap": false,
+        "align": "",
+        "group": false,
+        "width": "",
+        "border": [],
+        "height": "",
+        "margin": [],
+        "shadow": "",
+        "display": "",
+        "justify": "",
+        "padding": [],
+        "variant": "none",
+        "component": "shared_styles_options",
+        "direction": "",
+        "max_width": "",
+        "min_width": "",
+        "text_size": "",
+        "breakpoint": "base",
+        "max_height": "",
+        "min_height": "",
+        "border_style": "",
+        "custom_max_width": "",
+        "border_color_dark": "",
+        "border_color_dark_custom": {
+          "_uid": "c3391b5b-7ffb-4d85-90ea-e73acacc40c7",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "border_color_light_custom": {
+          "_uid": "f2012032-a0b7-4a51-a882-e8e00c7d2c12",
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        }
+      }
+    ],
+    "weight": "bold",
+    "content": "The King",
+    "element": "h2",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "color_dark": {
+      "_uid": "c5b62e98-0c3f-4ed1-b23c-866ecbd6d4b3",
+      "color": "#f40000",
+      "plugin": "native-color-picker"
+    },
+    "font_style": "",
+    "color_light": {
+      "_uid": "4fef7e98-0db6-4d1f-a69d-111db1f13401",
+      "color": "#f40000",
+      "plugin": "native-color-picker"
+    },
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "_uid": "71bd531a-19af-4e65-b0e5-3912e3d0bb55",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "content",
+        "premade_field": "title",
+        "builder_section": "article_heading_2"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_heading_2"
+  },
+  "updatedAt": "2026-02-10T16:49:51.227Z"
+}

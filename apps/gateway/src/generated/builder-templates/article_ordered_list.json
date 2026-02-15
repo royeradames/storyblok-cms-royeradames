@@ -1,0 +1,29 @@
+{
+  "slug": "element-builder/article-ordered-list",
+  "component": "article_ordered_list",
+  "template": {
+    "_uid": "7609e72b-4f67-4871-982c-62c64de96e55",
+    "size": "base",
+    "align": "left",
+    "color": "default",
+    "weight": "normal",
+    "content": "Ordered list content",
+    "element": "p",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "_uid": "8764c166-4fc1-4aa1-b8e8-e5823ce24a12",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "content",
+        "premade_field": "content",
+        "builder_section": "article_ordered_list"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_ordered_list"
+  },
+  "updatedAt": "2026-02-13T03:01:10.548Z"
+}

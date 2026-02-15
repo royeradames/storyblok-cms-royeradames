@@ -1,0 +1,29 @@
+{
+  "slug": "element-builder/article-table-row",
+  "component": "article_table_row",
+  "template": {
+    "_uid": "8d188334-737c-45fe-ab33-658d1933ccfb",
+    "size": "sm",
+    "align": "left",
+    "color": "muted",
+    "weight": "normal",
+    "content": "Table row text",
+    "element": "p",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "_uid": "c5797a87-9bba-4ee6-af7f-8696ce3651f2",
+        "component": "shared_builder_data_mapping",
+        "builder_field": "content",
+        "premade_field": "content",
+        "builder_section": "article_table_row"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_table_row"
+  },
+  "updatedAt": "2026-02-13T03:01:08.305Z"
+}

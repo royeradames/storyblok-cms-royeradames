@@ -1,52 +1,44 @@
 #!/usr/bin/env bun
 /**
- * Seed section builder templates into PostgreSQL.
+ * Generate repo-managed builder template artifacts from Storyblok.
  *
- * Fetches all stories under "section-builders/" from Storyblok and upserts
- * their content into the section_templates table.
+ * Fetches all builder stories, normalizes their templates, and writes:
+ * - src/generated/builder-templates/*.json (one file per template component)
+ * - src/generated/builder-template-registry.ts (typed registry for runtime lookup)
  *
  * Usage (from apps/gateway):
  *   bun run storyblok:seed:templates
  *
- * Requires: DATABASE_URL, STORYBLOK_SPACE_ID, STORYBLOK_PERSONAL_ACCESS_TOKEN
- * (all loaded from apps/gateway/.env)
+ * Requires: STORYBLOK_SPACE_ID, STORYBLOK_PERSONAL_ACCESS_TOKEN
+ * (loaded from apps/gateway/.env)
  */
 
 import { config } from "dotenv";
 import * as path from "path";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import { eq } from "drizzle-orm";
-import { sectionTemplates } from "../../src/db/schema/section-templates";
+import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import {
   normalizeBuilderTemplate,
   resolveTemplateComponentName,
   slugToBuilderPrefix,
 } from "../../src/lib/builder-template";
+import type {
+  BuilderTemplateRecord,
+  BuilderTemplateRegistry,
+} from "../../src/lib/template-artifacts";
 
-// Load app .env
 config({ path: path.join(process.cwd(), ".env") });
 
-const DATABASE_URL = process.env.DATABASE_URL;
 const SPACE_ID = process.env.STORYBLOK_SPACE_ID;
 const TOKEN = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
 const API_BASE = "https://mapi.storyblok.com/v1";
 
-if (!DATABASE_URL) {
-  console.error("Missing DATABASE_URL in .env");
-  process.exit(1);
-}
-if (!SPACE_ID || !TOKEN) {
-  console.error(
-    "Missing STORYBLOK_SPACE_ID or STORYBLOK_PERSONAL_ACCESS_TOKEN in .env",
-  );
-  process.exit(1);
-}
+const GENERATED_DIR = path.join(process.cwd(), "src/generated");
+const GENERATED_TEMPLATES_DIR = path.join(GENERATED_DIR, "builder-templates");
+const REGISTRY_FILE_PATH = path.join(
+  GENERATED_DIR,
+  "builder-template-registry.ts",
+);
 
-const client = postgres(DATABASE_URL, { prepare: false });
-const db = drizzle(client);
-
-/** Rate-limit delay between API calls (ms) */
 const DELAY_MS = 350;
 const BUILDER_ROOT_COMPONENTS = new Set([
   "page",
@@ -54,16 +46,29 @@ const BUILDER_ROOT_COMPONENTS = new Set([
   "form_builder_page",
 ]);
 
-/**
- * Fetches all stories under builder prefixes from Storyblok Management API.
- * The list endpoint doesn't include `content`, so we fetch each story
- * individually to get the full content.
- */
-async function fetchSectionBuilderStories(): Promise<any[]> {
-  const prefixes = ["section-builder/", "element-builder/", "form-builder/"];
-  const storyList: any[] = [];
+type StoryblokStory = {
+  id: number;
+  full_slug: string;
+  published_at?: string;
+  updated_at?: string;
+  content?: Record<string, unknown>;
+};
 
-  // Step 1: List stories to get IDs and slugs
+if (!SPACE_ID || !TOKEN) {
+  console.error(
+    "Missing STORYBLOK_SPACE_ID or STORYBLOK_PERSONAL_ACCESS_TOKEN in .env",
+  );
+  process.exit(1);
+}
+
+function toFileName(componentName: string): string {
+  return `${componentName.replace(/[^a-zA-Z0-9_-]/g, "_")}.json`;
+}
+
+async function fetchBuilderStories(): Promise<StoryblokStory[]> {
+  const prefixes = ["section-builder/", "element-builder/", "form-builder/"];
+  const storyList: StoryblokStory[] = [];
+
   for (const prefix of prefixes) {
     const listUrl = `${API_BASE}/spaces/${SPACE_ID}/stories?starts_with=${prefix}&per_page=100`;
     const listRes = await fetch(listUrl, {
@@ -80,10 +85,9 @@ async function fetchSectionBuilderStories(): Promise<any[]> {
     storyList.push(...(listData.stories ?? []));
   }
 
-  // Step 2: Fetch each story individually for full content
-  const fullStories: any[] = [];
+  const fullStories: StoryblokStory[] = [];
   for (const stub of storyList) {
-    await new Promise((r) => setTimeout(r, DELAY_MS));
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, DELAY_MS));
     const storyUrl = `${API_BASE}/spaces/${SPACE_ID}/stories/${stub.id}`;
     const storyRes = await fetch(storyUrl, {
       headers: { Authorization: TOKEN! },
@@ -103,28 +107,23 @@ async function fetchSectionBuilderStories(): Promise<any[]> {
   return fullStories;
 }
 
-async function main() {
-  console.log("Fetching builder stories from Storyblok...");
-  const stories = await fetchSectionBuilderStories();
-
-  if (stories.length === 0) {
-    console.log("No builder stories found.");
-    await client.end();
-    return;
-  }
-
-  console.log(`Found ${stories.length} builder stories.`);
+function buildTemplateRecords(stories: StoryblokStory[]): BuilderTemplateRecord[] {
+  const records: BuilderTemplateRecord[] = [];
 
   for (const story of stories) {
-    const slug = story.full_slug as string;
-    const rootComponent = story.content?.component as string | undefined;
-    if (rootComponent && !BUILDER_ROOT_COMPONENTS.has(rootComponent)) {
+    const slug = story.full_slug;
+    const rootComponent = story.content?.component;
+
+    if (
+      typeof rootComponent === "string" &&
+      !BUILDER_ROOT_COMPONENTS.has(rootComponent)
+    ) {
       console.log(
         `  Skipping ${slug}: unsupported root component "${rootComponent}"`,
       );
       continue;
     }
-    // Extract and normalize template (element-builder page-level fallback supported)
+
     const template = normalizeBuilderTemplate(story.content);
     const slugPrefix = slugToBuilderPrefix(slug);
     const componentName = resolveTemplateComponentName(template, slugPrefix);
@@ -134,38 +133,80 @@ async function main() {
       continue;
     }
 
-    // Upsert
-    const existing = await db
-      .select()
-      .from(sectionTemplates)
-      .where(eq(sectionTemplates.slug, slug))
-      .limit(1);
-
-    if (existing.length > 0) {
-      await db
-        .update(sectionTemplates)
-        .set({
-          component: componentName,
-          template,
-          updatedAt: new Date(),
-        })
-        .where(eq(sectionTemplates.slug, slug));
-      console.log(`  Updated: ${slug} → ${componentName}`);
-    } else {
-      await db.insert(sectionTemplates).values({
-        slug,
-        component: componentName,
-        template,
-      });
-      console.log(`  Inserted: ${slug} → ${componentName}`);
-    }
+    records.push({
+      slug,
+      component: componentName,
+      template,
+      updatedAt: story.published_at ?? story.updated_at,
+    });
+    console.log(`  Prepared: ${slug} → ${componentName}`);
   }
 
-  console.log("Done seeding templates.");
-  await client.end();
+  return records.sort((a, b) => {
+    if (a.component === b.component) return a.slug.localeCompare(b.slug);
+    return a.component.localeCompare(b.component);
+  });
+}
+
+async function cleanPreviousTemplateFiles(): Promise<void> {
+  await mkdir(GENERATED_TEMPLATES_DIR, { recursive: true });
+  const entries = await readdir(GENERATED_TEMPLATES_DIR, { withFileTypes: true });
+  const jsonFiles = entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+    .map((entry) => path.join(GENERATED_TEMPLATES_DIR, entry.name));
+
+  await Promise.all(jsonFiles.map((filePath) => rm(filePath, { force: true })));
+}
+
+async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
+  await mkdir(GENERATED_DIR, { recursive: true });
+  await cleanPreviousTemplateFiles();
+
+  for (const record of records) {
+    const templateFilePath = path.join(
+      GENERATED_TEMPLATES_DIR,
+      toFileName(record.component),
+    );
+    await writeFile(templateFilePath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  }
+
+  const registry: BuilderTemplateRegistry = {
+    source: "storyblok",
+    generatedAt: new Date().toISOString(),
+    templates: records,
+  };
+
+  const registryFileContents = `import type { BuilderTemplateRegistry } from "@/lib/template-artifacts";
+
+/**
+ * Auto-generated by scripts/storyblok/seed-templates.ts
+ * Do not edit manually.
+ */
+export const builderTemplateRegistry = ${JSON.stringify(registry, null, 2)} satisfies BuilderTemplateRegistry;
+`;
+
+  await writeFile(REGISTRY_FILE_PATH, registryFileContents, "utf8");
+}
+
+async function main() {
+  console.log("Fetching builder stories from Storyblok...");
+  const stories = await fetchBuilderStories();
+
+  if (stories.length === 0) {
+    console.log("No builder stories found.");
+    await writeTemplateArtifacts([]);
+    return;
+  }
+
+  console.log(`Found ${stories.length} builder stories.`);
+  const records = buildTemplateRecords(stories);
+  await writeTemplateArtifacts(records);
+  console.log(
+    `Done generating template artifacts. Wrote ${records.length} template record${records.length === 1 ? "" : "s"}.`,
+  );
 }
 
 main().catch((err) => {
-  console.error("Seed templates failed:", err);
+  console.error("Template artifact generation failed:", err);
   process.exit(1);
 });

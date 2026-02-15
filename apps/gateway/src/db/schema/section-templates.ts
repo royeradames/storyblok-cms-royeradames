@@ -1,10 +1,8 @@
 import { pgTable, serial, text, jsonb, timestamp } from "drizzle-orm/pg-core";
 
 /**
- * Stores raw builder templates fetched from Storyblok section-builder stories.
- *
- * Written by the /api/storyblok-webhook route on publish.
- * Read by getTemplate() in lib/templates.ts (cached by Vercel data cache).
+ * @deprecated Builder templates are now repo-generated artifacts.
+ * This table definition remains only for legacy/migration references.
  */
 export const sectionTemplates = pgTable("section_templates", {
   id: serial("id").primaryKey(),

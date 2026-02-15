@@ -1,0 +1,32 @@
+# Builder Template Artifacts
+
+Builder templates are stored as repo-managed generated artifacts.
+
+## Source of truth
+
+- Runtime lookup uses `src/generated/builder-template-registry.ts`.
+- Per-template JSON snapshots are stored in `src/generated/builder-templates/`.
+- Postgres `section_templates` is deprecated for template runtime storage.
+
+## Workflow
+
+1. Edit builder stories in Storyblok (`section-builder/*`, `element-builder/*`, `form-builder/*`).
+2. Generate template artifacts:
+   - `bun run storyblok:seed:templates`
+3. Review generated diffs under `src/generated/`.
+4. Commit, open PR, and deploy.
+
+## Runtime behavior
+
+- `TemplateProvider` loads templates from generated artifacts only.
+- `PremadeSection` still uses `buildStructureFromTemplate(...)` to assemble renderable blocks.
+- If artifacts are missing/outdated, the UI shows guidance to regenerate and commit templates.
+
+## Webhook behavior
+
+`/api/storyblok-webhook` still handles schema derivation and Storyblok component updates, but no longer writes templates to DB.
+
+When a published story changes template content, webhook responses indicate:
+
+- template sync is required
+- next step is to run `storyblok:seed:templates`, commit artifacts, and deploy
