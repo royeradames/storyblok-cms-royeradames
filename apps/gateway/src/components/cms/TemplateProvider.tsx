@@ -17,8 +17,14 @@ export async function TemplateProvider({
   children: React.ReactNode;
 }) {
   unstable_noStore();
-  const rows = await db.select().from(sectionTemplates);
-  const templates = Object.fromEntries(rows.map((r) => [r.component, r.template]));
+  let templates: Record<string, unknown> = {};
+  try {
+    const rows = await db.select().from(sectionTemplates);
+    templates = Object.fromEntries(rows.map((r) => [r.component, r.template]));
+  } catch (err) {
+    // Table may not exist yet (migrations not run) or DB unavailable; allow preview to load with no templates
+    console.warn("[TemplateProvider] section_templates query failed:", err);
+  }
   return (
     <TemplateContextProvider templates={templates}>
       {children}
