@@ -38,6 +38,9 @@ export interface ShadcnIconBlok extends SbBlokData {
 }
 
 export function ShadcnIcon({ blok }: { blok: ShadcnIconBlok }) {
+  if (!blok.name) {
+    return null;
+  }
   const color = useThemeColor(blok.color_light, blok.color_dark);
   const sizeNum = blok.size ? (ICON_SIZE_PX[blok.size] ?? 24) : 24;
 
