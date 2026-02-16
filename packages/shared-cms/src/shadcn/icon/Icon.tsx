@@ -4,17 +4,18 @@ import { storyblokEditable } from "@storyblok/react";
 import { cn } from "@repo/ui";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { SbBlokData } from "@storyblok/react";
+import { renderCustomIcon } from "./custom/custom-icon-registry";
 import {
   buildStyleClasses,
   buildInlineStyles,
   type StylesOptionsBlok,
-} from "../styles";
+} from "../../styles";
 import {
   type NativeColorPickerValue,
   useThemeColor,
-} from "../storyblok/plugins";
+} from "../../storyblok/plugins";
 
-/** Icon size options (xs → 4xl) mapped to pixels. Matches predefined scale. */
+/** Icon size options (xs -> 4xl) mapped to pixels. Matches predefined scale. */
 const ICON_SIZE_PX: Record<string, number> = {
   xs: 16,
   sm: 20,
@@ -41,18 +42,35 @@ export function ShadcnIcon({ blok }: { blok: ShadcnIconBlok }) {
   if (!blok.name) {
     return null;
   }
+
   const color = useThemeColor(blok.color_light, blok.color_dark);
   const sizeNum = blok.size ? (ICON_SIZE_PX[blok.size] ?? 24) : 24;
+  const storyblokAttrs = storyblokEditable(blok);
+  const className = cn(...buildStyleClasses(blok.styles));
+  const style = buildInlineStyles(blok.styles);
+  const customIcon = renderCustomIcon({
+    name: blok.name,
+    size: sizeNum,
+    color,
+    strokeWidth: blok.stroke_width,
+    className,
+    style,
+    storyblokAttrs,
+  });
+
+  if (customIcon) {
+    return customIcon;
+  }
 
   return (
     <DynamicIcon
-      {...storyblokEditable(blok)}
+      {...storyblokAttrs}
       name={blok.name as IconName}
       size={sizeNum}
       color={color}
       strokeWidth={blok.stroke_width}
-      className={cn(...buildStyleClasses(blok.styles))}
-      style={buildInlineStyles(blok.styles)}
+      className={className}
+      style={style}
     />
   );
 }

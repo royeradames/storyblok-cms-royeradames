@@ -18,7 +18,7 @@ export {
 } from "./ArticleAside";
 export { ShadcnAlert, type ShadcnAlertBlok } from "./Alert";
 export { ShadcnBadge, type ShadcnBadgeBlok } from "./Badge";
-export { ShadcnIcon, type ShadcnIconBlok } from "./Icon";
+export { ShadcnIcon, type ShadcnIconBlok } from "./icon/Icon";
 export { ShadcnSeparator, type ShadcnSeparatorBlok } from "./Separator";
 
 // Navigation

@@ -1,6 +1,10 @@
 import { icons as lucideIcons } from "lucide-react";
-import { createStylesBlokField } from "../styles/styles_options";
-import type { StoryblokComponent, StoryblokOption } from "../storyblok-seed/types";
+import { createStylesBlokField } from "../../styles/styles_options";
+import type {
+  StoryblokComponent,
+  StoryblokOption,
+} from "../../storyblok-seed/types";
+import { customIconOptions } from "./custom/custom-icon-options";
 
 function toKebabCase(name: string): string {
   return name
@@ -13,6 +17,18 @@ const lucideIconNameOptions: StoryblokOption[] = Object.keys(lucideIcons)
   .map(toKebabCase)
   .sort()
   .map((name) => ({ value: name, name }));
+
+const customIconNameOptions: StoryblokOption[] = [...customIconOptions].map(
+  (option) => ({
+    value: option.value,
+    name: option.name,
+  }),
+);
+
+const iconNameOptions: StoryblokOption[] = [
+  ...customIconNameOptions,
+  ...lucideIconNameOptions,
+];
 
 const iconSizeOptions: StoryblokOption[] = [
   { value: "xs", name: "XS (16px)" },
@@ -45,8 +61,8 @@ export const shadcnIconDefinition = {
       type: "option",
       pos: 0,
       required: true,
-      options: lucideIconNameOptions,
-      description: "Lucide icon name. Use search to filter.",
+      options: iconNameOptions,
+      description: "Icon name (custom + Lucide). Use search to filter.",
     },
     size: {
       type: "option",
@@ -74,6 +90,9 @@ export const shadcnIconDefinition = {
       pos: 4,
       description: "Stroke width",
     },
-    styles: createStylesBlokField(5, "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)"),
+    styles: createStylesBlokField(
+      5,
+      "Layout and sizing per breakpoint (base, sm, md, lg, xl, 2xl)",
+    ),
   },
 } satisfies StoryblokComponent;

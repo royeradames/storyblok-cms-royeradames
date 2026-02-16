@@ -1,5 +1,5 @@
 import { shadcnGridDefinition } from "../../shadcn/Grid.definition";
-import { shadcnIconDefinition } from "../../shadcn/Icon.definition";
+import { shadcnIconDefinition } from "../../shadcn/icon/Icon.definition";
 import { shadcnSectionDefinition } from "../../shadcn/Section.definition";
 import { shadcnContainerDefinition } from "../../shadcn/container/Container.definition";
 import { stylesOptionsStoryblokDefinition } from "../../styles/styles_options";

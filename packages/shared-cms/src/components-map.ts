@@ -15,7 +15,7 @@ import { BuilderRichTextInputs } from "./shadcn/BuilderRichTextInputs";
 import { ShadcnArticleAside } from "./shadcn/ArticleAside";
 import { ShadcnAlert } from "./shadcn/Alert";
 import { ShadcnBadge } from "./shadcn/Badge";
-import { ShadcnIcon } from "./shadcn/Icon";
+import { ShadcnIcon } from "./shadcn/icon/Icon";
 import { ShadcnSeparator } from "./shadcn/Separator";
 import { ShadcnAccordion } from "./shadcn/Accordion";
 import { ShadcnTabs } from "./shadcn/Tabs";
