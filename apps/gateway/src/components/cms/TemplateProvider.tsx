@@ -11,11 +11,10 @@ const TEMPLATE_META_COUNT_KEY = "__template_meta_count__";
 const TEMPLATE_META_DETAIL_KEY = "__template_meta_detail__";
 
 /**
- * Server component that fetches all section builder templates from PostgreSQL
- * (via Vercel data cache) and provides them to client components via context.
+ * Server component that exposes generated artifact metadata to client components.
  *
- * Wrap this around your layout so PremadeSectionWrapper can read templates
- * without importing server-only modules.
+ * Wrap this around your layout so wrappers can show deterministic fallback UX
+ * when template hydrator artifacts are missing or out of date.
  */
 
 export async function TemplateProvider({

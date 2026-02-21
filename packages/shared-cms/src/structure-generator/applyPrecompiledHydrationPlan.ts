@@ -25,6 +25,8 @@ type RuntimeSetter = BuilderPrecompiledHydrationPlan["setters"][number] & {
   nearestRepeaterIndex: number | null;
 };
 
+// Runtime executor contract: this module only applies compiler-emitted
+// instructions and must not perform template-discovery traversal.
 export function applyPrecompiledHydrationPlan(
   plan: BuilderPrecompiledHydrationPlan,
   blok: Record<string, unknown>,

@@ -100,15 +100,31 @@ function toSetterTargetPath(nodePath: string, builderField: string): string {
 function buildPrecompiledHydrationPlan(
   record: BuilderCompiledTemplateRecord,
 ): BuilderPrecompiledHydrationPlan {
-  return {
-    rootSectionName: record.compiled.rootSectionName,
-    skeleton: record.compiled.skeleton,
-    setters: record.compiled.injections.map((injection) => ({
+  const setters = record.compiled.injections
+    .map((injection) => ({
       sectionName: injection.sectionName,
       premadeField: injection.premadeField,
       targetPath: toSetterTargetPath(injection.nodePath, injection.builderField),
-    })),
-    repeaters: record.compiled.repeaters,
+    }))
+    .sort((left, right) => {
+      if (left.targetPath !== right.targetPath) {
+        return left.targetPath.localeCompare(right.targetPath);
+      }
+      if (left.sectionName !== right.sectionName) {
+        return left.sectionName.localeCompare(right.sectionName);
+      }
+      return left.premadeField.localeCompare(right.premadeField);
+    });
+
+  const repeaters = [...record.compiled.repeaters].sort((left, right) =>
+    left.nodePath.localeCompare(right.nodePath),
+  );
+
+  return {
+    rootSectionName: record.compiled.rootSectionName,
+    skeleton: record.compiled.skeleton,
+    setters,
+    repeaters,
   };
 }
 
@@ -241,14 +257,24 @@ async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
   await mkdir(GENERATED_DIR, { recursive: true });
   await cleanPreviousTemplateFiles();
 
-  const compiledRecords: BuilderCompiledTemplateRecord[] = records.map((record) => ({
-    slug: record.slug,
-    component: record.component,
-    compiled: compileBuilderTemplate(record.template),
-    updatedAt: record.updatedAt,
-  }));
+  const sortedRecords = [...records].sort((a, b) => {
+    if (a.component !== b.component) return a.component.localeCompare(b.component);
+    return a.slug.localeCompare(b.slug);
+  });
 
-  for (const record of records) {
+  const compiledRecords: BuilderCompiledTemplateRecord[] = sortedRecords
+    .map((record) => ({
+      slug: record.slug,
+      component: record.component,
+      compiled: compileBuilderTemplate(record.template),
+      updatedAt: record.updatedAt,
+    }))
+    .sort((a, b) => {
+      if (a.component !== b.component) return a.component.localeCompare(b.component);
+      return a.slug.localeCompare(b.slug);
+    });
+
+  for (const record of sortedRecords) {
     const templateFilePath = path.join(
       GENERATED_TEMPLATES_DIR,
       toFileName(record.component),
@@ -270,7 +296,7 @@ async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
   const registry: BuilderTemplateRegistry = {
     source: "storyblok",
     generatedAt: new Date().toISOString(),
-    templates: records,
+    templates: sortedRecords,
   };
   const registryFileContents = `import type { BuilderTemplateRegistry } from "../types";
 

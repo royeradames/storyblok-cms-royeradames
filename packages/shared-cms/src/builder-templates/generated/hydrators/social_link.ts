@@ -218,11 +218,6 @@ const hydrationPlan = {
   "setters": [
     {
       "sectionName": "social_link",
-      "premadeField": "link",
-      "targetPath": "$.link"
-    },
-    {
-      "sectionName": "social_link",
       "premadeField": "icon_title",
       "targetPath": "$.label.0.content"
     },
@@ -230,6 +225,11 @@ const hydrationPlan = {
       "sectionName": "social_link",
       "premadeField": "icon_name",
       "targetPath": "$.label.1.name"
+    },
+    {
+      "sectionName": "social_link",
+      "premadeField": "link",
+      "targetPath": "$.link"
     }
   ],
   "repeaters": []

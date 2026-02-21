@@ -21,8 +21,26 @@ Builder templates are stored as repo-managed generated artifacts.
 
 - `TemplateProvider` surfaces generated hydrator metadata for UI status.
 - `PremadeSection` dispatches to generated per-template hydrator functions.
-- Generated hydrators are self-contained TS logic (no shared compiled-template interpreter import).
+- Generated hydrators contain deterministic precompiled hydration plans and call a shared instruction applier.
 - If artifacts are missing/outdated, the UI shows guidance to regenerate and commit templates.
+
+## Compiler contract
+
+- Generated artifacts:
+  - one JSON template snapshot per component in `packages/shared-cms/src/builder-templates/generated/builder-templates/`
+  - one TS hydrator per component in `packages/shared-cms/src/builder-templates/generated/hydrators/`
+  - one registry entry per component in `packages/shared-cms/src/builder-templates/generated/template-hydrator-registry.ts`
+- Never hand-write:
+  - files under `packages/shared-cms/src/builder-templates/generated/`
+  - template-specific runtime hydration logic
+- New template onboarding:
+  - publish/update builder story in Storyblok
+  - run `cd packages/shared-cms && bun run storyblok:seed:templates`
+  - commit generated artifacts
+  - deploy gateway/shared-cms together
+- Runtime boundary:
+  - runtime only applies generated setter/repeater instructions to incoming `blok` data
+  - no runtime template-discovery traversal is allowed
 
 ## Webhook behavior
 

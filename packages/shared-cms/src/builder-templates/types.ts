@@ -35,30 +35,18 @@ export type BuilderCompiledRepeaterLookup = Record<
   BuilderCompiledRepeater
 >;
 
-export type BuilderHydratorCodegenPlan = {
-  rootSectionName: string;
-  skeleton: BuilderCompiledTemplateJson;
-  injectionsByPath: BuilderHydratorInjectionLookup;
-  repeatersByPath: BuilderCompiledRepeaterLookup;
-};
-
-export type BuilderHydratorInjectionOperation = {
-  sectionName: string;
-  premadeField: string;
-  builderField: string;
-};
-
-export type BuilderHydratorInjectionLookup = Record<
-  BuilderTemplateNodePath,
-  BuilderHydratorInjectionOperation[]
->;
-
 export type BuilderHydrationSetterOperation = {
   sectionName: string;
   premadeField: string;
   targetPath: BuilderTemplateNodePath;
 };
 
+/**
+ * Canonical runtime plan contract:
+ * - `skeleton` has metadata (`data_mapping`, `data_section_name`, `_editable`) removed
+ * - `setters` is deterministic and uses absolute node paths rooted at "$"
+ * - `repeaters` points to item-node paths in the same "$"-rooted namespace
+ */
 export type BuilderPrecompiledHydrationPlan = {
   rootSectionName: string;
   skeleton: BuilderCompiledTemplateJson;

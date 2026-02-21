@@ -489,13 +489,13 @@ const hydrationPlan = {
     },
     {
       "sectionName": "blog7_section_articles",
-      "premadeField": "link",
-      "targetPath": "$.items.1.items.0.items.0.footer.0.link"
+      "premadeField": "action_label",
+      "targetPath": "$.items.1.items.0.items.0.footer.0.label.0.content"
     },
     {
       "sectionName": "blog7_section_articles",
-      "premadeField": "action_label",
-      "targetPath": "$.items.1.items.0.items.0.footer.0.label.0.content"
+      "premadeField": "link",
+      "targetPath": "$.items.1.items.0.items.0.footer.0.link"
     },
     {
       "sectionName": "blog7_section_articles",
