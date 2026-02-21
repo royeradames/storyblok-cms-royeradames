@@ -23,7 +23,6 @@
     "storyblok:seed:generate": "bun scripts/storyblok/generate-seed.ts",
     "storyblok:seed:push": "bun scripts/storyblok/push-seed.ts",
     "storyblok:seed": "bun run storyblok:seed:generate && bun run storyblok:seed:push",
-    "storyblok:seed:templates": "cd ../packages/shared-cms && bun run storyblok:seed:templates",
     "storyblok:migrate:border-color-theme": "bun run scripts/storyblok/migrate-border-color-to-theme-fields.ts",
     "storyblok:migrate-flex-options-to-styles": "bun scripts/storyblok/migrate-flex-options-to-styles.ts",
     "storyblok:migrate-flex-breakpoint-to-styles-breakpoint": "bun scripts/storyblok/migrate-flex-breakpoint-to-styles-breakpoint.ts",
