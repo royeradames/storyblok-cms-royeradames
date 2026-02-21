@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchStory } from "@/lib/storyblok";
-import { builderTemplateRegistry } from "@/generated/builder-template-registry";
 import {
+  builderTemplateRegistry,
+  buildTemplateSnapshotBySlug,
   normalizeBuilderTemplate,
   resolveTemplateComponentName,
   derivePrefixFromComponentName,
   slugToBuilderPrefix,
-} from "@/lib/builder-template";
-import { buildTemplateSnapshotBySlug } from "@/lib/template-artifacts";
+} from "@repo/shared-cms/builder-templates";
 import {
   derivePremadeBlokSchemas,
   diffSchemas,
@@ -228,12 +228,15 @@ export async function POST(request: NextRequest) {
 
     await updateBuild(
       jobId,
-      "Template changed. Run storyblok:seed:templates and commit generated artifacts.",
+      "Template changed. Run storyblok:seed:templates in packages/shared-cms and commit generated artifacts.",
     );
 
     console.log(`[webhook] Template changed: ${slug} → ${componentName}`);
 
-    await completeBuild(jobId, "Template sync required (run storyblok:seed:templates)");
+    await completeBuild(
+      jobId,
+      "Template sync required (run storyblok:seed:templates in packages/shared-cms)",
+    );
 
     return NextResponse.json({
       ok: true,
@@ -241,7 +244,7 @@ export async function POST(request: NextRequest) {
       component: componentName,
       templateSyncRequired: true,
       nextStep:
-        "Run bun run storyblok:seed:templates, commit generated template artifacts, and deploy.",
+        "Run bun run storyblok:seed:templates in packages/shared-cms, commit generated template artifacts, and deploy.",
     });
   } catch (error) {
     console.error("[webhook] Error processing Storyblok webhook:", error);

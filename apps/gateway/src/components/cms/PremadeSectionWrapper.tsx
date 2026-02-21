@@ -50,8 +50,8 @@ function renderTemplateFailureCard(
 
   const guidanceByStatus = {
     artifact_missing:
-      'Run "bun run storyblok:seed:templates", commit generated files, and redeploy.',
-    ok: `Template not found in generated artifacts for "${componentName}". Run "bun run storyblok:seed:templates", commit generated files, and deploy.`,
+      'Run "bun run storyblok:seed:templates" in packages/shared-cms, commit generated files, and redeploy.',
+    ok: `Template not found in generated artifacts for "${componentName}". Run "bun run storyblok:seed:templates" in packages/shared-cms, commit generated files, and deploy.`,
   } as const satisfies Record<TemplateProviderStatus, string>;
 
   return (

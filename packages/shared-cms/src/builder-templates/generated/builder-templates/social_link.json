@@ -49,7 +49,7 @@
       },
       {
         "_uid": "e5842559-3141-44fb-8da4-2048d2bd8d50",
-        "name": "twitter",
+        "name": "x-com",
         "size": "default",
         "styles": [
           {
@@ -260,5 +260,5 @@
     ],
     "data_section_name": "social_link"
   },
-  "updatedAt": "2026-02-13T22:44:19.409Z"
+  "updatedAt": "2026-02-16T19:49:54.210Z"
 }

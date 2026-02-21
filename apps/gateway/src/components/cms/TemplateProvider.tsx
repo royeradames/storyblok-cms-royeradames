@@ -1,5 +1,7 @@
-import { builderTemplateRegistry } from "@/generated/builder-template-registry";
-import { buildTemplateLookup } from "@/lib/template-artifacts";
+import {
+  builderTemplateRegistry,
+  buildTemplateLookup,
+} from "@repo/shared-cms/builder-templates";
 import { TemplateContextProvider } from "./TemplateContext";
 import { unstable_noStore } from "next/cache";
 
@@ -41,7 +43,7 @@ export async function TemplateProvider({
       [TEMPLATE_META_STATUS_KEY]: "artifact_missing",
       [TEMPLATE_META_COUNT_KEY]: 0,
       [TEMPLATE_META_DETAIL_KEY]:
-        "No generated template artifacts found. Run bun run storyblok:seed:templates and commit generated files.",
+        "No generated template artifacts found. Run bun run storyblok:seed:templates in packages/shared-cms and commit generated files.",
     };
   }
   return (

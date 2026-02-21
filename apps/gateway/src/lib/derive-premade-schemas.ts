@@ -1,5 +1,5 @@
 import { getComponentSchema } from "@repo/shared-cms/storyblok-seed";
-import { slugToBuilderPrefix } from "./builder-template";
+import { slugToBuilderPrefix } from "@repo/shared-cms/builder-templates";
 
 /**
  * Derives premade blok component definitions from a section builder template.

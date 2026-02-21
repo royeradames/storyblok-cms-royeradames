@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
+    "./builder-templates": "./src/builder-templates/index.ts",
     "./components-map": "./src/components-map.ts",
     "./flex-maps": "./src/shadcn/flex/maps.ts",
     "./styles": "./src/styles/index.ts",
@@ -18,6 +19,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "storyblok:definitions:check": "bun scripts/check-storyblok-definition-aggregation.ts",
+    "storyblok:seed:templates": "bun scripts/storyblok/seed-templates.ts",
     "styles:safelist:generate": "STYLES_SAFELIST_PROFILE=dev bun scripts/generate-styles-safelist.ts",
     "styles:safelist:generate:full": "STYLES_SAFELIST_PROFILE=full bun scripts/generate-styles-safelist.ts",
     "styles:safelist:check": "STYLES_SAFELIST_PROFILE=dev bun scripts/check-styles-safelist-artifact.ts",
@@ -36,10 +38,11 @@
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
-    "next-themes": "^0.4.6",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "dotenv": "17.3.1",
     "next": "^15.0.0",
+    "next-themes": "^0.4.6",
     "typescript": "^5.9.3"
   }
 }
