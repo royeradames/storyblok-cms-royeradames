@@ -1,7 +1,7 @@
 import type {
   BuilderCompiledRepeater,
   BuilderPrecompiledHydrationPlan,
-} from "../builder-templates/types";
+} from "./types";
 
 type PathSegment = string | number;
 type HydrationRecord = Record<string, unknown>;

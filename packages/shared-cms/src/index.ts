@@ -13,8 +13,8 @@ export * from "./presets";
 // Sections (predetermined section components)
 export * from "./sections";
 
-// Structure generator (generic template → component tree processor)
-export * from "./structure-generator";
+// Builder template hydration/compiler runtime
+export * from "./builder-templates";
 
 // Dev scenario system
 export * from "./dev";

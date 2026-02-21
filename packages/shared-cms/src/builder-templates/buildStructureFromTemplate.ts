@@ -1,4 +1,4 @@
-import type { BuilderPrecompiledHydrationPlan } from "../builder-templates/types";
+import type { BuilderPrecompiledHydrationPlan } from "./types";
 import { applyPrecompiledHydrationPlan } from "./applyPrecompiledHydrationPlan";
 
 export function buildStructureFromTemplate(

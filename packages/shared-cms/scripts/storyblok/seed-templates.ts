@@ -133,7 +133,7 @@ function createHydratorFileContents(
 ): string {
   const functionName = toHydratorFunctionName(record.component);
   const hydrationPlan = buildPrecompiledHydrationPlan(record);
-  return `import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+  return `import { applyPrecompiledHydrationPlan } from "../../applyPrecompiledHydrationPlan";
 import type {
   BuilderPrecompiledHydrationPlan,
   BuilderTemplateHydrator,

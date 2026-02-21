@@ -13,6 +13,13 @@ export {
   getBuilderTemplateHydrator,
   getBuilderTemplateHydratorCount,
 } from "./hydrators";
+export {
+  applyPrecompiledHydrationPlan,
+} from "./applyPrecompiledHydrationPlan";
+export {
+  buildStructureFromTemplate,
+  hydrateCompiledTemplate,
+} from "./buildStructureFromTemplate";
 export type {
   BuilderCompiledInjectionOperation,
   BuilderCompiledInjectionLookup,

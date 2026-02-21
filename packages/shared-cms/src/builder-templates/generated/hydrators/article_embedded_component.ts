@@ -1,4 +1,4 @@
-import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import { applyPrecompiledHydrationPlan } from "../../applyPrecompiledHydrationPlan";
 import type {
   BuilderPrecompiledHydrationPlan,
   BuilderTemplateHydrator,

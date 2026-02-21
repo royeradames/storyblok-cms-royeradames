@@ -1,0 +1,24 @@
+---
+description: Enforce hard-cut migrations with no compatibility layers
+alwaysApply: true
+---
+
+# Full Migration Rule (No Compatibility)
+
+When the requested change is a migration/refactor from one module/domain to another, perform a full cutover.
+
+- Do not keep compatibility shims, proxy re-exports, dual-path runtime, or temporary wrappers.
+- Remove deprecated folders/files/exports in the same task once replacements are in place.
+- Update all imports and package entry exports to the new canonical location.
+- Regenerate generated artifacts after path/API changes so generated code matches the new source of truth.
+- Verify there are no leftover references to old paths/symbols before finishing.
+
+## Required Validation
+
+- Type-check affected packages/apps after migration.
+- Run domain-specific runtime/debug checks for representative cases.
+- If Storyblok-related foundations changed, run the required Storyblok sync command in the same task.
+
+## Hydration Domain Expectation
+
+For hydration/compiler migrations in this repo, use `builder-templates` as the single canonical domain and fully remove old alternatives during the same change.
