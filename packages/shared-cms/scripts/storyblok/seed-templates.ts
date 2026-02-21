@@ -4,6 +4,8 @@
  *
  * Fetches all builder stories, normalizes their templates, and writes:
  * - src/builder-templates/generated/builder-templates/*.json (one file per template component)
+ * - src/builder-templates/generated/hydrators/*.ts (per-template hydrator functions)
+ * - src/builder-templates/generated/template-hydrator-registry.ts (hydrator lookup registry)
  * - src/builder-templates/generated/builder-template-registry.ts (typed registry for runtime lookup)
  *
  * Usage (from packages/shared-cms):
@@ -20,10 +22,10 @@ import {
   resolveTemplateComponentName,
   slugToBuilderPrefix,
 } from "../../src/builder-templates/builder-template";
-import { toInjectableTemplate } from "../../src/builder-templates/injectable-template";
+import { compileBuilderTemplate } from "../../src/builder-templates/compile-template";
 import type {
-  BuilderInjectableTemplateRecord,
-  BuilderInjectableTemplateRegistry,
+  BuilderCompiledTemplateRecord,
+  BuilderPrecompiledHydrationPlan,
   BuilderTemplateRecord,
   BuilderTemplateRegistry,
 } from "../../src/builder-templates/types";
@@ -42,17 +44,14 @@ const GENERATED_DIR = path.join(
   "generated",
 );
 const GENERATED_TEMPLATES_DIR = path.join(GENERATED_DIR, "builder-templates");
-const GENERATED_INJECTABLE_TEMPLATES_DIR = path.join(
-  GENERATED_DIR,
-  "builder-templates-injectable",
-);
+const GENERATED_HYDRATORS_DIR = path.join(GENERATED_DIR, "hydrators");
 const REGISTRY_FILE_PATH = path.join(
   GENERATED_DIR,
   "builder-template-registry.ts",
 );
-const INJECTABLE_REGISTRY_FILE_PATH = path.join(
+const HYDRATOR_REGISTRY_FILE_PATH = path.join(
   GENERATED_DIR,
-  "builder-template-injectable-registry.ts",
+  "template-hydrator-registry.ts",
 );
 
 const DELAY_MS = 350;
@@ -81,6 +80,56 @@ function toFileName(componentName: string): string {
   return `${componentName.replace(/[^a-zA-Z0-9_-]/g, "_")}.json`;
 }
 
+function toHydratorIdentifier(componentName: string): string {
+  const normalized = componentName.replace(/[^a-zA-Z0-9_]+/g, "_");
+  return /^[0-9]/.test(normalized) ? `_${normalized}` : normalized;
+}
+
+function toHydratorFunctionName(componentName: string): string {
+  return `hydrate_${toHydratorIdentifier(componentName)}`;
+}
+
+function toHydratorFileName(componentName: string): string {
+  return `${toHydratorIdentifier(componentName)}.ts`;
+}
+
+function toSetterTargetPath(nodePath: string, builderField: string): string {
+  return nodePath === "$" ? `$.${builderField}` : `${nodePath}.${builderField}`;
+}
+
+function buildPrecompiledHydrationPlan(
+  record: BuilderCompiledTemplateRecord,
+): BuilderPrecompiledHydrationPlan {
+  return {
+    rootSectionName: record.compiled.rootSectionName,
+    skeleton: record.compiled.skeleton,
+    setters: record.compiled.injections.map((injection) => ({
+      sectionName: injection.sectionName,
+      premadeField: injection.premadeField,
+      targetPath: toSetterTargetPath(injection.nodePath, injection.builderField),
+    })),
+    repeaters: record.compiled.repeaters,
+  };
+}
+
+function createHydratorFileContents(
+  record: BuilderCompiledTemplateRecord,
+): string {
+  const functionName = toHydratorFunctionName(record.component);
+  const hydrationPlan = buildPrecompiledHydrationPlan(record);
+  return `import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = ${JSON.stringify(hydrationPlan, null, 2)} satisfies BuilderPrecompiledHydrationPlan;
+
+export const ${functionName}: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);
+`;
+}
+
 async function fetchBuilderStories(): Promise<StoryblokStory[]> {
   const prefixes = ["section-builder/", "element-builder/", "form-builder/"];
   const storyList: StoryblokStory[] = [];
@@ -97,7 +146,7 @@ async function fetchBuilderStories(): Promise<StoryblokStory[]> {
       );
     }
 
-    const listData = await listRes.json();
+    const listData = (await listRes.json()) as { stories?: StoryblokStory[] };
     storyList.push(...(listData.stories ?? []));
   }
 
@@ -116,7 +165,11 @@ async function fetchBuilderStories(): Promise<StoryblokStory[]> {
       continue;
     }
 
-    const storyData = await storyRes.json();
+    const storyData = (await storyRes.json()) as { story?: StoryblokStory };
+    if (!storyData.story) {
+      console.warn(`  Story payload missing for ${stub.id} (${stub.full_slug})`);
+      continue;
+    }
     fullStories.push(storyData.story);
   }
 
@@ -166,22 +219,21 @@ function buildTemplateRecords(stories: StoryblokStory[]): BuilderTemplateRecord[
 
 async function cleanPreviousTemplateFiles(): Promise<void> {
   await mkdir(GENERATED_TEMPLATES_DIR, { recursive: true });
-  await mkdir(GENERATED_INJECTABLE_TEMPLATES_DIR, { recursive: true });
+  await mkdir(GENERATED_HYDRATORS_DIR, { recursive: true });
   const entries = await readdir(GENERATED_TEMPLATES_DIR, { withFileTypes: true });
-  const injectableEntries = await readdir(GENERATED_INJECTABLE_TEMPLATES_DIR, {
+  const hydratorEntries = await readdir(GENERATED_HYDRATORS_DIR, {
     withFileTypes: true,
   });
   const jsonFiles = entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
     .map((entry) => path.join(GENERATED_TEMPLATES_DIR, entry.name));
-  const injectableJsonFiles = injectableEntries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
-    .map((entry) => path.join(GENERATED_INJECTABLE_TEMPLATES_DIR, entry.name));
+  const hydratorTsFiles = hydratorEntries
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
+    .map((entry) => path.join(GENERATED_HYDRATORS_DIR, entry.name));
 
   await Promise.all(
-    [...jsonFiles, ...injectableJsonFiles].map((filePath) =>
-      rm(filePath, { force: true }),
-    ),
+    [...jsonFiles, ...hydratorTsFiles]
+      .map((filePath) => rm(filePath, { force: true })),
   );
 }
 
@@ -189,12 +241,12 @@ async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
   await mkdir(GENERATED_DIR, { recursive: true });
   await cleanPreviousTemplateFiles();
 
-  const injectableRecords: BuilderInjectableTemplateRecord[] = records.map(
-    (record) => ({
-      ...record,
-      template: toInjectableTemplate(record.template) as Record<string, unknown>,
-    }),
-  );
+  const compiledRecords: BuilderCompiledTemplateRecord[] = records.map((record) => ({
+    slug: record.slug,
+    component: record.component,
+    compiled: compileBuilderTemplate(record.template),
+    updatedAt: record.updatedAt,
+  }));
 
   for (const record of records) {
     const templateFilePath = path.join(
@@ -203,12 +255,16 @@ async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
     );
     await writeFile(templateFilePath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
   }
-  for (const record of injectableRecords) {
-    const templateFilePath = path.join(
-      GENERATED_INJECTABLE_TEMPLATES_DIR,
-      toFileName(record.component),
+  for (const record of compiledRecords) {
+    const hydratorFilePath = path.join(
+      GENERATED_HYDRATORS_DIR,
+      toHydratorFileName(record.component),
     );
-    await writeFile(templateFilePath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+    await writeFile(
+      hydratorFilePath,
+      createHydratorFileContents(record),
+      "utf8",
+    );
   }
 
   const registry: BuilderTemplateRegistry = {
@@ -216,12 +272,6 @@ async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
     generatedAt: new Date().toISOString(),
     templates: records,
   };
-  const injectableRegistry: BuilderInjectableTemplateRegistry = {
-    source: "storyblok",
-    generatedAt: new Date().toISOString(),
-    templates: injectableRecords,
-  };
-
   const registryFileContents = `import type { BuilderTemplateRegistry } from "../types";
 
 /**
@@ -230,21 +280,32 @@ async function writeTemplateArtifacts(records: BuilderTemplateRecord[]) {
  */
 export const builderTemplateRegistry = ${JSON.stringify(registry, null, 2)} satisfies BuilderTemplateRegistry;
 `;
-  const injectableRegistryFileContents = `import type { BuilderInjectableTemplateRegistry } from "../types";
-
+  const hydratorImportLines = compiledRecords
+    .map((record) => {
+      const functionName = toHydratorFunctionName(record.component);
+      const fileName = toHydratorFileName(record.component).replace(/\.ts$/, "");
+      return `import { ${functionName} } from "./hydrators/${fileName}";`;
+    })
+    .join("\n");
+  const hydratorRegistryEntries = compiledRecords
+    .map((record) => {
+      const functionName = toHydratorFunctionName(record.component);
+      return `  "${record.component}": ${functionName},`;
+    })
+    .join("\n");
+  const hydratorRegistryFileContents = `import type { BuilderTemplateHydratorRegistry } from "../types";
+${hydratorImportLines.length > 0 ? `\n${hydratorImportLines}\n` : "\n"}
 /**
  * Auto-generated by scripts/storyblok/seed-templates.ts
  * Do not edit manually.
  */
-export const builderTemplateInjectableRegistry = ${JSON.stringify(injectableRegistry, null, 2)} satisfies BuilderInjectableTemplateRegistry;
+export const builderTemplateHydratorRegistry = {
+${hydratorRegistryEntries}
+} satisfies BuilderTemplateHydratorRegistry;
 `;
 
   await writeFile(REGISTRY_FILE_PATH, registryFileContents, "utf8");
-  await writeFile(
-    INJECTABLE_REGISTRY_FILE_PATH,
-    injectableRegistryFileContents,
-    "utf8",
-  );
+  await writeFile(HYDRATOR_REGISTRY_FILE_PATH, hydratorRegistryFileContents, "utf8");
 }
 
 async function main() {

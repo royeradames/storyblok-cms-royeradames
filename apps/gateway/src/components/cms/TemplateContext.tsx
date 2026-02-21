@@ -3,11 +3,10 @@
 import { createContext, useContext } from "react";
 
 /**
- * Client-side context for section builder templates.
+ * Client-side context for template generation metadata.
  *
- * Templates are fetched server-side by TemplateProvider and injected here
- * so client components (PremadeSectionWrapper) can access them without
- * importing `postgres` (which is Node.js-only).
+ * Metadata is provided server-side by TemplateProvider and consumed by client
+ * wrappers for error messaging and status guidance.
  */
 type TemplateMap = Record<string, any>;
 

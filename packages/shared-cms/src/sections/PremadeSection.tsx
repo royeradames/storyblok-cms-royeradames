@@ -1,13 +1,13 @@
 "use client";
 
 import { StoryblokComponent } from "@storyblok/react";
-import { buildStructureFromTemplate } from "../structure-generator";
+import { getBuilderTemplateHydrator } from "../builder-templates/hydrators";
 
 /**
  * Generic renderer for any premade section.
  *
- * Takes a raw builder template (fetched from DB by the server wrapper) and the
- * CMS blok data, generates the full component structure, and renders it via
+ * Resolves a generated hydrator by component name, transforms the incoming
+ * CMS blok data into a renderable component structure, and renders it via
  * StoryblokComponent.
  *
  * This component is "use client" because StoryblokComponent needs the bridge
@@ -16,11 +16,19 @@ import { buildStructureFromTemplate } from "../structure-generator";
  */
 export function PremadeSection({
   blok,
-  template,
 }: {
   blok: any;
-  template: any;
 }) {
-  const fullBlok = buildStructureFromTemplate(template, blok);
+  const rawComponentName = String(blok?.component ?? "");
+  const normalizedComponentName = rawComponentName.replace(/^shared_/, "");
+  const hydrateTemplate = getBuilderTemplateHydrator(normalizedComponentName);
+
+  if (!hydrateTemplate) {
+    throw new Error(
+      `Missing generated hydrator for component "${normalizedComponentName}". Regenerate templates.`,
+    );
+  }
+
+  const fullBlok = hydrateTemplate(blok);
   return <StoryblokComponent blok={fullBlok} />;
 }

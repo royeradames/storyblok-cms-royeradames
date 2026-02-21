@@ -6,7 +6,7 @@ import type { BuilderTemplateRegistry } from "../types";
  */
 export const builderTemplateRegistry = {
   "source": "storyblok",
-  "generatedAt": "2026-02-21T12:06:57.237Z",
+  "generatedAt": "2026-02-21T13:43:35.044Z",
   "templates": [
     {
       "slug": "element-builder/article-embedded-component",

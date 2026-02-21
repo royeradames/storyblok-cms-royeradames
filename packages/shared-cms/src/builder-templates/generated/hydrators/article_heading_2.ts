@@ -1,27 +1,28 @@
-{
-  "slug": "element-builder/article-quote",
-  "component": "article_quote",
-  "template": {
-    "size": "base",
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "article_heading_2",
+  "skeleton": {
+    "size": "2xl",
     "align": "left",
-    "color": "primary",
+    "color": "default",
     "styles": [
       {
         "wrap": false,
         "align": "",
         "group": false,
         "width": "",
-        "border": [
-          "border-l-4"
-        ],
+        "border": [],
         "height": "",
         "margin": [],
         "shadow": "",
         "display": "",
         "justify": "",
-        "padding": [
-          "pl-4"
-        ],
+        "padding": [],
         "variant": "none",
         "component": "shared_styles_options",
         "direction": "",
@@ -34,9 +35,8 @@
         "border_style": "",
         "custom_max_width": "",
         "border_color_dark": "",
-        "border_color_light": "border-muted",
         "border_color_dark_custom": {
-          "color": "#364152",
+          "color": "#f40000",
           "plugin": "native-color-picker"
         },
         "border_color_light_custom": {
@@ -45,30 +45,32 @@
         }
       }
     ],
-    "weight": "medium",
-    "content": "After all,” he said, “everyone enjoys a good joke, so it's only fair that they should pay for the privilege.",
-    "element": "blockquote",
+    "weight": "bold",
+    "content": "The King",
+    "element": "h2",
     "sr_only": false,
     "component": "shared_shadcn_text",
     "color_dark": {
-      "color": "#f3f4f6",
+      "color": "#f40000",
       "plugin": "native-color-picker"
     },
-    "font_style": "italic",
+    "font_style": "",
     "color_light": {
-      "color": "",
+      "color": "#f40000",
       "plugin": "native-color-picker"
     },
     "line_height": "normal",
-    "data_mapping": [
-      {
-        "builder_section": "article_quote",
-        "premade_field": "quote",
-        "builder_field": "content"
-      }
-    ],
-    "letter_spacing": "normal",
-    "data_section_name": "article_quote"
+    "letter_spacing": "normal"
   },
-  "updatedAt": "2026-02-13T03:44:32.502Z"
-}
+  "setters": [
+    {
+      "sectionName": "article_heading_2",
+      "premadeField": "title",
+      "targetPath": "$.content"
+    }
+  ],
+  "repeaters": []
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_article_heading_2: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);

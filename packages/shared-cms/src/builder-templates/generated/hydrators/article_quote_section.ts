@@ -1,7 +1,12 @@
-{
-  "slug": "section-builder/article-quote",
-  "component": "article_quote_section",
-  "template": {
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "",
+  "skeleton": {
     "name": "",
     "items": [
       {
@@ -76,8 +81,11 @@
           "type": "paragraph"
         }
       ]
-    },
-    "data_section_name": ""
+    }
   },
-  "updatedAt": "2026-02-10T17:29:42.101Z"
-}
+  "setters": [],
+  "repeaters": []
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_article_quote_section: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);

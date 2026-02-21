@@ -1,7 +1,12 @@
-{
-  "slug": "section-builder/case-studies-2",
-  "component": "case_studies_2_section",
-  "template": {
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "case_studies_2_section",
+  "skeleton": {
     "name": "case-studies-2",
     "items": [
       {
@@ -28,13 +33,6 @@
                   "plugin": "native-color-picker"
                 },
                 "line_height": "normal",
-                "data_mapping": [
-                  {
-                    "builder_section": "case_studies_2_section",
-                    "premade_field": "description",
-                    "builder_field": "content"
-                  }
-                ],
                 "letter_spacing": "wide"
               },
               {
@@ -78,13 +76,6 @@
                   "plugin": "native-color-picker"
                 },
                 "line_height": "",
-                "data_mapping": [
-                  {
-                    "builder_section": "case_studies_2_section",
-                    "premade_field": "name",
-                    "builder_field": "content"
-                  }
-                ],
                 "letter_spacing": ""
               }
             ],
@@ -132,8 +123,7 @@
           }
         ],
         "component": "shared_shadcn_container",
-        "container_as": "header",
-        "data_section_name": ""
+        "container_as": "header"
       },
       {
         "name": "case-studies",
@@ -178,14 +168,7 @@
                   "meta_data": {},
                   "is_external_url": false
                 },
-                "aspect_ratio": "auto",
-                "data_mapping": [
-                  {
-                    "builder_section": "case_studies_2_study",
-                    "premade_field": "image",
-                    "builder_field": "image_light"
-                  }
-                ]
+                "aspect_ratio": "auto"
               },
               {
                 "name": "case-study-content",
@@ -231,13 +214,6 @@
                       "plugin": "native-color-picker"
                     },
                     "line_height": "normal",
-                    "data_mapping": [
-                      {
-                        "builder_section": "case_studies_2_study",
-                        "premade_field": "quote",
-                        "builder_field": "content"
-                      }
-                    ],
                     "letter_spacing": "normal"
                   },
                   {
@@ -264,13 +240,6 @@
                               "plugin": "native-color-picker"
                             },
                             "line_height": "normal",
-                            "data_mapping": [
-                              {
-                                "builder_section": "case_studies_2_study",
-                                "premade_field": "name",
-                                "builder_field": "content"
-                              }
-                            ],
                             "letter_spacing": "normal"
                           },
                           {
@@ -294,13 +263,6 @@
                                   "plugin": "native-color-picker"
                                 },
                                 "line_height": "normal",
-                                "data_mapping": [
-                                  {
-                                    "builder_section": "case_studies_2_study",
-                                    "premade_field": "position",
-                                    "builder_field": "content"
-                                  }
-                                ],
                                 "letter_spacing": "normal"
                               },
                               {
@@ -322,14 +284,7 @@
                                   "meta_data": {},
                                   "is_external_url": false
                                 },
-                                "aspect_ratio": "auto",
-                                "data_mapping": [
-                                  {
-                                    "builder_section": "case_studies_2_study",
-                                    "premade_field": "company_logo",
-                                    "builder_field": "image_light"
-                                  }
-                                ]
+                                "aspect_ratio": "auto"
                               }
                             ],
                             "styles": [
@@ -426,13 +381,6 @@
                                   "plugin": "native-color-picker"
                                 },
                                 "line_height": "none",
-                                "data_mapping": [
-                                  {
-                                    "builder_section": "case_studies_2_statistic",
-                                    "premade_field": "headline_number",
-                                    "builder_field": "content"
-                                  }
-                                ],
                                 "letter_spacing": "normal"
                               },
                               {
@@ -453,13 +401,6 @@
                                   "plugin": "native-color-picker"
                                 },
                                 "line_height": "normal",
-                                "data_mapping": [
-                                  {
-                                    "builder_section": "case_studies_2_statistic",
-                                    "premade_field": "what_it_measures",
-                                    "builder_field": "content"
-                                  }
-                                ],
                                 "letter_spacing": "normal"
                               },
                               {
@@ -480,13 +421,6 @@
                                   "plugin": "native-color-picker"
                                 },
                                 "line_height": "normal",
-                                "data_mapping": [
-                                  {
-                                    "builder_section": "case_studies_2_statistic",
-                                    "premade_field": "source_or_context",
-                                    "builder_field": "content"
-                                  }
-                                ],
                                 "letter_spacing": "normal"
                               }
                             ],
@@ -539,8 +473,7 @@
                           }
                         ],
                         "component": "shared_shadcn_container",
-                        "container_as": "div",
-                        "data_section_name": "case_studies_2_statistic"
+                        "container_as": "div"
                       }
                     ],
                     "styles": [
@@ -600,8 +533,7 @@
                   }
                 ],
                 "component": "shared_shadcn_container",
-                "container_as": "div",
-                "data_section_name": ""
+                "container_as": "div"
               }
             ],
             "styles": [
@@ -731,8 +663,7 @@
               }
             ],
             "component": "shared_shadcn_container",
-            "container_as": "li",
-            "data_section_name": "case_studies_2_study"
+            "container_as": "li"
           }
         ],
         "styles": [
@@ -791,8 +722,73 @@
       }
     ],
     "component": "shared_shadcn_container",
-    "container_as": "section",
-    "data_section_name": "case_studies_2_section"
+    "container_as": "section"
   },
-  "updatedAt": "2026-02-10T00:32:23.584Z"
-}
+  "setters": [
+    {
+      "sectionName": "case_studies_2_section",
+      "premadeField": "description",
+      "targetPath": "$.items.0.items.0.items.0.content"
+    },
+    {
+      "sectionName": "case_studies_2_section",
+      "premadeField": "name",
+      "targetPath": "$.items.0.items.0.items.1.content"
+    },
+    {
+      "sectionName": "case_studies_2_study",
+      "premadeField": "image",
+      "targetPath": "$.items.1.items.0.items.0.image_light"
+    },
+    {
+      "sectionName": "case_studies_2_study",
+      "premadeField": "quote",
+      "targetPath": "$.items.1.items.0.items.1.items.0.content"
+    },
+    {
+      "sectionName": "case_studies_2_study",
+      "premadeField": "name",
+      "targetPath": "$.items.1.items.0.items.1.items.1.items.0.items.0.content"
+    },
+    {
+      "sectionName": "case_studies_2_study",
+      "premadeField": "position",
+      "targetPath": "$.items.1.items.0.items.1.items.1.items.0.items.1.items.0.content"
+    },
+    {
+      "sectionName": "case_studies_2_study",
+      "premadeField": "company_logo",
+      "targetPath": "$.items.1.items.0.items.1.items.1.items.0.items.1.items.1.image_light"
+    },
+    {
+      "sectionName": "case_studies_2_statistic",
+      "premadeField": "headline_number",
+      "targetPath": "$.items.1.items.0.items.1.items.1.items.1.items.0.items.0.content"
+    },
+    {
+      "sectionName": "case_studies_2_statistic",
+      "premadeField": "what_it_measures",
+      "targetPath": "$.items.1.items.0.items.1.items.1.items.1.items.0.items.1.content"
+    },
+    {
+      "sectionName": "case_studies_2_statistic",
+      "premadeField": "source_or_context",
+      "targetPath": "$.items.1.items.0.items.1.items.1.items.1.items.0.items.2.content"
+    }
+  ],
+  "repeaters": [
+    {
+      "nodePath": "$.items.1.items.0",
+      "sectionName": "case_studies_2_study",
+      "mode": "self_clone"
+    },
+    {
+      "nodePath": "$.items.1.items.0.items.1.items.1.items.1",
+      "sectionName": "case_studies_2_statistic",
+      "mode": "wrapper_children"
+    }
+  ]
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_case_studies_2_section: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);

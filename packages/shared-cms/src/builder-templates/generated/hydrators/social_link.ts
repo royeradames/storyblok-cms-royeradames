@@ -1,7 +1,12 @@
-{
-  "slug": "element-builder/social-link",
-  "component": "social_link",
-  "template": {
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "social_link",
+  "skeleton": {
     "link": {
       "id": "",
       "url": "https://www.linkedin.com/feed/",
@@ -32,13 +37,6 @@
           "plugin": "native-color-picker"
         },
         "line_height": "normal",
-        "data_mapping": [
-          {
-            "builder_section": "social_link",
-            "premade_field": "icon_title",
-            "builder_field": "content"
-          }
-        ],
         "letter_spacing": "normal"
       },
       {
@@ -158,13 +156,6 @@
           "color": "#f40000",
           "plugin": "native-color-picker"
         },
-        "data_mapping": [
-          {
-            "builder_section": "social_link",
-            "premade_field": "icon_name",
-            "builder_field": "name"
-          }
-        ],
         "stroke_width": ""
       }
     ],
@@ -222,15 +213,27 @@
       }
     ],
     "variant": "link",
-    "component": "shared_shadcn_button",
-    "data_mapping": [
-      {
-        "builder_section": "social_link",
-        "premade_field": "link",
-        "builder_field": "link"
-      }
-    ],
-    "data_section_name": "social_link"
+    "component": "shared_shadcn_button"
   },
-  "updatedAt": "2026-02-16T19:49:54.210Z"
-}
+  "setters": [
+    {
+      "sectionName": "social_link",
+      "premadeField": "link",
+      "targetPath": "$.link"
+    },
+    {
+      "sectionName": "social_link",
+      "premadeField": "icon_title",
+      "targetPath": "$.label.0.content"
+    },
+    {
+      "sectionName": "social_link",
+      "premadeField": "icon_name",
+      "targetPath": "$.label.1.name"
+    }
+  ],
+  "repeaters": []
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_social_link: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);

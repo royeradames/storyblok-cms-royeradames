@@ -1,6 +1,5 @@
 import {
-  builderTemplateInjectableRegistry,
-  buildInjectableTemplateLookup,
+  getBuilderTemplateHydratorCount,
 } from "@repo/shared-cms/builder-templates";
 import { TemplateContextProvider } from "./TemplateContext";
 import { unstable_noStore } from "next/cache";
@@ -25,7 +24,7 @@ export async function TemplateProvider({
   children: React.ReactNode;
 }) {
   unstable_noStore();
-  const generatedTemplateCount = builderTemplateInjectableRegistry.templates.length;
+  const generatedTemplateCount = getBuilderTemplateHydratorCount();
   let templates: Record<string, unknown> = {
     [TEMPLATE_META_STATUS_KEY]: "ok" satisfies TemplateProviderStatus,
     [TEMPLATE_META_COUNT_KEY]: generatedTemplateCount,
@@ -33,10 +32,9 @@ export async function TemplateProvider({
   };
   if (generatedTemplateCount > 0) {
     templates = {
-      ...buildInjectableTemplateLookup(builderTemplateInjectableRegistry.templates),
       [TEMPLATE_META_STATUS_KEY]: "ok",
       [TEMPLATE_META_COUNT_KEY]: generatedTemplateCount,
-      [TEMPLATE_META_DETAIL_KEY]: `Loaded ${generatedTemplateCount} inject-ready template artifact${generatedTemplateCount === 1 ? "" : "s"} from generated registry.`,
+      [TEMPLATE_META_DETAIL_KEY]: `Loaded ${generatedTemplateCount} generated template hydrator${generatedTemplateCount === 1 ? "" : "s"}.`,
     };
   } else {
     templates = {

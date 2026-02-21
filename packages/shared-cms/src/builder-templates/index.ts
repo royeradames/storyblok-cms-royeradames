@@ -6,17 +6,36 @@ export {
 } from "./builder-template";
 export {
   buildTemplateLookup,
-  buildInjectableTemplateLookup,
   buildTemplateSnapshotBySlug,
 } from "./helpers";
-export { toInjectableTemplate } from "./injectable-template";
+export { compileBuilderTemplate } from "./compile-template";
+export {
+  getBuilderTemplateHydrator,
+  getBuilderTemplateHydratorCount,
+} from "./hydrators";
 export type {
-  BuilderInjectableTemplateJson,
-  BuilderInjectableTemplateRecord,
-  BuilderInjectableTemplateRegistry,
+  BuilderCompiledInjectionOperation,
+  BuilderCompiledInjectionLookup,
+  BuilderCompiledRepeater,
+  BuilderCompiledRepeaterLookup,
+  BuilderCompiledRepeaterMode,
+  BuilderCompiledTemplate,
+  BuilderCompiledTemplateJson,
+  BuilderCompiledTemplateRecord,
+  BuilderCompiledTemplateRegistry,
+  BuilderHydratorCodegenPlan,
+  BuilderHydratorInjectionLookup,
+  BuilderHydratorInjectionOperation,
+  BuilderHydrationSetterOperation,
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateNodePath,
   BuilderTemplateJson,
+  BuilderTemplateHydrator,
+  BuilderTemplateHydratorBlok,
+  BuilderTemplateHydratorRegistry,
+  BuilderTemplateHydratorResult,
   BuilderTemplateRecord,
   BuilderTemplateRegistry,
 } from "./types";
 export { builderTemplateRegistry } from "./generated/builder-template-registry";
-export { builderTemplateInjectableRegistry } from "./generated/builder-template-injectable-registry";
+export { builderTemplateHydratorRegistry } from "./generated/template-hydrator-registry";

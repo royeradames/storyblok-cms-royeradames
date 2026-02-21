@@ -1,6 +1,7 @@
 "use client";
 
 import { PremadeSection } from "@repo/shared-cms";
+import { getBuilderTemplateHydrator } from "@repo/shared-cms/builder-templates";
 import { useTemplates } from "./TemplateContext";
 
 type TemplateProviderStatus = "ok" | "artifact_missing";
@@ -24,18 +25,6 @@ function getTemplateProviderStatus(
 function getTemplateProviderDetail(templates: Record<string, unknown>): string {
   const detail = templates[TEMPLATE_META_DETAIL_KEY];
   return typeof detail === "string" ? detail : "";
-}
-
-function resolveTemplate(
-  templates: Record<string, unknown>,
-  rawComponentName: string,
-): unknown {
-  const normalizedComponentName = rawComponentName.replace(/^shared_/, "");
-  return (
-    templates[rawComponentName] ??
-    templates[normalizedComponentName] ??
-    templates[`${normalizedComponentName}_section`]
-  );
 }
 
 function renderTemplateFailureCard(
@@ -65,9 +54,8 @@ function renderTemplateFailureCard(
 /**
  * Client-side wrapper for premade sections.
  *
- * Reads the template from TemplateContext (provided by the server-side
- * TemplateProvider), then delegates to PremadeSection for structure
- * generation and rendering.
+ * Resolves a generated hydrator by component name and delegates rendering
+ * to PremadeSection.
  *
  * This is a client component so it can live in the Storyblok component map
  * without pulling server-only template sources into the client bundle.
@@ -77,11 +65,11 @@ export function PremadeSectionWrapper({ blok }: { blok: any }) {
 
   const rawComponentName = String(blok.component ?? "");
   const componentName = rawComponentName.replace(/^shared_/, "");
-  const template = resolveTemplate(templates, rawComponentName);
+  const hydrateTemplate = getBuilderTemplateHydrator(componentName);
   const providerStatus = getTemplateProviderStatus(templates);
   const providerDetail = getTemplateProviderDetail(templates);
 
-  if (!template) {
+  if (!hydrateTemplate) {
     const contextLabel =
       providerStatus === "ok"
         ? "missing template"
@@ -92,7 +80,7 @@ export function PremadeSectionWrapper({ blok }: { blok: any }) {
     return renderTemplateFailureCard(providerStatus, componentName, providerDetail);
   }
 
-  return <PremadeSection blok={blok} template={template} />;
+  return <PremadeSection blok={blok} />;
 }
 
 /**
@@ -105,11 +93,11 @@ export function SharedTemplateResolver({ blok }: { blok: any }) {
   const templates = useTemplates();
   const rawComponentName = String(blok.component ?? "");
   const componentName = rawComponentName.replace(/^shared_/, "");
-  const template = resolveTemplate(templates, rawComponentName);
+  const hydrateTemplate = getBuilderTemplateHydrator(componentName);
   const providerStatus = getTemplateProviderStatus(templates);
   const providerDetail = getTemplateProviderDetail(templates);
 
-  if (!template) {
+  if (!hydrateTemplate) {
     const contextLabel =
       providerStatus === "ok"
         ? "missing template"
@@ -120,5 +108,5 @@ export function SharedTemplateResolver({ blok }: { blok: any }) {
     return renderTemplateFailureCard(providerStatus, componentName, providerDetail);
   }
 
-  return <PremadeSection blok={blok} template={template} />;
+  return <PremadeSection blok={blok} />;
 }

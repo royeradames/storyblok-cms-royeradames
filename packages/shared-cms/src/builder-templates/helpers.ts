@@ -1,12 +1,9 @@
 import type {
-  BuilderInjectableTemplateJson,
-  BuilderInjectableTemplateRecord,
   BuilderTemplateJson,
   BuilderTemplateRecord,
 } from "./types";
 
 type TemplateLookup = Record<string, BuilderTemplateJson>;
-type InjectableTemplateLookup = Record<string, BuilderInjectableTemplateJson>;
 
 type TemplateRecordLookupItem<TTemplate> = {
   component: string;
@@ -43,12 +40,6 @@ function buildLookupByComponentName<TTemplate>(
 export function buildTemplateLookup(
   templateRecords: BuilderTemplateRecord[],
 ): TemplateLookup {
-  return buildLookupByComponentName(templateRecords);
-}
-
-export function buildInjectableTemplateLookup(
-  templateRecords: BuilderInjectableTemplateRecord[],
-): InjectableTemplateLookup {
   return buildLookupByComponentName(templateRecords);
 }
 

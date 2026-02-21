@@ -1,7 +1,12 @@
-{
-  "slug": "section-builder/blog7",
-  "component": "blog7_section",
-  "template": {
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "blog7_section",
+  "skeleton": {
     "name": "blog",
     "items": [
       {
@@ -14,14 +19,7 @@
                 "text": "Latest Updates",
                 "styles": [],
                 "variant": "secondary",
-                "component": "shared_shadcn_badge",
-                "data_mapping": [
-                  {
-                    "builder_section": "blog7_section",
-                    "premade_field": "badge_text",
-                    "builder_field": "text"
-                  }
-                ]
+                "component": "shared_shadcn_badge"
               },
               {
                 "size": "4xl",
@@ -59,13 +57,6 @@
                   "plugin": "native-color-picker"
                 },
                 "line_height": "",
-                "data_mapping": [
-                  {
-                    "builder_section": "blog7_section",
-                    "premade_field": "title",
-                    "builder_field": "content"
-                  }
-                ],
                 "letter_spacing": ""
               },
               {
@@ -86,13 +77,6 @@
                   "plugin": "native-color-picker"
                 },
                 "line_height": "normal",
-                "data_mapping": [
-                  {
-                    "builder_section": "blog7_section",
-                    "premade_field": "description",
-                    "builder_field": "content"
-                  }
-                ],
                 "letter_spacing": "wide"
               },
               {
@@ -123,13 +107,6 @@
                       "plugin": "native-color-picker"
                     },
                     "line_height": "",
-                    "data_mapping": [
-                      {
-                        "builder_section": "blog7_section",
-                        "premade_field": "action_text",
-                        "builder_field": "content"
-                      }
-                    ],
                     "letter_spacing": ""
                   },
                   {
@@ -239,14 +216,7 @@
                       "meta_data": {},
                       "is_external_url": false
                     },
-                    "aspect_ratio": "video",
-                    "data_mapping": [
-                      {
-                        "builder_section": "blog7_section_articles",
-                        "premade_field": "image",
-                        "builder_field": "image_light"
-                      }
-                    ]
+                    "aspect_ratio": "video"
                   }
                 ],
                 "title": [
@@ -296,13 +266,6 @@
                           "plugin": "native-color-picker"
                         },
                         "line_height": "",
-                        "data_mapping": [
-                          {
-                            "builder_section": "blog7_section_articles",
-                            "premade_field": "title",
-                            "builder_field": "content"
-                          }
-                        ],
                         "letter_spacing": ""
                       }
                     ],
@@ -340,13 +303,6 @@
                           "plugin": "native-color-picker"
                         },
                         "line_height": "",
-                        "data_mapping": [
-                          {
-                            "builder_section": "blog7_section_articles",
-                            "premade_field": "action_label",
-                            "builder_field": "content"
-                          }
-                        ],
                         "letter_spacing": ""
                       },
                       {
@@ -369,14 +325,7 @@
                     ],
                     "styles": [],
                     "variant": "link",
-                    "component": "shared_shadcn_button",
-                    "data_mapping": [
-                      {
-                        "builder_section": "blog7_section_articles",
-                        "premade_field": "link",
-                        "builder_field": "link"
-                      }
-                    ]
+                    "component": "shared_shadcn_button"
                   }
                 ],
                 "header": [
@@ -428,13 +377,6 @@
                       "plugin": "native-color-picker"
                     },
                     "line_height": "",
-                    "data_mapping": [
-                      {
-                        "builder_section": "blog7_section_articles",
-                        "premade_field": "content",
-                        "builder_field": "content"
-                      }
-                    ],
                     "letter_spacing": ""
                   }
                 ],
@@ -444,8 +386,7 @@
             ],
             "styles": [],
             "component": "shared_shadcn_container",
-            "container_as": "li",
-            "data_section_name": ""
+            "container_as": "li"
           }
         ],
         "styles": [
@@ -489,8 +430,7 @@
           }
         ],
         "component": "shared_shadcn_container",
-        "container_as": "ul",
-        "data_section_name": "blog7_section_articles"
+        "container_as": "ul"
       }
     ],
     "styles": [
@@ -519,8 +459,63 @@
       }
     ],
     "component": "shared_shadcn_container",
-    "container_as": "section",
-    "data_section_name": "blog7_section"
+    "container_as": "section"
   },
-  "updatedAt": "2026-02-08T17:05:56.151Z"
-}
+  "setters": [
+    {
+      "sectionName": "blog7_section",
+      "premadeField": "badge_text",
+      "targetPath": "$.items.0.items.0.items.0.text"
+    },
+    {
+      "sectionName": "blog7_section",
+      "premadeField": "title",
+      "targetPath": "$.items.0.items.0.items.1.content"
+    },
+    {
+      "sectionName": "blog7_section",
+      "premadeField": "description",
+      "targetPath": "$.items.0.items.0.items.2.content"
+    },
+    {
+      "sectionName": "blog7_section",
+      "premadeField": "action_text",
+      "targetPath": "$.items.0.items.0.items.3.label.0.content"
+    },
+    {
+      "sectionName": "blog7_section_articles",
+      "premadeField": "content",
+      "targetPath": "$.items.1.items.0.items.0.content.0.content"
+    },
+    {
+      "sectionName": "blog7_section_articles",
+      "premadeField": "link",
+      "targetPath": "$.items.1.items.0.items.0.footer.0.link"
+    },
+    {
+      "sectionName": "blog7_section_articles",
+      "premadeField": "action_label",
+      "targetPath": "$.items.1.items.0.items.0.footer.0.label.0.content"
+    },
+    {
+      "sectionName": "blog7_section_articles",
+      "premadeField": "image",
+      "targetPath": "$.items.1.items.0.items.0.image.0.image_light"
+    },
+    {
+      "sectionName": "blog7_section_articles",
+      "premadeField": "title",
+      "targetPath": "$.items.1.items.0.items.0.title.0.label.0.content"
+    }
+  ],
+  "repeaters": [
+    {
+      "nodePath": "$.items.1",
+      "sectionName": "blog7_section_articles",
+      "mode": "self_clone"
+    }
+  ]
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_blog7_section: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);

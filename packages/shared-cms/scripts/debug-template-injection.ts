@@ -2,7 +2,7 @@
 
 import * as path from "node:path";
 import { readFile } from "node:fs/promises";
-import { buildStructureFromTemplate } from "../src/structure-generator/buildStructureFromTemplate";
+import { getBuilderTemplateHydrator } from "../src/builder-templates/hydrators";
 
 type DataMapping = {
   builder_section: string;
@@ -33,9 +33,11 @@ function collectDataMappings(node: unknown, result: DataMapping[]): void {
   if (Array.isArray(mappings)) {
     for (const mapping of mappings) {
       if (!isObject(mapping)) continue;
+
       const builderSection = mapping.builder_section;
       const premadeField = mapping.premade_field;
       const builderField = mapping.builder_field;
+
       if (
         typeof builderSection !== "string" ||
         typeof premadeField !== "string" ||
@@ -43,6 +45,7 @@ function collectDataMappings(node: unknown, result: DataMapping[]): void {
       ) {
         continue;
       }
+
       result.push({
         builder_section: builderSection,
         premade_field: premadeField,
@@ -104,13 +107,15 @@ function createSampleValue(fieldName: string): string {
 }
 
 function buildSampleBlok(
-  template: Record<string, unknown>,
+  artifact: TemplateArtifact,
   componentName: string,
 ): Record<string, unknown> {
   const rootSectionName =
-    typeof template.data_section_name === "string" ? template.data_section_name : "";
+    typeof artifact.template.data_section_name === "string"
+      ? artifact.template.data_section_name
+      : "";
   const mappings: DataMapping[] = [];
-  collectDataMappings(template, mappings);
+  collectDataMappings(artifact.template, mappings);
 
   const fieldsBySection = new Map<string, Set<string>>();
   for (const mapping of mappings) {
@@ -155,19 +160,26 @@ async function main() {
     "src",
     "builder-templates",
     "generated",
-    "builder-templates-injectable",
+    "builder-templates",
     `${component}.json`,
   );
 
   const artifactRaw = await readFile(artifactPath, "utf8");
   const artifact = JSON.parse(artifactRaw) as TemplateArtifact;
-  const sampleBlok = buildSampleBlok(artifact.template, artifact.component);
+  const sampleBlok = buildSampleBlok(artifact, artifact.component);
   const debugBlok = {
     ...sampleBlok,
     ...dataOverride,
   };
 
-  const populatedStructure = buildStructureFromTemplate(artifact.template, debugBlok);
+  const hydrateTemplate = getBuilderTemplateHydrator(artifact.component);
+  if (!hydrateTemplate) {
+    throw new Error(
+      `No generated hydrator found for component "${artifact.component}". Regenerate templates.`,
+    );
+  }
+
+  const populatedStructure = hydrateTemplate(debugBlok);
 
   console.log(`Template component: ${artifact.component}`);
   console.log(`Template slug: ${artifact.slug}`);

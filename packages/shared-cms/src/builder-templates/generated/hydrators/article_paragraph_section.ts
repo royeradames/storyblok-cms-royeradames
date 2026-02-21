@@ -1,7 +1,12 @@
-{
-  "slug": "section-builder/article-paragraph",
-  "component": "article_paragraph_section",
-  "template": {
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "",
+  "skeleton": {
     "name": "",
     "items": [
       {
@@ -36,8 +41,11 @@
           "type": "paragraph"
         }
       ]
-    },
-    "data_section_name": ""
+    }
   },
-  "updatedAt": "2026-02-10T00:18:21.033Z"
-}
+  "setters": [],
+  "repeaters": []
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_article_paragraph_section: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);

@@ -4,9 +4,9 @@ Builder templates are stored as repo-managed generated artifacts.
 
 ## Source of truth
 
-- Runtime lookup uses `packages/shared-cms/src/builder-templates/generated/builder-template-registry.ts`.
+- Runtime hydrator registry uses `packages/shared-cms/src/builder-templates/generated/template-hydrator-registry.ts`.
 - Per-template JSON snapshots are stored in `packages/shared-cms/src/builder-templates/generated/builder-templates/`.
-- Inject-ready JSON snapshots are stored in `packages/shared-cms/src/builder-templates/generated/builder-templates-injectable/`.
+- Per-template generated hydrator functions are stored in `packages/shared-cms/src/builder-templates/generated/hydrators/`.
 - Postgres `section_templates` is deprecated for template runtime storage.
 
 ## Workflow
@@ -19,8 +19,9 @@ Builder templates are stored as repo-managed generated artifacts.
 
 ## Runtime behavior
 
-- `TemplateProvider` loads inject-ready templates from generated artifacts.
-- `PremadeSection` still uses `buildStructureFromTemplate(...)` to assemble renderable blocks.
+- `TemplateProvider` surfaces generated hydrator metadata for UI status.
+- `PremadeSection` dispatches to generated per-template hydrator functions.
+- Generated hydrators are self-contained TS logic (no shared compiled-template interpreter import).
 - If artifacts are missing/outdated, the UI shows guidance to regenerate and commit templates.
 
 ## Webhook behavior

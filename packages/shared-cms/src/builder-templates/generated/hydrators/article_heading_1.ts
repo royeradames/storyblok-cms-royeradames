@@ -1,8 +1,13 @@
-{
-  "slug": "element-builder/article-heading-2",
-  "component": "article_heading_2",
-  "template": {
-    "size": "2xl",
+import { applyPrecompiledHydrationPlan } from "../../../structure-generator/applyPrecompiledHydrationPlan";
+import type {
+  BuilderPrecompiledHydrationPlan,
+  BuilderTemplateHydrator,
+} from "../../types";
+
+const hydrationPlan = {
+  "rootSectionName": "article_heading_1",
+  "skeleton": {
+    "size": "4xl",
     "align": "left",
     "color": "default",
     "styles": [
@@ -42,7 +47,7 @@
     ],
     "weight": "bold",
     "content": "The King",
-    "element": "h2",
+    "element": "h1",
     "sr_only": false,
     "component": "shared_shadcn_text",
     "color_dark": {
@@ -55,15 +60,17 @@
       "plugin": "native-color-picker"
     },
     "line_height": "normal",
-    "data_mapping": [
-      {
-        "builder_section": "article_heading_2",
-        "premade_field": "title",
-        "builder_field": "content"
-      }
-    ],
-    "letter_spacing": "normal",
-    "data_section_name": "article_heading_2"
+    "letter_spacing": "normal"
   },
-  "updatedAt": "2026-02-10T16:49:51.227Z"
-}
+  "setters": [
+    {
+      "sectionName": "article_heading_1",
+      "premadeField": "title",
+      "targetPath": "$.content"
+    }
+  ],
+  "repeaters": []
+} satisfies BuilderPrecompiledHydrationPlan;
+
+export const hydrate_article_heading_1: BuilderTemplateHydrator = (blok) =>
+  applyPrecompiledHydrationPlan(hydrationPlan, blok);
