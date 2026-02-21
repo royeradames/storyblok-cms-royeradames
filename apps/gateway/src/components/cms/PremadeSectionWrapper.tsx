@@ -8,6 +8,9 @@ type TemplateProviderStatus = "ok" | "artifact_missing";
 
 const TEMPLATE_META_STATUS_KEY = "__template_meta_status__";
 const TEMPLATE_META_DETAIL_KEY = "__template_meta_detail__";
+const NON_TEMPLATE_SHARED_COMPONENTS = new Set([
+  "rich_text_node_mappings",
+]);
 
 function getTemplateProviderStatus(
   templates: Record<string, unknown>,
@@ -93,6 +96,9 @@ export function SharedTemplateResolver({ blok }: { blok: any }) {
   const templates = useTemplates();
   const rawComponentName = String(blok.component ?? "");
   const componentName = rawComponentName.replace(/^shared_/, "");
+  if (NON_TEMPLATE_SHARED_COMPONENTS.has(componentName)) {
+    return null;
+  }
   const hydrateTemplate = getBuilderTemplateHydrator(componentName);
   const providerStatus = getTemplateProviderStatus(templates);
   const providerDetail = getTemplateProviderDetail(templates);

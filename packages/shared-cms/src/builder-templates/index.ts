@@ -6,7 +6,6 @@ export {
 } from "./builder-template";
 export {
   buildTemplateLookup,
-  buildTemplateSnapshotBySlug,
 } from "./helpers";
 export { compileBuilderTemplate } from "./compile-template";
 export {
@@ -39,7 +38,5 @@ export type {
   BuilderTemplateHydratorRegistry,
   BuilderTemplateHydratorResult,
   BuilderTemplateRecord,
-  BuilderTemplateRegistry,
 } from "./types";
-export { builderTemplateRegistry } from "./generated/builder-template-registry";
 export { builderTemplateHydratorRegistry } from "./generated/template-hydrator-registry";

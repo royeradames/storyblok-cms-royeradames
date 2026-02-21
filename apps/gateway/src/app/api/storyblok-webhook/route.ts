@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchStory } from "@/lib/storyblok";
 import {
-  builderTemplateRegistry,
-  buildTemplateSnapshotBySlug,
   normalizeBuilderTemplate,
   resolveTemplateComponentName,
   derivePrefixFromComponentName,
@@ -33,20 +31,15 @@ const BUILDER_SLUG_PREFIXES = [
   "element-builder/",
   "form-builder/",
 ];
-const generatedTemplateSnapshotBySlug = buildTemplateSnapshotBySlug(
-  builderTemplateRegistry.templates,
-);
 
 /**
  * Storyblok webhook handler.
  *
  * Receives `story.published` events for section-builder stories and:
- * 1. Extracts the template and compares with generated template snapshot
- * 2. Derives premade blok schemas from the new template
- * 3. Diffs against previous schemas to detect field renames/deletions/additions
- * 4. Pushes changed component definitions to Storyblok (create/update/delete)
- * 5. Migrates existing story data for renames/deletions
- * 6. Reports that template artifact regeneration is required for repo sync
+ * 1. Extracts template content from the published builder story
+ * 2. Derives premade blok schemas from the template
+ * 3. Pushes derived component definitions and safety-syncs Storyblok components
+ * 4. Reports that template artifact regeneration is required for repo sync
  *
  * Progress is tracked in the webhook_jobs table and displayed by BuildStatusBanner.
  */
@@ -110,21 +103,6 @@ export async function POST(request: NextRequest) {
     const componentName = resolveTemplateComponentName(template, slugPrefix);
     const derivationPrefix = derivePrefixFromComponentName(componentName);
 
-    await updateBuild(jobId, "Comparing with generated template snapshot...");
-
-    const existingSnapshot = generatedTemplateSnapshotBySlug[slug];
-    const existingTemplate = existingSnapshot?.template;
-
-    // Skip if template unchanged
-    if (
-      existingTemplate &&
-      JSON.stringify(existingTemplate) === JSON.stringify(template)
-    ) {
-      console.log(`[webhook] No changes for ${slug}, skipping`);
-      await completeBuild(jobId, "No changes detected vs generated snapshot");
-      return NextResponse.json({ ok: true, unchanged: true, templateSyncRequired: false });
-    }
-
     // ── Derive and diff premade blok schemas ──
 
     const spaceId = process.env.STORYBLOK_SPACE_ID;
@@ -135,24 +113,8 @@ export async function POST(request: NextRequest) {
 
       const newSchemas = derivePremadeBlokSchemas(template, derivationPrefix);
 
-      let oldSchemas: typeof newSchemas = [];
-      let oldRootComponentName: string | null = existingSnapshot?.component ?? null;
-      if (existingTemplate) {
-        try {
-          const existingComponentName =
-            existingSnapshot?.component ??
-            resolveTemplateComponentName(existingTemplate as any, slugPrefix);
-          oldRootComponentName = existingComponentName;
-          const oldDerivationPrefix =
-            derivePrefixFromComponentName(existingComponentName);
-          oldSchemas = derivePremadeBlokSchemas(
-            existingTemplate as any,
-            oldDerivationPrefix,
-          );
-        } catch {
-          // Could not derive old schemas -- treat as fresh
-        }
-      }
+      const oldSchemas: typeof newSchemas = [];
+      const oldRootComponentName: string | null = null;
 
       const diff = diffSchemas(oldSchemas, newSchemas);
 
@@ -228,10 +190,10 @@ export async function POST(request: NextRequest) {
 
     await updateBuild(
       jobId,
-      "Template changed. Run storyblok:seed:templates in packages/shared-cms and commit generated artifacts.",
+      "Builder publish received. Run storyblok:seed:templates in packages/shared-cms and commit generated artifacts.",
     );
 
-    console.log(`[webhook] Template changed: ${slug} → ${componentName}`);
+    console.log(`[webhook] Builder publish processed: ${slug} → ${componentName}`);
 
     await completeBuild(
       jobId,

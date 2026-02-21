@@ -7,6 +7,7 @@ Builder templates are stored as repo-managed generated artifacts.
 - Runtime hydrator registry uses `packages/shared-cms/src/builder-templates/generated/template-hydrator-registry.ts`.
 - Per-template JSON snapshots are stored in `packages/shared-cms/src/builder-templates/generated/builder-templates/`.
 - Per-template generated hydrator functions are stored in `packages/shared-cms/src/builder-templates/generated/hydrators/`.
+- There is no monolithic `builder-template-registry.ts`; template artifacts are sharded by component.
 - Postgres `section_templates` is deprecated for template runtime storage.
 
 ## Workflow
@@ -46,7 +47,7 @@ Builder templates are stored as repo-managed generated artifacts.
 
 `/api/storyblok-webhook` still handles schema derivation and Storyblok component updates, but no longer writes templates to DB.
 
-When a published story changes template content, webhook responses indicate:
+For builder story publishes, webhook responses always indicate:
 
 - template sync is required
 - next step is to run `storyblok:seed:templates` in `packages/shared-cms`, commit artifacts, and deploy

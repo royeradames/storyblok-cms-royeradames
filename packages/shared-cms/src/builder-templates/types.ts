@@ -68,12 +68,6 @@ export type BuilderCompiledTemplateRecord = {
   updatedAt?: string;
 };
 
-export type BuilderTemplateRegistry = {
-  source: "storyblok";
-  generatedAt: string;
-  templates: BuilderTemplateRecord[];
-};
-
 export type BuilderCompiledTemplateRegistry = {
   source: "storyblok";
   generatedAt: string;

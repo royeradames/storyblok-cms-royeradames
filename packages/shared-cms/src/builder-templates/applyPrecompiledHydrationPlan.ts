@@ -52,6 +52,8 @@ export function applyPrecompiledHydrationPlan(
     repeaterIndex: null,
   });
 
+  // Compiled skeleton strips _uid, so restore deterministic ids for nested component bloks.
+  ensureDeterministicNestedUids(hydratedRoot, [], blok._uid);
   hydratedRoot.sectionBlok = blok;
   hydratedRoot._uid = blok._uid;
   return hydratedRoot;
@@ -346,4 +348,48 @@ function setAtPath(
 
 function isRecord(value: unknown): value is HydrationRecord {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function ensureDeterministicNestedUids(
+  node: unknown,
+  path: PathSegment[],
+  rootUid: unknown,
+): void {
+  if (Array.isArray(node)) {
+    node.forEach((entry, index) => {
+      ensureDeterministicNestedUids(entry, [...path, index], rootUid);
+    });
+    return;
+  }
+
+  if (!isRecord(node)) return;
+
+  if (typeof node.component === "string") {
+    const currentUid = node._uid;
+    if (typeof currentUid !== "string" || currentUid.length === 0) {
+      node._uid = buildDeterministicUid(path, node.component, rootUid);
+    }
+  }
+
+  Object.entries(node).forEach(([key, value]) => {
+    if (key === "sectionBlok") return;
+    ensureDeterministicNestedUids(value, [...path, key], rootUid);
+  });
+}
+
+function buildDeterministicUid(
+  path: PathSegment[],
+  componentName: string,
+  rootUid: unknown,
+): string {
+  const normalizedRootUid =
+    typeof rootUid === "string" && rootUid.length > 0 ? rootUid : "root";
+  const normalizedComponent = componentName.replace(/[^a-zA-Z0-9_]+/g, "_");
+  const normalizedPath = path
+    .map((segment) =>
+      String(segment).replace(/[^a-zA-Z0-9_]+/g, "_"),
+    )
+    .join("_");
+  const pathToken = normalizedPath.length > 0 ? normalizedPath : "root";
+  return `hydrated_${normalizedRootUid}_${normalizedComponent}_${pathToken}`;
 }

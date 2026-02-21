@@ -42,15 +42,3 @@ export function buildTemplateLookup(
 ): TemplateLookup {
   return buildLookupByComponentName(templateRecords);
 }
-
-export function buildTemplateSnapshotBySlug(
-  templateRecords: BuilderTemplateRecord[],
-): Record<string, BuilderTemplateRecord> {
-  return templateRecords.reduce<Record<string, BuilderTemplateRecord>>(
-    (lookupBySlug, record) => {
-      lookupBySlug[record.slug] = record;
-      return lookupBySlug;
-    },
-    {},
-  );
-}
