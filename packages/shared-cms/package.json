@@ -18,6 +18,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
+    "template:debug-injection": "bun scripts/debug-template-injection.ts",
     "storyblok:definitions:check": "bun scripts/check-storyblok-definition-aggregation.ts",
     "storyblok:seed:templates": "bun scripts/storyblok/seed-templates.ts",
     "styles:safelist:generate": "STYLES_SAFELIST_PROFILE=dev bun scripts/generate-styles-safelist.ts",

@@ -1,0 +1,26 @@
+{
+  "slug": "element-builder/article-list-item",
+  "component": "article_list_item",
+  "template": {
+    "size": "base",
+    "align": "left",
+    "color": "default",
+    "weight": "normal",
+    "content": "List item content",
+    "element": "p",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "builder_section": "article_list_item",
+        "premade_field": "content",
+        "builder_field": "content"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_list_item"
+  },
+  "updatedAt": "2026-02-13T03:01:09.648Z"
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "element-builder/article-heading-6",
+  "component": "article_heading_6",
+  "template": {
+    "size": "base",
+    "align": "left",
+    "color": "muted",
+    "weight": "medium",
+    "content": "Subheading level 6",
+    "element": "h6",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "builder_section": "article_heading_6",
+        "premade_field": "title",
+        "builder_field": "content"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_heading_6"
+  },
+  "updatedAt": "2026-02-13T03:01:12.989Z"
+}

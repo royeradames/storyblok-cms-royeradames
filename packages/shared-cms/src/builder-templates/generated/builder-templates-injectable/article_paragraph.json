@@ -1,0 +1,26 @@
+{
+  "slug": "element-builder/article-paragraph",
+  "component": "article_paragraph",
+  "template": {
+    "size": "base",
+    "align": "left",
+    "color": "default",
+    "weight": "normal",
+    "content": "Paragraph text",
+    "element": "p",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "builder_section": "article_paragraph",
+        "premade_field": "content",
+        "builder_field": "content"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_paragraph"
+  },
+  "updatedAt": "2026-02-13T03:01:12.075Z"
+}

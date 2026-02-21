@@ -1,0 +1,26 @@
+{
+  "slug": "element-builder/article-table",
+  "component": "article_table",
+  "template": {
+    "size": "sm",
+    "align": "left",
+    "color": "muted",
+    "weight": "normal",
+    "content": "Table text",
+    "element": "p",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "font_style": "normal",
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "builder_section": "article_table",
+        "premade_field": "content",
+        "builder_field": "content"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_table"
+  },
+  "updatedAt": "2026-02-13T03:01:08.908Z"
+}

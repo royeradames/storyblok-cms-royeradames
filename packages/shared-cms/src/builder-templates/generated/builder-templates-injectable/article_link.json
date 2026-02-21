@@ -1,0 +1,24 @@
+{
+  "slug": "element-builder/article-link",
+  "component": "article_link",
+  "template": {
+    "size": "default",
+    "text": "Read more",
+    "variant": "link",
+    "component": "shared_shadcn_button",
+    "data_mapping": [
+      {
+        "builder_section": "article_link",
+        "premade_field": "content",
+        "builder_field": "text"
+      },
+      {
+        "builder_section": "article_link",
+        "premade_field": "link",
+        "builder_field": "link"
+      }
+    ],
+    "data_section_name": "article_link"
+  },
+  "updatedAt": "2026-02-13T03:22:54.228Z"
+}

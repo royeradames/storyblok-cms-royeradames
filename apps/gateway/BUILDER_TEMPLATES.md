@@ -6,6 +6,7 @@ Builder templates are stored as repo-managed generated artifacts.
 
 - Runtime lookup uses `packages/shared-cms/src/builder-templates/generated/builder-template-registry.ts`.
 - Per-template JSON snapshots are stored in `packages/shared-cms/src/builder-templates/generated/builder-templates/`.
+- Inject-ready JSON snapshots are stored in `packages/shared-cms/src/builder-templates/generated/builder-templates-injectable/`.
 - Postgres `section_templates` is deprecated for template runtime storage.
 
 ## Workflow
@@ -18,7 +19,7 @@ Builder templates are stored as repo-managed generated artifacts.
 
 ## Runtime behavior
 
-- `TemplateProvider` loads templates from generated artifacts only.
+- `TemplateProvider` loads inject-ready templates from generated artifacts.
 - `PremadeSection` still uses `buildStructureFromTemplate(...)` to assemble renderable blocks.
 - If artifacts are missing/outdated, the UI shows guidance to regenerate and commit templates.
 

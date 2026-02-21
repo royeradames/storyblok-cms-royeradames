@@ -1,0 +1,69 @@
+{
+  "slug": "element-builder/article-heading-1",
+  "component": "article_heading_1",
+  "template": {
+    "size": "4xl",
+    "align": "left",
+    "color": "default",
+    "styles": [
+      {
+        "wrap": false,
+        "align": "",
+        "group": false,
+        "width": "",
+        "border": [],
+        "height": "",
+        "margin": [],
+        "shadow": "",
+        "display": "",
+        "justify": "",
+        "padding": [],
+        "variant": "none",
+        "component": "shared_styles_options",
+        "direction": "",
+        "max_width": "",
+        "min_width": "",
+        "text_size": "",
+        "breakpoint": "base",
+        "max_height": "",
+        "min_height": "",
+        "border_style": "",
+        "custom_max_width": "",
+        "border_color_dark": "",
+        "border_color_dark_custom": {
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        },
+        "border_color_light_custom": {
+          "color": "#f40000",
+          "plugin": "native-color-picker"
+        }
+      }
+    ],
+    "weight": "bold",
+    "content": "The King",
+    "element": "h1",
+    "sr_only": false,
+    "component": "shared_shadcn_text",
+    "color_dark": {
+      "color": "#f40000",
+      "plugin": "native-color-picker"
+    },
+    "font_style": "",
+    "color_light": {
+      "color": "#f40000",
+      "plugin": "native-color-picker"
+    },
+    "line_height": "normal",
+    "data_mapping": [
+      {
+        "builder_section": "article_heading_1",
+        "premade_field": "title",
+        "builder_field": "content"
+      }
+    ],
+    "letter_spacing": "normal",
+    "data_section_name": "article_heading_1"
+  },
+  "updatedAt": "2026-02-10T16:47:16.654Z"
+}
