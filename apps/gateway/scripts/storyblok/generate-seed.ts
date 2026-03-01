@@ -57,7 +57,8 @@ type ComponentDef = {
 
 function normalizeWhitelistComponentName(name: string): string {
   if (name === "styles_breakpoint_options") return "styles_options";
-  if (name === "shared_styles_breakpoint_options") return "shared_styles_options";
+  if (name === "shared_styles_breakpoint_options")
+    return "shared_styles_options";
   return name;
 }
 
@@ -69,7 +70,9 @@ function transformToStoryblokFormat(
   const prefixedNames: string[] = [];
 
   const components = definitions.map((component) => {
-    const prefixedName = namePrefix ? `${namePrefix}${component.name}` : component.name;
+    const prefixedName = namePrefix
+      ? `${namePrefix}${component.name}`
+      : component.name;
     prefixedNames.push(prefixedName);
 
     const schema: Record<string, unknown> = {};
@@ -98,7 +101,8 @@ function transformToStoryblokFormat(
         field.restrict_components = true;
         if (fieldDef.component_whitelist?.length) {
           field.component_whitelist = fieldDef.component_whitelist.map(
-            (name) => `${whitelistPrefix}${normalizeWhitelistComponentName(name)}`,
+            (name) =>
+              `${whitelistPrefix}${normalizeWhitelistComponentName(name)}`,
           );
         }
       }
@@ -110,8 +114,10 @@ function transformToStoryblokFormat(
         field.filetypes = fieldDef.filetypes;
       }
       if (fieldDef.type === "number") {
-        if (fieldDef.min_value !== undefined) field.min_value = fieldDef.min_value;
-        if (fieldDef.max_value !== undefined) field.max_value = fieldDef.max_value;
+        if (fieldDef.min_value !== undefined)
+          field.min_value = fieldDef.min_value;
+        if (fieldDef.max_value !== undefined)
+          field.max_value = fieldDef.max_value;
       }
 
       schema[fieldName] = field;
@@ -123,7 +129,9 @@ function transformToStoryblokFormat(
       is_root: component.is_root ?? false,
       is_nestable: component.is_nestable ?? true,
       schema,
-      ...(component.preview_field && { preview_field: component.preview_field }),
+      ...(component.preview_field && {
+        preview_field: component.preview_field,
+      }),
       ...(component.preview_tmpl && { preview_tmpl: component.preview_tmpl }),
       ...(component.color && { color: component.color }),
       ...(component.icon && { icon: component.icon }),
@@ -138,8 +146,11 @@ function main() {
 
   // 1. Transform shared definitions with "shared_" prefix
   const sharedDefs = sharedDefinitions as unknown as ComponentDef[];
-  const { components: sharedComponents } =
-    transformToStoryblokFormat(sharedDefs, SHARED_PREFIX, SHARED_PREFIX);
+  const { components: sharedComponents } = transformToStoryblokFormat(
+    sharedDefs,
+    SHARED_PREFIX,
+    SHARED_PREFIX,
+  );
 
   // 2. Gateway definitions (page body whitelist is managed dynamically by the webhook)
   const { components: appComponents } = transformToStoryblokFormat(

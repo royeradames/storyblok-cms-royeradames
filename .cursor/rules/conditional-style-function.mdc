@@ -1,0 +1,69 @@
+---
+description: Use style object functions with switch or object variants
+alwaysApply: true
+---
+
+# Conditional Style Function Pattern
+
+When styles are conditional, use a style function that:
+1) selects variant styles with a `switch` or an object map, and
+2) returns one grouped style object consumed once in the component.
+
+- Put conditional branching inside the style function, not inline in JSX.
+- Use a `switch` or variant object map for variants/states (for example theme, intent, size, status).
+- Build and return a single object that groups related classes with simple keys (for example `container`, `title`, `description`, `cta`).
+- Hoist static `base` and `styles` objects to module scope so they are created once.
+- Keep the style function lightweight: select an existing variant and apply fallback handling only.
+- In the component, call the style function one time (for example `const styles = getStyles(...)`) and reference its keys in JSX.
+- Keep all variant-related styles together in that object so updates happen in one place.
+- For medium/large components, extract style constants and selector into a colocated style file (for example `ComponentNameStyles.ts`) and import the selector.
+
+## Example (Object Map)
+
+```tsx
+type Variant = 'default' | 'highlight' | 'muted';
+type StyleGroup = {
+  container: string;
+  title: string;
+  description: string;
+  cta: string;
+};
+
+const base: StyleGroup = {
+  container: 'rounded-md border p-4',
+  title: 'text-sm font-semibold',
+  description: 'text-sm',
+  cta: 'text-sm underline',
+};
+
+const styles: Record<Variant, StyleGroup> = {
+  default: {
+    container: `${base.container} border-gray-300 bg-white`,
+    title: `${base.title} text-gray-900`,
+    description: `${base.description} text-gray-700`,
+    cta: `${base.cta} text-gray-900`,
+  },
+  highlight: {
+    container: `${base.container} border-blue-500 bg-blue-50`,
+    title: `${base.title} text-blue-900`,
+    description: `${base.description} text-blue-800`,
+    cta: `${base.cta} text-blue-700`,
+  },
+  muted: {
+    container: `${base.container} border-gray-200 bg-gray-50`,
+    title: `${base.title} text-gray-700`,
+    description: `${base.description} text-gray-600`,
+    cta: `${base.cta} text-gray-600`,
+  },
+};
+
+const getStyles = (variant: Variant): StyleGroup => {
+  return styles[variant] ?? styles.default;
+};
+```
+
+## Notes
+
+- Prefer object maps when variants are mostly static and easy to enumerate.
+- Prefer `switch` when variant logic needs branching, composition, or computed conditions.
+- Prefer colocated style files when style logic adds noise to component rendering logic.

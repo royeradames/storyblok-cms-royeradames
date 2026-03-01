@@ -101,10 +101,7 @@ function pluralizeSuffix(word: string): string {
  * Given a child section component name and a prefix, derive the array field name.
  * "case_studies_2_study" with prefix "case_studies_2" → "studies"
  */
-function deriveArrayFieldName(
-  childComponent: string,
-  prefix: string,
-): string {
+function deriveArrayFieldName(childComponent: string, prefix: string): string {
   const suffix = childComponent.startsWith(prefix + "_")
     ? childComponent.slice(prefix.length + 1)
     : childComponent;
@@ -147,14 +144,16 @@ function copyFieldFromHost(
   if (source.description) copied.description = source.description;
   if (source.filetypes) copied.filetypes = source.filetypes;
   if (source.options) copied.options = source.options;
-  if (source.default_value !== undefined) copied.default_value = source.default_value;
+  if (source.default_value !== undefined)
+    copied.default_value = source.default_value;
   if (source.required !== undefined) copied.required = source.required;
   if (source.max_choices !== undefined) copied.max_choices = source.max_choices;
   if (source.allow_target_blank !== undefined)
     copied.allow_target_blank = source.allow_target_blank;
   if (source.restrict_components !== undefined)
     copied.restrict_components = source.restrict_components;
-  if (source.component_whitelist) copied.component_whitelist = source.component_whitelist;
+  if (source.component_whitelist)
+    copied.component_whitelist = source.component_whitelist;
   if (source.min_value !== undefined) copied.min_value = source.min_value;
   if (source.max_value !== undefined) copied.max_value = source.max_value;
   if (source.field_type) copied.field_type = source.field_type;
@@ -238,7 +237,11 @@ function collectSections(
       if (premadeField && builderField) {
         const section = sections.get(builderSection);
         if (section && !section.fields.has(premadeField)) {
-          const copied = copyFieldFromHost(hostComponent, builderField, premadeField);
+          const copied = copyFieldFromHost(
+            hostComponent,
+            builderField,
+            premadeField,
+          );
           const fieldInfo: FieldInfo = copied
             ? { premadeField, ...copied }
             : { premadeField, ...inferFieldType(hostComponent, builderField) };
@@ -263,7 +266,13 @@ function collectSections(
     if (Array.isArray(value)) {
       for (const item of value) {
         if (isObject(item) && typeof item.component === "string") {
-          collectSections(item, currentSection, sections, currentSection, false);
+          collectSections(
+            item,
+            currentSection,
+            sections,
+            currentSection,
+            false,
+          );
         }
       }
     }
@@ -305,14 +314,17 @@ export function derivePremadeBlokSchemas(
       if (field.description) fieldDef.description = field.description;
       if (field.filetypes) fieldDef.filetypes = field.filetypes;
       if (field.options) fieldDef.options = field.options;
-      if (field.default_value !== undefined) fieldDef.default_value = field.default_value;
+      if (field.default_value !== undefined)
+        fieldDef.default_value = field.default_value;
       if (field.required !== undefined) fieldDef.required = field.required;
-      if (field.max_choices !== undefined) fieldDef.max_choices = field.max_choices;
+      if (field.max_choices !== undefined)
+        fieldDef.max_choices = field.max_choices;
       if (field.allow_target_blank !== undefined)
         fieldDef.allow_target_blank = field.allow_target_blank;
       if (field.restrict_components !== undefined)
         fieldDef.restrict_components = field.restrict_components;
-      if (field.component_whitelist) fieldDef.component_whitelist = field.component_whitelist;
+      if (field.component_whitelist)
+        fieldDef.component_whitelist = field.component_whitelist;
       if (field.min_value !== undefined) fieldDef.min_value = field.min_value;
       if (field.max_value !== undefined) fieldDef.max_value = field.max_value;
       if (field.field_type) fieldDef.field_type = field.field_type;
@@ -517,9 +529,7 @@ function fieldPropsEqual(
   return true;
 }
 
-function derivedToStoryblokSchema(
-  comp: DerivedComponent,
-): Record<string, any> {
+function derivedToStoryblokSchema(comp: DerivedComponent): Record<string, any> {
   const schema: Record<string, any> = {};
   for (const [fieldName, fieldDef] of Object.entries(comp.schema)) {
     const field: Record<string, any> = {
@@ -592,13 +602,18 @@ export async function pushDerivedComponents(
           `${MAPI_BASE}/spaces/${spaceId}/components/${existingComp.id}`,
           {
             method: "PUT",
-            headers: { Authorization: token, "Content-Type": "application/json" },
+            headers: {
+              Authorization: token,
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify({ component: storyblokComp }),
           },
         );
         if (!res.ok) {
           const err = await res.text();
-          console.error(`  Failed to update ${prefixedName}: ${res.status} ${err}`);
+          console.error(
+            `  Failed to update ${prefixedName}: ${res.status} ${err}`,
+          );
         } else {
           console.log(`  Updated (exists): ${prefixedName}`);
           updated++;
@@ -616,7 +631,9 @@ export async function pushDerivedComponents(
         });
         if (!res.ok) {
           const err = await res.text();
-          console.error(`  Failed to create ${prefixedName}: ${res.status} ${err}`);
+          console.error(
+            `  Failed to create ${prefixedName}: ${res.status} ${err}`,
+          );
         } else {
           console.log(`  Created: ${prefixedName}`);
           created++;
@@ -649,7 +666,9 @@ export async function pushDerivedComponents(
         });
         if (!res.ok) {
           const err = await res.text();
-          console.error(`  Failed to create ${prefixedName}: ${res.status} ${err}`);
+          console.error(
+            `  Failed to create ${prefixedName}: ${res.status} ${err}`,
+          );
         } else {
           console.log(`  Created: ${prefixedName}`);
           created++;
@@ -680,7 +699,9 @@ export async function pushDerivedComponents(
       );
       if (!res.ok) {
         const err = await res.text();
-        console.error(`  Failed to update ${prefixedName}: ${res.status} ${err}`);
+        console.error(
+          `  Failed to update ${prefixedName}: ${res.status} ${err}`,
+        );
       } else {
         console.log(`  Updated: ${prefixedName}`);
         updated++;
@@ -704,7 +725,9 @@ export async function pushDerivedComponents(
       );
       if (!res.ok) {
         const err = await res.text();
-        console.error(`  Failed to delete ${prefixedName}: ${res.status} ${err}`);
+        console.error(
+          `  Failed to delete ${prefixedName}: ${res.status} ${err}`,
+        );
       } else {
         console.log(`  Deleted: ${prefixedName}`);
         deleted++;
@@ -877,7 +900,9 @@ export async function migrateStoryData(
 
     if (modified) {
       if (dryRun) {
-        console.log(`  [dry-run] Would migrate story: ${story.full_slug} (id: ${story.id})`);
+        console.log(
+          `  [dry-run] Would migrate story: ${story.full_slug} (id: ${story.id})`,
+        );
       } else {
         await sleep(DELAY_MS);
         const res = await fetch(
@@ -926,10 +951,7 @@ function walkAndMigrate(
   }
 }
 
-async function fetchAllStories(
-  spaceId: string,
-  token: string,
-): Promise<any[]> {
+async function fetchAllStories(spaceId: string, token: string): Promise<any[]> {
   const stories: any[] = [];
   let page = 1;
   const perPage = 100;
@@ -999,7 +1021,9 @@ export async function updatePageBodyWhitelist(
   const pageComp = existing.get("page");
 
   if (!pageComp) {
-    console.warn("[updatePageBodyWhitelist] 'page' component not found in Storyblok");
+    console.warn(
+      "[updatePageBodyWhitelist] 'page' component not found in Storyblok",
+    );
     return;
   }
 
@@ -1011,13 +1035,17 @@ export async function updatePageBodyWhitelist(
 
   if (action === "add") {
     if (currentWhitelist.includes(prefixedName)) {
-      console.log(`[updatePageBodyWhitelist] ${prefixedName} already in whitelist`);
+      console.log(
+        `[updatePageBodyWhitelist] ${prefixedName} already in whitelist`,
+      );
       return;
     }
     newWhitelist = [...currentWhitelist, prefixedName];
   } else {
     if (!currentWhitelist.includes(prefixedName)) {
-      console.log(`[updatePageBodyWhitelist] ${prefixedName} not in whitelist, nothing to remove`);
+      console.log(
+        `[updatePageBodyWhitelist] ${prefixedName} not in whitelist, nothing to remove`,
+      );
       return;
     }
     newWhitelist = currentWhitelist.filter((n) => n !== prefixedName);
@@ -1054,7 +1082,9 @@ export async function updatePageBodyWhitelist(
 
   if (!res.ok) {
     const err = await res.text();
-    console.error(`[updatePageBodyWhitelist] Failed to update page: ${res.status} ${err}`);
+    console.error(
+      `[updatePageBodyWhitelist] Failed to update page: ${res.status} ${err}`,
+    );
   } else {
     console.log(
       `[updatePageBodyWhitelist] ${action === "add" ? "Added" : "Removed"} ${prefixedName} → whitelist now: [${newWhitelist.join(", ")}]`,
